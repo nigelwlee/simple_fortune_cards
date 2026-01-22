@@ -420,6 +420,18 @@
             margin-top: 0.5rem;
         }
 
+        /* Ko-fi button container */
+        .kofi-button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .kofi-button-container span.kofitext {
+            font-family: 'Cormorant Garamond', serif !important;
+            letter-spacing: 0.1em !important;
+        }
+
         /* Gratitude message */
         .gratitude-message {
             font-size: 0.8rem;
@@ -954,25 +966,9 @@
                     <p class="price-label">Suggested Offering</p>
                 </div>
 
-                <div class="offering-methods">
-                    <a href="https://ko-fi.com/yourname" target="_blank" class="offering-method">
-                        <div class="method-info">
-                            <div class="method-icon">&#9749;</div>
-                            <span class="method-name">Ko-fi</span>
-                        </div>
-                        <span class="method-arrow">&rarr;</span>
-                    </a>
-                    <a href="https://buymeacoffee.com/yourname" target="_blank" class="offering-method">
-                        <div class="method-info">
-                            <div class="method-icon">&#9829;</div>
-                            <span class="method-name">Buy Me a Coffee</span>
-                        </div>
-                        <span class="method-arrow">&rarr;</span>
-                    </a>
-                </div>
-
-                <div class="offering-divider">
-                    <span>then</span>
+                <div class="kofi-button-container">
+                    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+                    <script type='text/javascript'>kofiwidget2.init('Make an Offering', '#2c2c2c', 'fortuneapp');kofiwidget2.draw();</script>
                 </div>
 
                 <div class="karma-message">
@@ -1111,7 +1107,7 @@
 
             <p><strong>Offerings</strong></p>
             <ul>
-                <li>Offerings are voluntary and processed through third-party services (Ko-fi, Buy Me a Coffee, PayPal)</li>
+                <li>Offerings are voluntary and processed through Ko-fi</li>
                 <li>We operate on an honor system - we trust your integrity</li>
                 <li>All offerings are non-refundable</li>
             </ul>
