@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortune Cards</title>
+    <title>Fortune Cards - Your Daily Ritual</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght=300;400;500&display=swap" rel="stylesheet">
@@ -756,6 +756,126 @@
             padding: 1.5rem;
         }
 
+        /* Daily Card */
+        .daily-card-section {
+            margin-bottom: 2rem;
+        }
+
+        .daily-card {
+            background: #fff;
+            border: 1px solid #e8e8e6;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .daily-card:hover {
+            border-color: #ccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .daily-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .daily-card-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .daily-card-date {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .daily-card-content {
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .daily-card-sealed {
+            text-align: center;
+        }
+
+        .daily-card-sealed .moon-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.6;
+        }
+
+        .daily-card-sealed .reveal-text {
+            font-size: 0.8rem;
+            color: #999;
+            letter-spacing: 0.1em;
+        }
+
+        .daily-card-revealed {
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .daily-card-revealed .zodiac-badge {
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #999;
+            background: #f5f5f3;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+        }
+
+        .daily-card-revealed .affirmation {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #2c2c2c;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .daily-card-revealed .guidance-tip {
+            font-size: 0.85rem;
+            color: #666;
+            padding-top: 0.75rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .daily-card-revealed .guidance-tip .tip-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #999;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .daily-card-already {
+            text-align: center;
+        }
+
+        .daily-card-already p {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 0;
+        }
+
+        .daily-card-already .checkmark {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.5;
+        }
+
         /* Footer */
         .footer {
             margin-top: 3rem;
@@ -867,11 +987,24 @@
         <!-- Screen 1: Start -->
         <div class="screen active" id="screen-start">
             <h1>Fortune</h1>
-            <p class="subtitle">Divine your path</p>
+            <p class="subtitle">Your daily ritual awaits</p>
+
+            <!-- Daily Card Section -->
+            <div class="daily-card-section">
+                <div class="daily-card" id="daily-card" onclick="revealDailyCard()">
+                    <div class="daily-card-header">
+                        <span class="daily-card-label">☾ Today's Card</span>
+                        <span class="daily-card-date" id="daily-card-date"></span>
+                    </div>
+                    <div class="daily-card-content" id="daily-card-content">
+                        <!-- Content populated by JS based on state -->
+                    </div>
+                </div>
+            </div>
 
             <div class="deck-container">
                 <div class="main-deck" onclick="showScreen('screen-choice')"></div>
-                <p class="tap-hint">tap to begin</p>
+                <p class="tap-hint">tap for full reading</p>
             </div>
 
             <div class="footer">
@@ -881,20 +1014,20 @@
 
         <!-- Screen 2: Choose Free or Paid -->
         <div class="screen" id="screen-choice">
-            <h2>Choose Your Reading</h2>
-            <p>How deep do you wish to see?</p>
+            <h2>Choose Your Path</h2>
+            <p>What does your heart need today?</p>
 
             <div class="choice-container">
                 <div class="choice-card" onclick="selectTier('free')">
                     <h3>Glimpse</h3>
                     <p class="price">Free</p>
-                    <p class="desc">A brief insight into your fortune</p>
+                    <p class="desc">A gentle insight to guide your day</p>
                 </div>
 
                 <div class="choice-card" onclick="selectTier('paid')">
-                    <h3>Offering</h3>
+                    <h3>Deep Ritual</h3>
                     <p class="price">$2.99</p>
-                    <p class="desc">Detailed guidance with actionable wisdom</p>
+                    <p class="desc">Personalized guidance with actionable wisdom</p>
                 </div>
             </div>
 
@@ -918,7 +1051,7 @@
         <!-- Screen 3b-1: Paid Wish Form -->
         <div class="screen" id="screen-wish-form">
             <h2>Set Your Intention</h2>
-            <p>What guidance do you seek?</p>
+            <p>What does your soul need clarity on?</p>
 
             <div class="form-group">
                 <label>Your Wish</label>
@@ -958,7 +1091,7 @@
         <!-- Screen 3b-2: Offering (Honor System) -->
         <div class="screen" id="screen-offering">
             <h2>Make Your Offering</h2>
-            <p>Support this practice with a small gift</p>
+            <p>Support this ritual with a small gift of gratitude</p>
 
             <div class="offering-container">
                 <div class="offering-amount">
@@ -1014,9 +1147,9 @@
             </div>
 
             <div class="upsell">
-                <h4>Seek Deeper Guidance?</h4>
-                <p>Unlock your lucky object, favorable timing, and actionable steps to shape your fortune.</p>
-                <button class="btn btn-primary" onclick="selectTier('paid')">Reveal Full Reading</button>
+                <h4>Ready for Deeper Wisdom?</h4>
+                <p>Unlock personalized guidance, your lucky elements, and actionable steps to honor your path.</p>
+                <button class="btn btn-primary" onclick="selectTier('paid')">Begin Deep Ritual</button>
             </div>
 
             <button class="btn btn-secondary" onclick="showScreen('screen-start')">Draw Again</button>
@@ -1099,10 +1232,11 @@
 
             <p><strong>Your Privacy</strong></p>
             <ul>
-                <li>We do not store your birthday, wishes, or any personal data</li>
-                <li>All information you enter is processed locally in your browser</li>
-                <li>Nothing is sent to or saved on our servers</li>
-                <li>We do not use cookies or tracking</li>
+                <li>Your birthday is stored locally on your device only—never on our servers</li>
+                <li>This allows us to personalize your daily card experience</li>
+                <li>All information stays in your browser and is never transmitted</li>
+                <li>We do not use cookies or external tracking</li>
+                <li>Clear your browser data anytime to remove all stored information</li>
             </ul>
 
             <p><strong>Offerings</strong></p>
@@ -1128,16 +1262,16 @@
 
         // Wish suggestion pool
         const wishPool = [
-            "I want clarity about my career path",
-            "I seek guidance in matters of the heart",
-            "I wish to understand my financial future",
-            "I need direction on a big decision",
-            "I want to know about upcoming opportunities",
-            "I seek peace of mind about my health",
-            "I wish to improve my relationships",
-            "I want guidance on a new beginning",
-            "I seek insight into my creative pursuits",
-            "I need wisdom about family matters"
+            "I seek clarity about my next chapter",
+            "I want guidance on matters of the heart",
+            "I need direction on a decision weighing on me",
+            "I wish to understand what's blocking my growth",
+            "I seek peace around a relationship in my life",
+            "I want insight into my career or purpose",
+            "I need wisdom about setting boundaries",
+            "I wish to understand my creative calling",
+            "I seek guidance on trusting myself more",
+            "I want clarity about my self-worth"
         ];
 
         // Fortune pool - 100 fortunes across categories
@@ -1271,6 +1405,278 @@
             "Karma is the universe's perfect accountant. Your honesty today shapes your tomorrow."
         ];
 
+        // Daily card content pool - organized by zodiac sign
+        // Each has an affirmation/reflection + guidance tip
+        const dailyCards = {
+            // Generic (for users without birthday)
+            generic: [
+                { type: 'affirmation', message: "I am open to receiving the guidance the universe has for me today.", tip: "Lucky color: soft lavender", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I trust my inner wisdom to guide me through whatever comes.", tip: "Pause before reacting to unexpected news", tipLabel: "Today's Guidance" },
+                { type: 'reflection', message: "What would you do today if you knew you couldn't fail?", tip: "Lucky number: 7", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I release what no longer serves me and welcome new possibilities.", tip: "Reach out to someone you've been thinking about", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What small act of self-care have you been postponing?", tip: "Avoid making major decisions before noon", tipLabel: "Today's Caution" },
+                { type: 'affirmation', message: "My intuition is a gift, and I choose to honor it.", tip: "Lucky direction: East", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I am worthy of the abundance flowing toward me.", tip: "Take a different route than usual", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What truth have you been avoiding that needs your attention?", tip: "Lucky color: sage green", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I choose peace over worry, trust over fear.", tip: "Spend time near water today", tipLabel: "Today's Guidance" },
+                { type: 'reflection', message: "If your future self could send you one message, what would it be?", tip: "Lucky number: 3", tipLabel: "Today's Element" },
+            ],
+            // Fire signs: Aries, Leo, Sagittarius
+            Aries: [
+                { type: 'affirmation', message: "My courage inspires others. I lead with heart and conviction.", tip: "Channel your energy into one focused goal", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "Where might patience serve you better than speed today?", tip: "Lucky color: bold red", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I trust my instincts—they have never led me astray.", tip: "Avoid starting new projects after 4pm", tipLabel: "Today's Caution" },
+                { type: 'affirmation', message: "My passion is my power. I use it wisely.", tip: "Take three deep breaths before important conversations", tipLabel: "Today's Guidance" },
+                { type: 'reflection', message: "What battle might you win by choosing not to fight?", tip: "Lucky number: 9", tipLabel: "Today's Element" },
+            ],
+            Leo: [
+                { type: 'affirmation', message: "My light uplifts everyone around me. I shine without apology.", tip: "Share genuine praise with someone today", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "How can you lead with warmth instead of force today?", tip: "Lucky color: gold", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I am creative, generous, and worthy of admiration.", tip: "Create something, even if just for yourself", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "My heart is big enough for self-love and love for others.", tip: "Avoid seeking validation externally", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "What would happen if you let others take the spotlight today?", tip: "Lucky number: 1", tipLabel: "Today's Element" },
+            ],
+            Sagittarius: [
+                { type: 'affirmation', message: "Every experience expands my wisdom. I am a lifelong learner.", tip: "Say yes to an unexpected invitation", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What adventure is calling to you that you've been ignoring?", tip: "Lucky color: purple", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "My optimism is contagious. I spread hope wherever I go.", tip: "Learn one new thing today", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "Freedom and commitment can coexist in my life.", tip: "Avoid overcommitting your time", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "What truth needs to be spoken with kindness today?", tip: "Lucky number: 5", tipLabel: "Today's Element" },
+            ],
+            // Earth signs: Taurus, Virgo, Capricorn
+            Taurus: [
+                { type: 'affirmation', message: "I am grounded, stable, and deeply connected to abundance.", tip: "Enjoy a sensory pleasure mindfully today", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "Where might flexibility serve you better than stubbornness?", tip: "Lucky color: forest green", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I deserve comfort and beauty in my daily life.", tip: "Declutter one small space", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "My patience is a strength, not a weakness.", tip: "Avoid rushed financial decisions", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "What are you holding onto that you've already outgrown?", tip: "Lucky number: 6", tipLabel: "Today's Element" },
+            ],
+            Virgo: [
+                { type: 'affirmation', message: "My attention to detail is a gift. I use it with compassion.", tip: "Release perfectionism in one area today", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What would self-compassion look like for you right now?", tip: "Lucky color: navy blue", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I am enough exactly as I am, imperfections and all.", tip: "Do something without planning first", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "My service to others matters, but so does serving myself.", tip: "Avoid overanalyzing small decisions", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "How can you help without trying to fix everything?", tip: "Lucky number: 8", tipLabel: "Today's Element" },
+            ],
+            Capricorn: [
+                { type: 'affirmation', message: "My ambition serves a greater purpose. Success is my birthright.", tip: "Celebrate a recent accomplishment", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "When did you last rest without guilt?", tip: "Lucky color: charcoal", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I balance achievement with presence. The journey matters.", tip: "Take a break you've been postponing", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "I am worthy beyond my productivity and accomplishments.", tip: "Avoid working through lunch", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "What would happen if you chose ease over effort today?", tip: "Lucky number: 4", tipLabel: "Today's Element" },
+            ],
+            // Air signs: Gemini, Libra, Aquarius
+            Gemini: [
+                { type: 'affirmation', message: "My curiosity is a superpower. I embrace all my facets.", tip: "Have a meaningful conversation with someone new", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What scattered energy could you focus into one direction?", tip: "Lucky color: bright yellow", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I communicate with clarity and heart. My words have power.", tip: "Write down your thoughts before sharing", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "Both sides of me are valid. I contain multitudes.", tip: "Avoid gossip and idle chatter", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "What conversation have you been avoiding that needs to happen?", tip: "Lucky number: 2", tipLabel: "Today's Element" },
+            ],
+            Libra: [
+                { type: 'affirmation', message: "I create harmony while honoring my own needs.", tip: "Make a decision you've been postponing", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What would you choose if you couldn't consider others' opinions?", tip: "Lucky color: rose pink", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "My peace matters. I choose relationships that honor me.", tip: "Spend time in a beautiful environment", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "I can set boundaries and still be loving.", tip: "Avoid people-pleasing at your expense", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "Where have you abandoned yourself to keep the peace?", tip: "Lucky number: 7", tipLabel: "Today's Element" },
+            ],
+            Aquarius: [
+                { type: 'affirmation', message: "My uniqueness is my contribution to the world.", tip: "Share an unconventional idea", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "How can you balance independence with intimacy?", tip: "Lucky color: electric blue", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I belong, even when I feel different. My tribe exists.", tip: "Connect with like-minded souls", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "My emotions are valid, even when logic can't explain them.", tip: "Avoid detaching when feelings arise", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "What cause or vision deserves more of your attention?", tip: "Lucky number: 11", tipLabel: "Today's Element" },
+            ],
+            // Water signs: Cancer, Scorpio, Pisces
+            Cancer: [
+                { type: 'affirmation', message: "My sensitivity is wisdom. I nurture myself as I nurture others.", tip: "Create a cozy moment for yourself", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What emotions are asking to be felt, not fixed?", tip: "Lucky color: silver", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I protect my energy while keeping my heart open.", tip: "Set one boundary today", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "Home is within me. I carry my safety wherever I go.", tip: "Avoid absorbing others' moods", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "Who in your inner circle needs your presence today?", tip: "Lucky number: 2", tipLabel: "Today's Element" },
+            ],
+            Scorpio: [
+                { type: 'affirmation', message: "My depth is my power. I transform pain into wisdom.", tip: "Release one thing you've been gripping", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What are you ready to let die so something new can live?", tip: "Lucky color: deep burgundy", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I trust others without losing my discernment.", tip: "Share a secret with someone safe", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "Vulnerability is not weakness. It is my hidden strength.", tip: "Avoid obsessing over what you can't control", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "What truth have you been hiding from yourself?", tip: "Lucky number: 8", tipLabel: "Today's Element" },
+            ],
+            Pisces: [
+                { type: 'affirmation', message: "My dreams are messages. I honor my inner world.", tip: "Spend time near water today", tipLabel: "Today's Action" },
+                { type: 'reflection', message: "What creative impulse have you been suppressing?", tip: "Lucky color: sea foam", tipLabel: "Today's Element" },
+                { type: 'affirmation', message: "I am compassionate without losing myself in others.", tip: "Create or appreciate art today", tipLabel: "Today's Guidance" },
+                { type: 'affirmation', message: "My imagination is a portal. I use it to heal and create.", tip: "Avoid escapism through substances or screens", tipLabel: "Today's Caution" },
+                { type: 'reflection', message: "What spiritual practice is calling to you?", tip: "Lucky number: 12", tipLabel: "Today's Element" },
+            ]
+        };
+
+        // ===== localStorage Management =====
+        function getUserData() {
+            try {
+                return JSON.parse(localStorage.getItem('fortuneUserData')) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveUserData(data) {
+            localStorage.setItem('fortuneUserData', JSON.stringify(data));
+        }
+
+        function getTodayString() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function isDailyCardAvailable() {
+            const userData = getUserData();
+            const today = getTodayString();
+            return userData.dailyCard?.lastRevealDate !== today;
+        }
+
+        function updateStreak() {
+            const userData = getUserData();
+            const today = new Date();
+            const todayStr = getTodayString();
+
+            if (!userData.streak) {
+                userData.streak = { current: 0, longest: 0, lastVisitDate: null };
+            }
+
+            if (userData.streak.lastVisitDate) {
+                const lastVisit = new Date(userData.streak.lastVisitDate);
+                const daysDiff = Math.floor((today - lastVisit) / (1000 * 60 * 60 * 24));
+
+                if (daysDiff === 1) {
+                    userData.streak.current++;
+                    userData.streak.longest = Math.max(userData.streak.current, userData.streak.longest);
+                } else if (daysDiff > 1) {
+                    userData.streak.current = 1;
+                }
+                // daysDiff === 0 means same day, don't change
+            } else {
+                userData.streak.current = 1;
+            }
+
+            userData.streak.lastVisitDate = todayStr;
+            saveUserData(userData);
+        }
+
+        // Deterministic daily card selection based on date + zodiac
+        function getDailyCardSeed(dateStr, zodiac) {
+            let hash = 0;
+            const str = dateStr + (zodiac || 'generic');
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash);
+        }
+
+        function getDailyCard() {
+            const userData = getUserData();
+            const today = getTodayString();
+            const zodiac = userData.westernZodiac || null;
+
+            // Get cards for user's zodiac or generic
+            const cards = zodiac && dailyCards[zodiac] ? dailyCards[zodiac] : dailyCards.generic;
+
+            // Use date-based seed for consistent daily selection
+            const seed = getDailyCardSeed(today, zodiac);
+            const index = seed % cards.length;
+
+            return {
+                card: cards[index],
+                zodiac: zodiac,
+                isPersonalized: !!zodiac
+            };
+        }
+
+        function revealDailyCard() {
+            const userData = getUserData();
+            const today = getTodayString();
+
+            // If already revealed today, do nothing
+            if (userData.dailyCard?.lastRevealDate === today && userData.dailyCard?.revealed) {
+                return;
+            }
+
+            // Update streak and mark as revealed
+            updateStreak();
+
+            userData.dailyCard = {
+                lastRevealDate: today,
+                revealed: true
+            };
+
+            if (!userData.firstVisitDate) {
+                userData.firstVisitDate = today;
+            }
+
+            saveUserData(userData);
+            renderDailyCard();
+        }
+
+        function renderDailyCard() {
+            const userData = getUserData();
+            const today = getTodayString();
+            const contentEl = document.getElementById('daily-card-content');
+            const cardEl = document.getElementById('daily-card');
+
+            // Format date nicely
+            const dateObj = new Date();
+            const options = { month: 'long', day: 'numeric' };
+            document.getElementById('daily-card-date').textContent = dateObj.toLocaleDateString('en-US', options);
+
+            // Check state
+            const isRevealed = userData.dailyCard?.lastRevealDate === today && userData.dailyCard?.revealed;
+
+            if (!isRevealed) {
+                // Show sealed card
+                cardEl.style.cursor = 'pointer';
+                contentEl.innerHTML = `
+                    <div class="daily-card-sealed">
+                        <div class="moon-icon">☾</div>
+                        <p class="reveal-text">tap to reveal today's message</p>
+                    </div>
+                `;
+            } else {
+                // Show revealed card
+                const { card, zodiac, isPersonalized } = getDailyCard();
+                cardEl.style.cursor = 'default';
+
+                const zodiacBadge = isPersonalized
+                    ? `<span class="zodiac-badge">${zodiac}</span>`
+                    : '';
+
+                const messagePrefix = card.type === 'reflection' ? '' : '';
+
+                contentEl.innerHTML = `
+                    <div class="daily-card-revealed">
+                        ${zodiacBadge}
+                        <p class="affirmation">${messagePrefix}${card.message}</p>
+                        <div class="guidance-tip">
+                            <span class="tip-label">${card.tipLabel}</span>
+                            ${card.tip}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize daily card on page load
+        function initDailyCard() {
+            renderDailyCard();
+
+            // Pre-fill birthday if we have it stored
+            const userData = getUserData();
+            if (userData.birthday) {
+                document.getElementById('birthday-input').value = userData.birthday;
+                // Don't auto-show horoscope, let them trigger it
+            }
+        }
+
         function showScreen(screenId) {
             // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1278,10 +1684,11 @@
             // Show target screen
             document.getElementById(screenId).classList.add('active');
 
-            // Reset card flips when going back to start
+            // Reset card flips and re-render daily card when going back to start
             if (screenId === 'screen-start') {
                 document.getElementById('free-card-flip').classList.remove('flipped');
                 document.getElementById('paid-card-flip').classList.remove('flipped');
+                renderDailyCard(); // Re-render in case zodiac was just set
             }
 
             // Generate wish suggestions when showing wish form
@@ -1355,6 +1762,15 @@
 
             // Show the horoscope display
             document.getElementById('horoscope-display').classList.remove('hidden');
+
+            // Persist birthday and zodiac data to localStorage
+            const userData = getUserData();
+            userData.birthday = input;
+            userData.westernZodiac = userHoroscope.western;
+            userData.chineseZodiac = userHoroscope.chinese;
+            userData.element = userHoroscope.element;
+            userData.rulingPlanet = userHoroscope.planet;
+            saveUserData(userData);
         }
 
         function getWesternZodiac(month, day) {
@@ -1471,6 +1887,9 @@
                 event.target.classList.remove('active');
             }
         }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initDailyCard);
     </script>
 </body>
 </html>
