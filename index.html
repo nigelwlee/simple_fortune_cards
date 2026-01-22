@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Cards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght=300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: #fafaf9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #2c2c2c;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Screen states - only one visible at a time */
+        .screen {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            font-weight: 300;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        /* Main deck on start screen */
+        .deck-container {
+            margin: 3rem 0;
+        }
+
+        .main-deck {
+            width: 140px;
+            height: 200px;
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            border-radius: 8px;
+            margin: 0 auto;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow:
+                0 2px 4px rgba(0,0,0,0.1),
+                4px 4px 0 #e8e8e6,
+                8px 8px 0 #d8d8d6;
+        }
+
+        .main-deck:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.15),
+                4px 4px 0 #e8e8e6,
+                8px 8px 0 #d8d8d6;
+        }
+
+        .main-deck::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+
+        .main-deck::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+        }
+
+        .tap-hint {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            color: #bbb;
+            margin-top: 1.5rem;
+        }
+
+        /* Choice screen */
+        .choice-container {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .choice-card {
+            width: 140px;
+            padding: 2rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .choice-card:hover {
+            border-color: #2c2c2c;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .choice-card h3 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .choice-card .price {
+            font-size: 0.8rem;
+            color: #999;
+            letter-spacing: 0.1em;
+        }
+
+        .choice-card .desc {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            resize: none;
+            height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2c2c2c;
+        }
+
+        .form-group input[type="date"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            transition: border-color 0.3s ease;
+            background: #fff;
+        }
+
+        .form-group input[type="date"]:focus {
+            outline: none;
+            border-color: #2c2c2c;
+        }
+
+        /* Wish suggestions */
+        .wish-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .wish-chip {
+            padding: 0.5rem 0.875rem;
+            font-size: 0.8rem;
+            background: #f5f5f3;
+            border: 1px solid #e8e8e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .wish-chip:hover {
+            background: #2c2c2c;
+            color: #fff;
+            border-color: #2c2c2c;
+        }
+
+        /* Horoscope display */
+        .horoscope-display {
+            background: #fff;
+            border: 1px solid #e8e8e6;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-top: 0.75rem;
+            text-align: left;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .horoscope-display.hidden {
+            display: none;
+        }
+
+        .horoscope-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f5f5f3;
+            font-size: 0.85rem;
+        }
+
+        .horoscope-row:last-child {
+            border-bottom: none;
+        }
+
+        .horoscope-row .label {
+            color: #999;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .horoscope-row .value {
+            color: #2c2c2c;
+            font-weight: 400;
+        }
+
+        /* Offering/Payment screen */
+        .offering-container {
+            background: #fff;
+            border: 1px solid #e8e8e6;
+            border-radius: 8px;
+            padding: 2rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .offering-amount {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .offering-amount .price-large {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #2c2c2c;
+        }
+
+        .offering-amount .price-label {
+            font-size: 0.75rem;
+            color: #999;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .offering-methods {
+            margin-bottom: 1.5rem;
+        }
+
+        .offering-method {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border: 1px solid #e8e8e6;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .offering-method:hover {
+            border-color: #2c2c2c;
+            background: #fafaf9;
+        }
+
+        .offering-method .method-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .offering-method .method-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f3;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .offering-method .method-name {
+            font-size: 0.95rem;
+        }
+
+        .offering-method .method-arrow {
+            color: #ccc;
+            font-size: 1.2rem;
+        }
+
+        .offering-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            gap: 1rem;
+        }
+
+        .offering-divider::before,
+        .offering-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e8e8e6;
+        }
+
+        .offering-divider span {
+            font-size: 0.75rem;
+            color: #999;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .karma-message {
+            text-align: center;
+            padding: 1.25rem;
+            background: linear-gradient(to bottom, #fafaf9, #f5f5f3);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .karma-message p {
+            font-size: 0.9rem;
+            font-style: italic;
+            color: #777;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        .honor-confirmation {
+            text-align: center;
+        }
+
+        .honor-confirmation .btn {
+            margin-bottom: 0.5rem;
+        }
+
+        .honor-note {
+            font-size: 0.7rem;
+            color: #bbb;
+            margin-top: 0.5rem;
+        }
+
+        /* Gratitude message */
+        .gratitude-message {
+            font-size: 0.8rem;
+            font-style: italic;
+            color: #888;
+            background: linear-gradient(to right, transparent, #f5f5f3, transparent);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        /* Card selection screen */
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 2rem 0;
+        }
+
+        .fortune-card {
+            width: 80px;
+            height: 112px;
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .fortune-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Different card back patterns for paid tier */
+        .fortune-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .fortune-card.pattern-1::before { width: 30px; height: 30px; }
+        .fortune-card.pattern-2::before { width: 30px; height: 30px; border-radius: 0; transform: translate(-50%, -50%) rotate(45deg); }
+        .fortune-card.pattern-3::before { width: 20px; height: 40px; border-radius: 0; }
+        .fortune-card.pattern-4::before { width: 40px; height: 20px; border-radius: 0; }
+        .fortune-card.pattern-5::before { width: 25px; height: 25px; border-radius: 2px; }
+
+        .fortune-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+
+        /* Reading screen */
+        .reading-card {
+            width: 160px;
+            height: 224px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 0 auto 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .reading-card .category {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .reading-card .fortune-type {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .reading-card .symbol {
+            font-size: 2rem;
+            margin: 1rem 0;
+            opacity: 0.7;
+        }
+
+        .reading-text {
+            margin: 1.5rem 0;
+            padding: 0 0.5rem;
+        }
+
+        .reading-text p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        /* Detailed reading for paid tier */
+        .detailed-reading {
+            background: #fff;
+            border: 1px solid #e8e8e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .detailed-reading h4 {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 0.75rem;
+        }
+
+        .detailed-reading p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .detailed-reading ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detailed-reading li {
+            font-size: 0.85rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+        }
+
+        .detailed-reading li:last-child {
+            border-bottom: none;
+        }
+
+        .detailed-reading li span {
+            color: #999;
+            font-size: 0.75rem;
+            display: block;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Your signs section in paid reading */
+        .your-signs {
+            background: #f9f9f7;
+            border: 1px solid #e8e8e6;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .your-signs h4 {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .signs-row {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .signs-row .sign-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .signs-row .sign-label {
+            font-size: 0.65rem;
+            color: #bbb;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .signs-row .sign-value {
+            color: #2c2c2c;
+        }
+
+        /* Upsell section */
+        .upsell {
+            background: linear-gradient(to bottom, #fafaf9, #f5f5f3);
+            border: 1px solid #e8e8e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .upsell h4 {
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .upsell p {
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #2c2c2c;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #444;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #2c2c2c;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2c2c2c;
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-text:hover {
+            color: #2c2c2c;
+        }
+
+        .btn-full {
+            width: 100%;
+            margin: 0;
+        }
+
+        /* Card flip animation */
+        .card-flip-container {
+            perspective: 1000px;
+            width: 160px;
+            height: 224px;
+            margin: 0 auto 2rem;
+        }
+
+        .card-flip-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s ease;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .card-flip-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-flip-front,
+        .card-flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+        }
+
+        .card-flip-front {
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-flip-front::before {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .card-flip-back {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .footer p {
+            font-size: 0.75rem;
+            color: #bbb;
+        }
+
+        .footer a {
+            color: #999;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #2c2c2c;
+        }
+
+        /* Disclaimer styles */
+        .disclaimer-link {
+            font-size: 0.7rem;
+            color: #bbb;
+            margin-top: 0.5rem;
+            cursor: pointer;
+        }
+
+        .disclaimer-link:hover {
+            color: #999;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal h3 {
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .modal p {
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .modal ul {
+            padding-left: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal li {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #2c2c2c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Screen 1: Start -->
+        <div class="screen active" id="screen-start">
+            <h1>Fortune</h1>
+            <p class="subtitle">Divine your path</p>
+
+            <div class="deck-container">
+                <div class="main-deck" onclick="showScreen('screen-choice')"></div>
+                <p class="tap-hint">tap to begin</p>
+            </div>
+
+            <div class="footer">
+                <p class="disclaimer-link" onclick="openModal('disclaimer')">Privacy & Terms</p>
+            </div>
+        </div>
+
+        <!-- Screen 2: Choose Free or Paid -->
+        <div class="screen" id="screen-choice">
+            <h2>Choose Your Reading</h2>
+            <p>How deep do you wish to see?</p>
+
+            <div class="choice-container">
+                <div class="choice-card" onclick="selectTier('free')">
+                    <h3>Glimpse</h3>
+                    <p class="price">Free</p>
+                    <p class="desc">A brief insight into your fortune</p>
+                </div>
+
+                <div class="choice-card" onclick="selectTier('paid')">
+                    <h3>Offering</h3>
+                    <p class="price">$2.99</p>
+                    <p class="desc">Detailed guidance with actionable wisdom</p>
+                </div>
+            </div>
+
+            <button class="btn-text" onclick="showScreen('screen-start')">back</button>
+        </div>
+
+        <!-- Screen 3a: Free Card Selection (3 cards) -->
+        <div class="screen" id="screen-cards-free">
+            <h2>Choose Your Card</h2>
+            <p>Trust your intuition</p>
+
+            <div class="cards-grid">
+                <div class="fortune-card" onclick="selectCard('free')"></div>
+                <div class="fortune-card" onclick="selectCard('free')"></div>
+                <div class="fortune-card" onclick="selectCard('free')"></div>
+            </div>
+
+            <button class="btn-text" onclick="showScreen('screen-choice')">back</button>
+        </div>
+
+        <!-- Screen 3b-1: Paid Wish Form -->
+        <div class="screen" id="screen-wish-form">
+            <h2>Set Your Intention</h2>
+            <p>What guidance do you seek?</p>
+
+            <div class="form-group">
+                <label>Your Wish</label>
+                <textarea id="wish-input" placeholder="Share what's on your mind..."></textarea>
+                <div class="wish-suggestions" id="wish-suggestions">
+                    <!-- Will be populated by JS -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Your Birthday</label>
+                <input type="date" id="birthday-input" onchange="calculateHoroscopes()">
+                <div class="horoscope-display hidden" id="horoscope-display">
+                    <div class="horoscope-row">
+                        <span class="label">Western Zodiac</span>
+                        <span class="value" id="western-zodiac">-</span>
+                    </div>
+                    <div class="horoscope-row">
+                        <span class="label">Chinese Zodiac</span>
+                        <span class="value" id="chinese-zodiac">-</span>
+                    </div>
+                    <div class="horoscope-row">
+                        <span class="label">Element</span>
+                        <span class="value" id="element">-</span>
+                    </div>
+                    <div class="horoscope-row">
+                        <span class="label">Ruling Planet</span>
+                        <span class="value" id="ruling-planet">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-full" onclick="showScreen('screen-offering')">Continue</button>
+            <button class="btn-text" onclick="showScreen('screen-choice')">back</button>
+        </div>
+
+        <!-- Screen 3b-2: Offering (Honor System) -->
+        <div class="screen" id="screen-offering">
+            <h2>Make Your Offering</h2>
+            <p>Support this practice with a small gift</p>
+
+            <div class="offering-container">
+                <div class="offering-amount">
+                    <p class="price-large">$2.99</p>
+                    <p class="price-label">Suggested Offering</p>
+                </div>
+
+                <div class="offering-methods">
+                    <a href="https://ko-fi.com/yourname" target="_blank" class="offering-method">
+                        <div class="method-info">
+                            <div class="method-icon">&#9749;</div>
+                            <span class="method-name">Ko-fi</span>
+                        </div>
+                        <span class="method-arrow">&rarr;</span>
+                    </a>
+                    <a href="https://buymeacoffee.com/yourname" target="_blank" class="offering-method">
+                        <div class="method-info">
+                            <div class="method-icon">&#9829;</div>
+                            <span class="method-name">Buy Me a Coffee</span>
+                        </div>
+                        <span class="method-arrow">&rarr;</span>
+                    </a>
+                </div>
+
+                <div class="offering-divider">
+                    <span>then</span>
+                </div>
+
+                <div class="karma-message">
+                    <p>"The energy you give returns threefold. Your honesty strengthens the reading you're about to receive."</p>
+                </div>
+
+                <div class="honor-confirmation">
+                    <button class="btn btn-primary btn-full" onclick="confirmOffering()">I've Made My Offering</button>
+                    <p class="honor-note">We trust in your integrity</p>
+                </div>
+            </div>
+
+            <button class="btn-text" onclick="showScreen('screen-wish-form')">back</button>
+        </div>
+
+        <!-- Screen 3b-3: Paid Card Selection (30 cards with patterns) -->
+        <div class="screen" id="screen-cards-paid">
+            <h2>Choose Your Card</h2>
+            <p>Thank you for your offering. May your honesty and karma guide you to your fate.</p>
+
+            <div class="cards-grid" id="paid-cards-grid">
+                <!-- Cards will be generated by JS -->
+            </div>
+
+            <button class="btn-text" onclick="showScreen('screen-offering')">back</button>
+        </div>
+
+        <!-- Screen 4a: Free Reading Result -->
+        <div class="screen" id="screen-reading-free">
+            <div class="card-flip-container">
+                <div class="card-flip-inner" id="free-card-flip">
+                    <div class="card-flip-front"></div>
+                    <div class="card-flip-back">
+                        <p class="category">Your Fortune</p>
+                        <p class="fortune-type">Career</p>
+                        <p class="symbol">&#9678;</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reading-text">
+                <p>A shift approaches in your professional life. Stay alert to unexpected opportunities.</p>
+            </div>
+
+            <div class="upsell">
+                <h4>Seek Deeper Guidance?</h4>
+                <p>Unlock your lucky object, favorable timing, and actionable steps to shape your fortune.</p>
+                <button class="btn btn-primary" onclick="selectTier('paid')">Reveal Full Reading</button>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showScreen('screen-start')">Draw Again</button>
+        </div>
+
+        <!-- Screen 4b: Paid Reading Result -->
+        <div class="screen" id="screen-reading-paid">
+            <div class="card-flip-container">
+                <div class="card-flip-inner" id="paid-card-flip">
+                    <div class="card-flip-front"></div>
+                    <div class="card-flip-back">
+                        <p class="category">Your Fortune</p>
+                        <p class="fortune-type">Career</p>
+                        <p class="symbol">&#9678;</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="your-signs" id="reading-signs">
+                <h4>Your Signs</h4>
+                <div class="signs-row">
+                    <div class="sign-item">
+                        <span class="sign-label">Western</span>
+                        <span class="sign-value" id="reading-western">Aries</span>
+                    </div>
+                    <div class="sign-item">
+                        <span class="sign-label">Chinese</span>
+                        <span class="sign-value" id="reading-chinese">Dragon</span>
+                    </div>
+                    <div class="sign-item">
+                        <span class="sign-label">Element</span>
+                        <span class="sign-value" id="reading-element">Fire</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reading-text">
+                <p>A significant shift approaches in your professional life. The path you've been considering will soon reveal its true nature. Trust the process, but remain vigilant.</p>
+            </div>
+
+            <div class="detailed-reading">
+                <h4>Your Guidance</h4>
+                <ul>
+                    <li>
+                        <span>Lucky Object</span>
+                        A silver key or keychain
+                    </li>
+                    <li>
+                        <span>Favorable Day</span>
+                        Thursday of this week
+                    </li>
+                    <li>
+                        <span>Action to Take</span>
+                        Reach out to someone you haven't spoken to in months
+                    </li>
+                    <li>
+                        <span>Thing to Avoid</span>
+                        Making major decisions before noon
+                    </li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary" onclick="showScreen('screen-start')">Draw Again</button>
+
+            <div class="footer">
+                <p>May your path be clear</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Disclaimer Modal -->
+    <div class="modal-overlay" id="modal-disclaimer" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('disclaimer')">&times;</button>
+            <h3>Privacy & Terms</h3>
+
+            <p><strong>For Entertainment Only</strong></p>
+            <p>Fortune Cards is intended for entertainment purposes only. Readings should not be taken as professional advice for financial, medical, legal, or psychological matters.</p>
+
+            <p><strong>Your Privacy</strong></p>
+            <ul>
+                <li>We do not store your birthday, wishes, or any personal data</li>
+                <li>All information you enter is processed locally in your browser</li>
+                <li>Nothing is sent to or saved on our servers</li>
+                <li>We do not use cookies or tracking</li>
+            </ul>
+
+            <p><strong>Offerings</strong></p>
+            <ul>
+                <li>Offerings are voluntary and processed through third-party services (Ko-fi, Buy Me a Coffee, PayPal)</li>
+                <li>We operate on an honor system - we trust your integrity</li>
+                <li>All offerings are non-refundable</li>
+            </ul>
+
+            <p><strong>Contact</strong></p>
+            <p>Questions? Reach us at hello@example.com</p>
+        </div>
+    </div>
+
+    <script>
+        let currentTier = 'free';
+        let userHoroscope = {
+            western: '',
+            chinese: '',
+            element: '',
+            planet: ''
+        };
+
+        // Wish suggestion pool
+        const wishPool = [
+            "I want clarity about my career path",
+            "I seek guidance in matters of the heart",
+            "I wish to understand my financial future",
+            "I need direction on a big decision",
+            "I want to know about upcoming opportunities",
+            "I seek peace of mind about my health",
+            "I wish to improve my relationships",
+            "I want guidance on a new beginning",
+            "I seek insight into my creative pursuits",
+            "I need wisdom about family matters"
+        ];
+
+        // Karma messages pool
+        const karmaMessages = [
+            "The energy you give returns threefold. Your honesty strengthens the reading you're about to receive.",
+            "True fortune favors those who walk with integrity. What you give, the universe remembers.",
+            "An honest heart opens clearer paths. Your sincerity amplifies the guidance ahead.",
+            "The cards see all. Those who give freely receive the clearest visions.",
+            "Karma is the universe's perfect accountant. Your honesty today shapes your tomorrow."
+        ];
+
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+            // Show target screen
+            document.getElementById(screenId).classList.add('active');
+
+            // Reset card flips when going back to start
+            if (screenId === 'screen-start') {
+                document.getElementById('free-card-flip').classList.remove('flipped');
+                document.getElementById('paid-card-flip').classList.remove('flipped');
+            }
+
+            // Generate wish suggestions when showing wish form
+            if (screenId === 'screen-wish-form') {
+                generateWishSuggestions();
+            }
+
+            // Randomize karma message when showing offering screen
+            if (screenId === 'screen-offering') {
+                randomizeKarmaMessage();
+            }
+        }
+
+        function selectTier(tier) {
+            currentTier = tier;
+            if (tier === 'free') {
+                showScreen('screen-cards-free');
+            } else {
+                showScreen('screen-wish-form');
+            }
+        }
+
+        function generateWishSuggestions() {
+            const container = document.getElementById('wish-suggestions');
+            container.innerHTML = '';
+
+            // Get 3 random wishes
+            const shuffled = [...wishPool].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 3);
+
+            selected.forEach(wish => {
+                const chip = document.createElement('span');
+                chip.className = 'wish-chip';
+                chip.textContent = wish.length > 30 ? wish.substring(0, 30) + '...' : wish;
+                chip.onclick = () => {
+                    document.getElementById('wish-input').value = wish;
+                };
+                container.appendChild(chip);
+            });
+        }
+
+        function randomizeKarmaMessage() {
+            const messageEl = document.querySelector('.karma-message p');
+            const randomMessage = karmaMessages[Math.floor(Math.random() * karmaMessages.length)];
+            messageEl.textContent = '"' + randomMessage + '"';
+        }
+
+        function calculateHoroscopes() {
+            const input = document.getElementById('birthday-input').value;
+            if (!input) return;
+
+            const date = new Date(input);
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const year = date.getFullYear();
+
+            // Western Zodiac
+            const western = getWesternZodiac(month, day);
+            userHoroscope.western = western.sign;
+            userHoroscope.element = western.element;
+            userHoroscope.planet = western.planet;
+
+            // Chinese Zodiac
+            userHoroscope.chinese = getChineseZodiac(year);
+
+            // Update display
+            document.getElementById('western-zodiac').textContent = userHoroscope.western;
+            document.getElementById('chinese-zodiac').textContent = userHoroscope.chinese;
+            document.getElementById('element').textContent = userHoroscope.element;
+            document.getElementById('ruling-planet').textContent = userHoroscope.planet;
+
+            // Show the horoscope display
+            document.getElementById('horoscope-display').classList.remove('hidden');
+        }
+
+        function getWesternZodiac(month, day) {
+            const signs = [
+                { sign: 'Capricorn', element: 'Earth', planet: 'Saturn', start: [1, 1], end: [1, 19] },
+                { sign: 'Aquarius', element: 'Air', planet: 'Uranus', start: [1, 20], end: [2, 18] },
+                { sign: 'Pisces', element: 'Water', planet: 'Neptune', start: [2, 19], end: [3, 20] },
+                { sign: 'Aries', element: 'Fire', planet: 'Mars', start: [3, 21], end: [4, 19] },
+                { sign: 'Taurus', element: 'Earth', planet: 'Venus', start: [4, 20], end: [5, 20] },
+                { sign: 'Gemini', element: 'Air', planet: 'Mercury', start: [5, 21], end: [6, 20] },
+                { sign: 'Cancer', element: 'Water', planet: 'Moon', start: [6, 21], end: [7, 22] },
+                { sign: 'Leo', element: 'Fire', planet: 'Sun', start: [7, 23], end: [8, 22] },
+                { sign: 'Virgo', element: 'Earth', planet: 'Mercury', start: [8, 23], end: [9, 22] },
+                { sign: 'Libra', element: 'Air', planet: 'Venus', start: [9, 23], end: [10, 22] },
+                { sign: 'Scorpio', element: 'Water', planet: 'Pluto', start: [10, 23], end: [11, 21] },
+                { sign: 'Sagittarius', element: 'Fire', planet: 'Jupiter', start: [11, 22], end: [12, 21] },
+                { sign: 'Capricorn', element: 'Earth', planet: 'Saturn', start: [12, 22], end: [12, 31] }
+            ];
+
+            for (const zodiac of signs) {
+                const [startMonth, startDay] = zodiac.start;
+                const [endMonth, endDay] = zodiac.end;
+
+                if (month === startMonth && day >= startDay) return zodiac;
+                if (month === endMonth && day <= endDay) return zodiac;
+            }
+
+            return signs[0]; // Default to Capricorn
+        }
+
+        function getChineseZodiac(year) {
+            const animals = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake',
+                           'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'];
+            const startYear = 1900; // Year of the Rat
+            const index = (year - startYear) % 12;
+            return animals[index >= 0 ? index : index + 12];
+        }
+
+        function confirmOffering() {
+            // Move to card selection
+            generatePaidCards();
+            showScreen('screen-cards-paid');
+        }
+
+        function selectCard(tier) {
+            if (tier === 'free') {
+                showScreen('screen-reading-free');
+                setTimeout(() => {
+                    document.getElementById('free-card-flip').classList.add('flipped');
+                }, 300);
+            } else {
+                // Update reading with user's horoscope data
+                if (userHoroscope.western) {
+                    document.getElementById('reading-western').textContent = userHoroscope.western;
+                    document.getElementById('reading-chinese').textContent = userHoroscope.chinese;
+                    document.getElementById('reading-element').textContent = userHoroscope.element;
+                }
+
+                showScreen('screen-reading-paid');
+                setTimeout(() => {
+                    document.getElementById('paid-card-flip').classList.add('flipped');
+                }, 300);
+            }
+        }
+
+        function generatePaidCards() {
+            const grid = document.getElementById('paid-cards-grid');
+            grid.innerHTML = '';
+
+            const patterns = ['pattern-1', 'pattern-2', 'pattern-3', 'pattern-4', 'pattern-5'];
+
+            for (let i = 0; i < 30; i++) {
+                const card = document.createElement('div');
+                card.className = 'fortune-card ' + patterns[i % 5];
+                card.onclick = () => selectCard('paid');
+                grid.appendChild(card);
+            }
+        }
+
+        // Modal functions
+        function openModal(name) {
+            document.getElementById('modal-' + name).classList.add('active');
+        }
+
+        function closeModal(name) {
+            document.getElementById('modal-' + name).classList.remove('active');
+        }
+
+        function closeModalOnOverlay(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
