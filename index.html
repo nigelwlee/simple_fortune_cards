@@ -770,6 +770,41 @@
             color: var(--color-ink);
         }
 
+        /* ===== Donation Section ===== */
+        .donation-section {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--color-paper);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .donation-text {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            color: var(--color-ink);
+            margin-bottom: 0.25rem;
+        }
+
+        .donation-subtext {
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            color: var(--color-ink-muted);
+            margin-bottom: 1rem;
+        }
+
+        .donation-section .btn {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .donation-section .btn-text {
+            display: block;
+            width: 100%;
+            margin: 0;
+        }
+
         /* ===== Animations ===== */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -938,8 +973,12 @@
                 </ul>
             </div>
 
-            <div style="text-align: center;">
-                <button class="btn btn-primary" onclick="showScreen('screen-start')">Draw Again</button>
+            <!-- Donation Section -->
+            <div class="donation-section">
+                <p class="donation-text">Did this reading resonate with you?</p>
+                <p class="donation-subtext">Support our work and unlock deeper insights</p>
+                <a href="https://buy.stripe.com/test_placeholder" class="btn btn-primary" target="_blank">Support Us ☆</a>
+                <button class="btn-text" onclick="showScreen('screen-start')">Maybe later</button>
             </div>
         </div>
 
