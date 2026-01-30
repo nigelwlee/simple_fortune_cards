@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune 黄历 - V4 (Emerald & Coral)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS Variables - Emerald & Coral (Mahjong Parlor) ===== */
+        :root {
+            /* Primary - Emerald Green (silk brocade) */
+            --color-emerald: #1B5E4A;
+            --color-emerald-light: #2A7A62;
+            --color-emerald-dark: #0F3D31;
+
+            /* Accent - Coral Pink (mahjong tile backs) */
+            --color-coral: #E88B7D;
+            --color-coral-light: #F4ADA3;
+            --color-coral-dark: #D4695A;
+
+            /* Traditional - Lacquer Red */
+            --color-red: #C23A3A;
+
+            /* Neutrals - Ivory & Ink */
+            --color-ivory: #FDF8F3;
+            --color-cream: #F5EDE4;
+            --color-ink: #1A1A1A;
+            --color-ink-light: #4A4A4A;
+            --color-ink-muted: #8A8A7A;
+
+            /* Gold accent */
+            --color-gold: #C9A962;
+            --color-gold-light: #E0D4B0;
+
+            /* Typography */
+            --font-display: 'Cormorant Garamond', serif;
+            --font-chinese: 'Noto Serif SC', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* ===== Base Styles ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-emerald);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--color-ink);
+            /* Subtle floral pattern overlay */
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.03) 0%, transparent 50%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        /* ===== Header ===== */
+        .app-header {
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .app-title {
+            font-family: var(--font-chinese);
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--color-ivory);
+            letter-spacing: 0.3em;
+        }
+
+        .app-subtitle {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            color: var(--color-gold);
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            margin-top: 0.375rem;
+        }
+
+        /* ===== Calendar Card ===== */
+        .huangli-card {
+            background: var(--color-ivory);
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 4px 24px rgba(0,0,0,0.2),
+                0 0 0 1px rgba(255,255,255,0.1);
+        }
+
+        /* Coral accent bar at top (like mahjong tile back) */
+        .huangli-accent-bar {
+            height: 8px;
+            background: linear-gradient(90deg,
+                var(--color-coral) 0%,
+                var(--color-coral-light) 50%,
+                var(--color-coral) 100%);
+        }
+
+        /* ===== Date Section ===== */
+        .date-section {
+            padding: 1.75rem 1.5rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--color-cream);
+            position: relative;
+        }
+
+        /* Decorative corner elements */
+        .date-section::before,
+        .date-section::after {
+            content: '✦';
+            position: absolute;
+            top: 1rem;
+            font-size: 0.5rem;
+            color: var(--color-gold);
+        }
+        .date-section::before { left: 1rem; }
+        .date-section::after { right: 1rem; }
+
+        .date-lunar {
+            font-family: var(--font-chinese);
+            font-size: 0.75rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.375rem;
+        }
+
+        .date-lunar .separator {
+            color: var(--color-coral);
+            margin: 0 0.25rem;
+        }
+
+        .date-number {
+            font-family: var(--font-display);
+            font-size: 6.5rem;
+            font-weight: 300;
+            line-height: 0.9;
+            color: var(--color-emerald);
+            letter-spacing: -0.02em;
+        }
+
+        .date-weekday {
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: var(--color-ink-light);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 0.625rem;
+        }
+
+        .zodiac-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--color-emerald);
+            color: var(--color-ivory);
+            border-radius: 100px;
+        }
+
+        .zodiac-badge .emoji {
+            font-size: 1rem;
+        }
+
+        .zodiac-badge .text-cn {
+            font-family: var(--font-chinese);
+            font-size: 0.8rem;
+        }
+
+        .zodiac-badge .text-en {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            letter-spacing: 0.05em;
+            opacity: 0.8;
+        }
+
+        /* ===== Activities Section ===== */
+        .activities-section {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--color-cream);
+        }
+
+        .activity-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .activity-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .activity-label {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            font-weight: 600;
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .auspicious .activity-label {
+            background: var(--color-coral);
+            color: white;
+        }
+
+        .inauspicious .activity-label {
+            background: var(--color-cream);
+            color: var(--color-ink-muted);
+        }
+
+        .activity-content {
+            flex: 1;
+            padding-top: 0.125rem;
+        }
+
+        .activity-items-cn {
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            color: var(--color-ink);
+            letter-spacing: 0.025em;
+        }
+
+        .activity-items-cn .dot {
+            color: var(--color-gold);
+            margin: 0 0.25rem;
+        }
+
+        .activity-items-en {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            color: var(--color-ink-muted);
+            margin-top: 0.25rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* ===== Lucky Grid ===== */
+        .lucky-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: var(--color-cream);
+        }
+
+        .lucky-item {
+            padding: 1rem 0.75rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .lucky-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background: var(--color-gold-light);
+        }
+
+        .lucky-item .label {
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.375rem;
+        }
+
+        .lucky-item .value-cn {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            color: var(--color-emerald);
+            font-weight: 600;
+        }
+
+        .lucky-item .value-en {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: var(--color-ink-light);
+            margin-top: 0.125rem;
+        }
+
+        .color-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+        }
+
+        .color-indicator .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--color-ivory);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+        }
+
+        /* ===== Personal Section ===== */
+        .personal-section {
+            padding: 1rem 1.5rem;
+            background: var(--color-emerald);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .personal-zodiac {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .personal-zodiac .emoji {
+            font-size: 1.25rem;
+        }
+
+        .personal-zodiac .sign-cn {
+            font-family: var(--font-chinese);
+            font-size: 0.95rem;
+            color: var(--color-ivory);
+            font-weight: 600;
+        }
+
+        .personal-zodiac .sign-en {
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            color: var(--color-gold);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .personal-fortune {
+            flex: 1;
+        }
+
+        .personal-fortune .label {
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            color: var(--color-gold);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .personal-fortune .text-cn {
+            font-family: var(--font-chinese);
+            font-size: 0.85rem;
+            color: var(--color-ivory);
+            margin-top: 0.25rem;
+            line-height: 1.5;
+        }
+
+        .personal-fortune .text-en {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 0.125rem;
+        }
+
+        /* ===== Sealed State ===== */
+        .huangli-sealed {
+            position: absolute;
+            top: 8px; /* below accent bar */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-ivory);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+
+        .huangli-sealed.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .seal-icon {
+            font-size: 3rem;
+            color: var(--color-emerald);
+            margin-bottom: 1.25rem;
+            opacity: 0.7;
+        }
+
+        .seal-text-cn {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            color: var(--color-ink-light);
+            letter-spacing: 0.1em;
+        }
+
+        .seal-text-en {
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+
+        .seal-hint {
+            margin-top: 2rem;
+            padding: 0.5rem 1.25rem;
+            background: var(--color-coral);
+            color: white;
+            border-radius: 100px;
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* ===== Deck Section ===== */
+        .deck-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .main-deck {
+            width: 90px;
+            height: 126px;
+            background: linear-gradient(145deg, var(--color-ivory) 0%, var(--color-cream) 100%);
+            border-radius: 4px;
+            margin: 0 auto;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease;
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.15),
+                3px 3px 0 var(--color-emerald-light),
+                6px 6px 0 var(--color-emerald);
+            border: 1px solid var(--color-cream);
+        }
+
+        .main-deck:hover {
+            transform: translate(-2px, -2px);
+            box-shadow:
+                0 4px 12px rgba(0,0,0,0.2),
+                5px 5px 0 var(--color-emerald-light),
+                10px 10px 0 var(--color-emerald);
+        }
+
+        /* Coral stripe on deck (like mahjong tile) */
+        .main-deck::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20%;
+            background: linear-gradient(90deg,
+                var(--color-coral) 0%,
+                var(--color-coral-light) 50%,
+                var(--color-coral) 100%);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .main-deck::after {
+            content: '卜';
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-chinese);
+            font-size: 1.75rem;
+            color: var(--color-emerald);
+            opacity: 0.3;
+        }
+
+        .tap-hint {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: var(--color-gold);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-link {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-link:hover {
+            color: var(--color-gold);
+        }
+
+        /* ===== Animation ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .huangli-card {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 380px) {
+            .date-number {
+                font-size: 5.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1 class="app-title">每日黄历</h1>
+            <p class="app-subtitle">Daily Fortune</p>
+        </header>
+
+        <!-- Calendar Card -->
+        <div class="huangli-card">
+            <!-- Coral accent bar -->
+            <div class="huangli-accent-bar"></div>
+
+            <!-- Date Section -->
+            <div class="date-section">
+                <div class="date-lunar">
+                    正月<span class="separator">·</span>初二<span class="separator">·</span>1st Moon
+                </div>
+                <div class="date-number">30</div>
+                <div class="date-weekday">Thursday · 星期四</div>
+                <div class="zodiac-badge">
+                    <span class="emoji">🐍</span>
+                    <span class="text-cn">蛇日</span>
+                    <span class="text-en">Snake Day</span>
+                </div>
+            </div>
+
+            <!-- Activities -->
+            <div class="activities-section">
+                <div class="activity-row auspicious">
+                    <span class="activity-label">宜</span>
+                    <div class="activity-content">
+                        <div class="activity-items-cn">祈福<span class="dot">·</span>出行<span class="dot">·</span>求财<span class="dot">·</span>约会</div>
+                        <div class="activity-items-en">Pray · Travel · Seek wealth · Date</div>
+                    </div>
+                </div>
+                <div class="activity-row inauspicious">
+                    <span class="activity-label">忌</span>
+                    <div class="activity-content">
+                        <div class="activity-items-cn">动土<span class="dot">·</span>争执</div>
+                        <div class="activity-items-en">Construction · Conflicts</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lucky Grid -->
+            <div class="lucky-grid">
+                <div class="lucky-item">
+                    <div class="label">Color</div>
+                    <div class="color-indicator">
+                        <span class="dot" style="background: #C23A3A;"></span>
+                        <span class="value-cn">红</span>
+                    </div>
+                    <div class="value-en">Red</div>
+                </div>
+                <div class="lucky-item">
+                    <div class="label">Direction</div>
+                    <div class="value-cn">东南</div>
+                    <div class="value-en">Southeast</div>
+                </div>
+                <div class="lucky-item">
+                    <div class="label">Number</div>
+                    <div class="value-cn">3 · 8</div>
+                    <div class="value-en">&nbsp;</div>
+                </div>
+            </div>
+
+            <!-- Personal Section -->
+            <div class="personal-section" id="personal-section">
+                <div class="personal-zodiac">
+                    <span class="emoji">🐉</span>
+                    <div>
+                        <div class="sign-cn">龙</div>
+                        <div class="sign-en">Dragon</div>
+                    </div>
+                </div>
+                <div class="personal-fortune">
+                    <div class="label">Today's Fortune</div>
+                    <div class="text-cn">贵人相助，宜主动出击</div>
+                    <div class="text-en">Allies await. Take initiative.</div>
+                </div>
+            </div>
+
+            <!-- Sealed overlay -->
+            <div class="huangli-sealed hidden" id="sealed" onclick="reveal()">
+                <div class="seal-icon">☾</div>
+                <p class="seal-text-cn">轻触揭晓今日运势</p>
+                <p class="seal-text-en">Tap to reveal your fortune</p>
+                <div class="seal-hint">Reveal</div>
+            </div>
+        </div>
+
+        <!-- Deck -->
+        <div class="deck-section">
+            <div class="main-deck"></div>
+            <p class="tap-hint">Full Reading</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <a href="#" class="footer-link">Privacy & Terms</a>
+        </footer>
+    </div>
+
+    <script>
+        function reveal() {
+            document.getElementById('sealed').classList.add('hidden');
+        }
+
+        // To test sealed state, run in console:
+        // document.getElementById('sealed').classList.remove('hidden');
+    </script>
+</body>
+</html>

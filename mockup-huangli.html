@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune 黄历 - Mockup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS Variables ===== */
+        :root {
+            /* Primary - Auspicious Red */
+            --color-red: #C41E3A;
+            --color-red-light: #E85A71;
+            --color-red-dark: #8B0000;
+
+            /* Secondary - Prosperity Gold */
+            --color-gold: #D4AF37;
+            --color-gold-light: #F5E6C8;
+            --color-gold-dark: #996515;
+
+            /* Neutrals - Paper & Ink */
+            --color-paper: #FDF5E6;
+            --color-paper-light: #FFFEF9;
+            --color-ink: #1A1A1A;
+            --color-ink-light: #4A4A4A;
+            --color-ink-muted: #888;
+
+            /* Accent */
+            --color-jade: #00A86B;
+
+            /* Typography */
+            --font-display: 'Ma Shan Zheng', cursive;
+            --font-chinese: 'Noto Serif SC', serif;
+            --font-english: 'Inter', sans-serif;
+        }
+
+        /* ===== Base Styles ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-chinese);
+            background: linear-gradient(180deg, #FDF5E6 0%, #F5E6C8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--color-ink);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        /* ===== Header ===== */
+        .app-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: var(--color-ink);
+            letter-spacing: 0.1em;
+        }
+
+        .app-subtitle {
+            font-family: var(--font-english);
+            font-size: 0.75rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== Calendar Card Container ===== */
+        .huangli-card {
+            background: var(--color-paper-light);
+            border-radius: 8px;
+            box-shadow:
+                0 4px 20px rgba(0,0,0,0.1),
+                0 0 0 1px var(--color-gold-light),
+                inset 0 0 0 1px rgba(255,255,255,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Red accent bar on left side */
+        .huangli-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(
+                180deg,
+                var(--color-red) 0%,
+                var(--color-red-dark) 100%
+            );
+        }
+
+        /* Perforation dots along top */
+        .huangli-perforation {
+            height: 16px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 12px,
+                var(--color-paper) 12px,
+                var(--color-paper) 14px
+            );
+            border-bottom: 1px dashed var(--color-gold);
+            position: relative;
+        }
+
+        .huangli-perforation::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 10px,
+                rgba(0,0,0,0.05) 10px,
+                rgba(0,0,0,0.05) 12px
+            );
+        }
+
+        /* ===== Date Header Section ===== */
+        .huangli-header {
+            padding: 1rem 1.25rem 0.75rem;
+            padding-left: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--color-gold-light);
+        }
+
+        .date-gregorian {
+            text-align: left;
+        }
+
+        .date-gregorian .weekday {
+            font-family: var(--font-english);
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--color-ink-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .date-gregorian .weekday-cn {
+            font-family: var(--font-chinese);
+            color: var(--color-ink-light);
+            margin-left: 0.5rem;
+        }
+
+        .date-gregorian .date-full {
+            font-family: var(--font-english);
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--color-ink);
+            margin-top: 0.125rem;
+        }
+
+        .date-lunar {
+            text-align: right;
+        }
+
+        .date-lunar .lunar-month {
+            font-family: var(--font-chinese);
+            font-size: 0.8rem;
+            color: var(--color-ink-light);
+        }
+
+        .date-lunar .lunar-month-en {
+            font-family: var(--font-english);
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
+            display: block;
+        }
+
+        .date-lunar .lunar-day-text {
+            font-family: var(--font-chinese);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-ink);
+        }
+
+        /* ===== Large Lunar Day Focal Point ===== */
+        .huangli-focal {
+            padding: 1.5rem 1.25rem;
+            padding-left: 1.5rem;
+            text-align: center;
+            background: linear-gradient(
+                180deg,
+                var(--color-paper-light) 0%,
+                var(--color-paper) 100%
+            );
+            border-bottom: 1px solid var(--color-gold-light);
+        }
+
+        .lunar-day-large {
+            font-family: var(--font-display);
+            font-size: 6rem;
+            line-height: 1;
+            color: var(--color-ink);
+            display: block;
+        }
+
+        .zodiac-today {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .zodiac-today .zodiac-emoji {
+            font-size: 1.5rem;
+        }
+
+        .zodiac-today .zodiac-label {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            color: var(--color-ink-light);
+        }
+
+        .zodiac-today .zodiac-label-en {
+            font-family: var(--font-english);
+            font-size: 0.75rem;
+            color: var(--color-ink-muted);
+            margin-left: 0.25rem;
+        }
+
+        /* ===== Auspicious/Inauspicious Section ===== */
+        .huangli-activities {
+            padding: 1rem 1.25rem;
+            padding-left: 1.5rem;
+            border-bottom: 1px solid var(--color-gold-light);
+        }
+
+        .activity-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.875rem;
+        }
+
+        .activity-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .activity-label {
+            font-family: var(--font-chinese);
+            font-size: 1.1rem;
+            font-weight: 700;
+            width: 1.5rem;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .activity-label .label-en {
+            font-family: var(--font-english);
+            font-size: 0.5rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.125rem;
+        }
+
+        .auspicious .activity-label {
+            color: var(--color-red);
+        }
+
+        .inauspicious .activity-label {
+            color: var(--color-ink-light);
+        }
+
+        .activity-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .activity-item {
+            display: flex;
+            flex-direction: column;
+            padding: 0.375rem 0.625rem;
+            background: var(--color-paper);
+            border-radius: 4px;
+            border-left: 2px solid;
+        }
+
+        .auspicious .activity-item {
+            border-color: var(--color-red);
+        }
+
+        .inauspicious .activity-item {
+            border-color: var(--color-ink-muted);
+        }
+
+        .activity-item .item-cn {
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            color: var(--color-ink);
+        }
+
+        .activity-item .item-en {
+            font-family: var(--font-english);
+            font-size: 0.6rem;
+            color: var(--color-ink-muted);
+            margin-top: 0.125rem;
+        }
+
+        /* ===== Lucky Elements Section ===== */
+        .huangli-lucky {
+            padding: 1rem 1.25rem;
+            padding-left: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(
+                180deg,
+                var(--color-paper-light) 0%,
+                var(--color-gold-light) 100%
+            );
+            border-bottom: 1px solid var(--color-gold-light);
+        }
+
+        .lucky-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .lucky-item .lucky-label {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
+            margin-bottom: 0.375rem;
+        }
+
+        .lucky-item .lucky-label .label-cn {
+            font-family: var(--font-chinese);
+        }
+
+        .lucky-item .lucky-label .label-en {
+            font-family: var(--font-english);
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .lucky-item .lucky-value {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            color: var(--color-ink);
+        }
+
+        .lucky-item .lucky-value-en {
+            font-family: var(--font-english);
+            font-size: 0.7rem;
+            color: var(--color-ink-light);
+            display: block;
+        }
+
+        .color-swatch {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .color-swatch .swatch {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* ===== Personal Zodiac Section ===== */
+        .huangli-personal {
+            padding: 1rem 1.25rem;
+            padding-left: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--color-paper);
+        }
+
+        .personal-zodiac {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--color-paper-light);
+            border-radius: 6px;
+            border: 1px solid var(--color-gold-light);
+        }
+
+        .personal-zodiac .your-emoji {
+            font-size: 1.5rem;
+        }
+
+        .personal-zodiac .your-sign {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .personal-zodiac .your-sign .sign-cn {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-ink);
+        }
+
+        .personal-zodiac .your-sign .sign-en {
+            font-family: var(--font-english);
+            font-size: 0.6rem;
+            color: var(--color-ink-muted);
+        }
+
+        .compatibility-note {
+            flex: 1;
+        }
+
+        .compatibility-note .compat-label {
+            font-family: var(--font-chinese);
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .compatibility-note .compat-label .label-en {
+            font-family: var(--font-english);
+        }
+
+        .compatibility-note .compat-text {
+            font-family: var(--font-chinese);
+            font-size: 0.85rem;
+            color: var(--color-ink);
+            margin-top: 0.25rem;
+            line-height: 1.4;
+        }
+
+        .compatibility-note .compat-text-en {
+            font-family: var(--font-english);
+            font-size: 0.7rem;
+            color: var(--color-ink-light);
+            display: block;
+            margin-top: 0.125rem;
+        }
+
+        /* ===== Sealed State Overlay ===== */
+        .huangli-sealed {
+            position: absolute;
+            top: 16px;
+            left: 6px;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(253, 245, 230, 0.97) 0%,
+                rgba(245, 230, 200, 0.98) 100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .huangli-sealed:hover {
+            background: linear-gradient(
+                180deg,
+                rgba(253, 245, 230, 0.95) 0%,
+                rgba(245, 230, 200, 0.96) 100%
+            );
+        }
+
+        .huangli-sealed.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .seal-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .seal-text {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            color: var(--color-ink-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .seal-text-en {
+            font-family: var(--font-english);
+            font-size: 0.75rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 0.1em;
+        }
+
+        /* ===== Main Deck Section ===== */
+        .deck-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .main-deck {
+            width: 120px;
+            height: 170px;
+            background: linear-gradient(145deg, var(--color-ink) 0%, #0a0a0a 100%);
+            border-radius: 8px;
+            margin: 0 auto;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow:
+                0 2px 4px rgba(0,0,0,0.2),
+                4px 4px 0 var(--color-gold-light),
+                8px 8px 0 var(--color-gold);
+        }
+
+        .main-deck:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.25),
+                4px 4px 0 var(--color-gold-light),
+                8px 8px 0 var(--color-gold);
+        }
+
+        .main-deck::before {
+            content: '卜';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: rgba(255,255,255,0.2);
+        }
+
+        .tap-hint {
+            font-family: var(--font-english);
+            font-size: 0.7rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 0.15em;
+            margin-top: 1rem;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-link {
+            font-family: var(--font-english);
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-link:hover {
+            color: var(--color-ink-light);
+        }
+
+        /* ===== Animation ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .huangli-card {
+            animation: fadeIn 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Header -->
+        <header class="app-header">
+            <h1 class="app-title">黄历</h1>
+            <p class="app-subtitle">Daily Fortune Calendar</p>
+        </header>
+
+        <!-- Main Calendar Card -->
+        <div class="huangli-card" id="huangli-card">
+            <!-- Perforation dots -->
+            <div class="huangli-perforation"></div>
+
+            <!-- Date Header -->
+            <div class="huangli-header">
+                <div class="date-gregorian">
+                    <span class="weekday">Thursday <span class="weekday-cn">星期四</span></span>
+                    <div class="date-full">January 30, 2026</div>
+                </div>
+                <div class="date-lunar">
+                    <span class="lunar-month">正月<span class="lunar-month-en">1st Lunar Month</span></span>
+                    <span class="lunar-day-text">初二</span>
+                </div>
+            </div>
+
+            <!-- Large Lunar Day -->
+            <div class="huangli-focal">
+                <span class="lunar-day-large">二</span>
+                <div class="zodiac-today">
+                    <span class="zodiac-emoji">🐍</span>
+                    <span class="zodiac-label">蛇日<span class="zodiac-label-en">Snake Day</span></span>
+                </div>
+            </div>
+
+            <!-- Auspicious / Inauspicious Activities -->
+            <div class="huangli-activities">
+                <div class="activity-row auspicious">
+                    <div class="activity-label">
+                        宜
+                        <span class="label-en">Do</span>
+                    </div>
+                    <div class="activity-items">
+                        <div class="activity-item">
+                            <span class="item-cn">祈福</span>
+                            <span class="item-en">Pray</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="item-cn">出行</span>
+                            <span class="item-en">Travel</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="item-cn">求财</span>
+                            <span class="item-en">Seek Wealth</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="activity-row inauspicious">
+                    <div class="activity-label">
+                        忌
+                        <span class="label-en">Avoid</span>
+                    </div>
+                    <div class="activity-items">
+                        <div class="activity-item">
+                            <span class="item-cn">动土</span>
+                            <span class="item-en">Construction</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="item-cn">争执</span>
+                            <span class="item-en">Conflicts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lucky Elements -->
+            <div class="huangli-lucky">
+                <div class="lucky-item">
+                    <div class="lucky-label">
+                        <span class="label-cn">吉色</span>
+                        <span class="label-en">Lucky Color</span>
+                    </div>
+                    <div class="lucky-value color-swatch">
+                        <span class="swatch" style="background: #C41E3A;"></span>
+                        红
+                    </div>
+                    <span class="lucky-value-en">Red</span>
+                </div>
+                <div class="lucky-item">
+                    <div class="lucky-label">
+                        <span class="label-cn">吉方</span>
+                        <span class="label-en">Direction</span>
+                    </div>
+                    <div class="lucky-value">东南</div>
+                    <span class="lucky-value-en">Southeast</span>
+                </div>
+                <div class="lucky-item">
+                    <div class="lucky-label">
+                        <span class="label-cn">吉数</span>
+                        <span class="label-en">Number</span>
+                    </div>
+                    <div class="lucky-value">3, 8</div>
+                    <span class="lucky-value-en">&nbsp;</span>
+                </div>
+            </div>
+
+            <!-- Personal Zodiac (shown if user has birthday) -->
+            <div class="huangli-personal" id="huangli-personal">
+                <div class="personal-zodiac">
+                    <span class="your-emoji">🐉</span>
+                    <div class="your-sign">
+                        <span class="sign-cn">龙</span>
+                        <span class="sign-en">Dragon</span>
+                    </div>
+                </div>
+                <div class="compatibility-note">
+                    <div class="compat-label">
+                        <span class="label-cn">今日运势</span>
+                        <span class="label-en">/ Today</span>
+                    </div>
+                    <div class="compat-text">
+                        贵人相助，宜主动出击
+                        <span class="compat-text-en">Helpful allies today. Take initiative.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sealed State Overlay -->
+            <div class="huangli-sealed hidden" id="huangli-sealed" onclick="revealCard()">
+                <div class="seal-icon">☾</div>
+                <p class="seal-text">轻触揭晓今日运势</p>
+                <p class="seal-text-en">tap to reveal today's fortune</p>
+            </div>
+        </div>
+
+        <!-- Main Deck for Full Reading -->
+        <div class="deck-section">
+            <div class="main-deck"></div>
+            <p class="tap-hint">tap for full reading</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <a href="#" class="footer-link">Privacy & Terms</a>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle sealed state for demo
+        function revealCard() {
+            document.getElementById('huangli-sealed').classList.add('hidden');
+        }
+
+        // Demo: Toggle personal section visibility
+        function togglePersonalSection() {
+            const section = document.getElementById('huangli-personal');
+            section.style.display = section.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        // For testing sealed state, uncomment:
+        // document.getElementById('huangli-sealed').classList.remove('hidden');
+    </script>
+</body>
+</html>

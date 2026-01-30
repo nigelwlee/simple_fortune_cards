@@ -1,13 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortune Cards - Your Daily Ritual</title>
+    <title>Fortune 黄历 - Daily Fortune Calendar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght=300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ===== CSS Variables - Mahjong Parlor Palette ===== */
+        :root {
+            /* Primary - Emerald Green (silk brocade) */
+            --color-emerald: #1B5E4A;
+            --color-emerald-light: #2A7A62;
+            --color-emerald-dark: #0F3D31;
+
+            /* Accent - Coral Pink (mahjong tile backs) */
+            --color-coral: #E88B7D;
+            --color-coral-light: #F4ADA3;
+            --color-coral-dark: #D4695A;
+
+            /* Traditional - Lacquer Red */
+            --color-red: #C23A3A;
+
+            /* Neutrals - Ivory & Ink */
+            --color-ivory: #FDF8F3;
+            --color-cream: #F5EDE4;
+            --color-ink: #1A1A1A;
+            --color-ink-light: #4A4A4A;
+            --color-ink-muted: #8A8A7A;
+
+            /* Gold accent */
+            --color-gold: #C9A962;
+            --color-gold-light: #E0D4B0;
+
+            /* Typography */
+            --font-display: 'DM Serif Display', serif;
+            --font-chinese: 'Noto Serif SC', serif;
+            --font-english: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* ===== Base Styles ===== */
         * {
             margin: 0;
             padding: 0;
@@ -15,435 +49,539 @@
         }
 
         body {
-            font-family: 'Cormorant Garamond', serif;
-            background: #fafaf9;
+            font-family: var(--font-body);
+            background: var(--color-emerald);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #2c2c2c;
             padding: 20px;
+            color: var(--color-ink);
+            /* Subtle texture */
+            background-image:
+                radial-gradient(circle at 30% 20%, rgba(255,255,255,0.04) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.04) 0%, transparent 50%);
         }
 
         .container {
             width: 100%;
-            max-width: 400px;
-            text-align: center;
+            max-width: 380px;
         }
 
-        /* Screen states - only one visible at a time */
+        /* Screen states */
         .screen {
             display: none;
-            animation: fadeIn 0.6s ease;
+            animation: fadeIn 0.5s ease;
         }
 
         .screen.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Typography */
-        h1 {
-            font-size: 2rem;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            margin-bottom: 0.5rem;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            margin-bottom: 1rem;
-        }
-
-        p {
-            font-size: 1rem;
-            font-weight: 300;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .subtitle {
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
-            color: #999;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-        }
-
-        /* Main deck on start screen */
-        .deck-container {
-            margin: 3rem 0;
-        }
-
-        .main-deck {
-            width: 140px;
-            height: 200px;
-            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
-            border-radius: 8px;
-            margin: 0 auto;
-            cursor: pointer;
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow:
-                0 2px 4px rgba(0,0,0,0.1),
-                4px 4px 0 #e8e8e6,
-                8px 8px 0 #d8d8d6;
-        }
-
-        .main-deck:hover {
-            transform: translateY(-5px);
-            box-shadow:
-                0 8px 20px rgba(0,0,0,0.15),
-                4px 4px 0 #e8e8e6,
-                8px 8px 0 #d8d8d6;
-        }
-
-        .main-deck::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-        }
-
-        .main-deck::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: rgba(255,255,255,0.4);
-            border-radius: 50%;
-        }
-
-        .tap-hint {
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            color: #bbb;
-            margin-top: 1.5rem;
-        }
-
-        /* Choice screen */
-        .choice-container {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            margin: 2rem 0;
-        }
-
-        .choice-card {
-            width: 140px;
-            padding: 2rem 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #fff;
-        }
-
-        .choice-card:hover {
-            border-color: #2c2c2c;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .choice-card h3 {
-            font-size: 1.1rem;
-            font-weight: 400;
-            margin-bottom: 0.5rem;
-        }
-
-        .choice-card .price {
-            font-size: 0.8rem;
-            color: #999;
-            letter-spacing: 0.1em;
-        }
-
-        .choice-card .desc {
-            font-size: 0.75rem;
-            color: #888;
-            margin-top: 1rem;
-            line-height: 1.5;
-        }
-
-        /* Form styles */
-        .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: #999;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            resize: none;
-            height: 100px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #2c2c2c;
-        }
-
-        .form-group input[type="date"] {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            transition: border-color 0.3s ease;
-            background: #fff;
-        }
-
-        .form-group input[type="date"]:focus {
-            outline: none;
-            border-color: #2c2c2c;
-        }
-
-        /* Wish suggestions */
-        .wish-suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .wish-chip {
-            padding: 0.5rem 0.875rem;
-            font-size: 0.8rem;
-            background: #f5f5f3;
-            border: 1px solid #e8e8e6;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .wish-chip:hover {
-            background: #2c2c2c;
-            color: #fff;
-            border-color: #2c2c2c;
-        }
-
-        /* Horoscope display */
-        .horoscope-display {
-            background: #fff;
-            border: 1px solid #e8e8e6;
-            border-radius: 8px;
-            padding: 1.25rem;
-            margin-top: 0.75rem;
-            text-align: left;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .horoscope-display.hidden {
-            display: none;
-        }
-
-        .horoscope-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #f5f5f3;
-            font-size: 0.85rem;
-        }
-
-        .horoscope-row:last-child {
-            border-bottom: none;
-        }
-
-        .horoscope-row .label {
-            color: #999;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .horoscope-row .value {
-            color: #2c2c2c;
-            font-weight: 400;
-        }
-
-        /* Offering/Payment screen */
-        .offering-container {
-            background: #fff;
-            border: 1px solid #e8e8e6;
-            border-radius: 8px;
-            padding: 2rem 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .offering-amount {
+        /* ===== Header ===== */
+        .app-header {
             text-align: center;
             margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #f0f0f0;
         }
 
-        .offering-amount .price-large {
-            font-size: 2.5rem;
-            font-weight: 300;
-            color: #2c2c2c;
+        .app-title {
+            font-family: var(--font-chinese);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-ivory);
+            letter-spacing: 0.2em;
         }
 
-        .offering-amount .price-label {
-            font-size: 0.75rem;
-            color: #999;
-            letter-spacing: 0.1em;
+        .app-subtitle {
+            font-family: var(--font-english);
+            font-size: 0.6rem;
+            color: var(--color-gold);
+            letter-spacing: 0.3em;
             text-transform: uppercase;
             margin-top: 0.25rem;
         }
 
-        .offering-methods {
-            margin-bottom: 1.5rem;
+        /* ===== Calendar Card Container ===== */
+        .huangli-card {
+            background: var(--color-ivory);
+            border-radius: 4px;
+            box-shadow:
+                0 8px 32px rgba(0,0,0,0.2),
+                0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .offering-method {
+        /* Top accent bar - Coral (like mahjong tile) */
+        .huangli-topbar {
+            background: linear-gradient(90deg,
+                var(--color-coral) 0%,
+                var(--color-coral-light) 50%,
+                var(--color-coral) 100%);
+            padding: 0.625rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar-left {
+            font-family: var(--font-chinese);
+            font-size: 0.8rem;
+            color: white;
+            letter-spacing: 0.1em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .topbar-right {
+            font-family: var(--font-english);
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.9);
+            letter-spacing: 0.1em;
+        }
+
+        /* ===== Main Content Area ===== */
+        .huangli-main {
+            padding: 1.25rem;
+            position: relative;
+        }
+
+        /* Month header row */
+        .month-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-cream);
+        }
+
+        .month-cn {
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            color: var(--color-ink-light);
+        }
+
+        .month-en {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--color-emerald);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .year-badge {
+            font-family: var(--font-english);
+            font-size: 0.7rem;
+            color: var(--color-ink-muted);
+        }
+
+        /* Large Date Number - Hero Element */
+        .date-hero {
+            text-align: center;
+            padding: 1rem 0;
+            position: relative;
+        }
+
+        .date-number {
+            font-family: var(--font-display);
+            font-size: 8rem;
+            font-weight: 400;
+            line-height: 0.85;
+            color: var(--color-emerald);
+            letter-spacing: -0.02em;
+        }
+
+        .date-lunar-badge {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            color: var(--color-ink-light);
+            letter-spacing: 0.2em;
+        }
+
+        .date-zodiac-badge {
+            position: absolute;
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-family: var(--font-english);
+            font-size: 0.55rem;
+            color: var(--color-coral-dark);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* Weekday row */
+        .weekday-row {
+            text-align: center;
+            padding: 0.75rem 0;
+            border-top: 1px solid var(--color-cream);
+            border-bottom: 1px solid var(--color-cream);
+            background: var(--color-cream);
+            margin: 0 -1.25rem;
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+        }
+
+        .weekday-en {
+            font-family: var(--font-english);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--color-emerald);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .weekday-cn {
+            font-family: var(--font-chinese);
+            font-size: 0.75rem;
+            color: var(--color-ink-light);
+            margin-left: 0.5rem;
+        }
+
+        /* ===== Activities Section with decorative border ===== */
+        .activities-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--color-cream);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .activities-section::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: 1px solid var(--color-gold-light);
+            border-radius: 2px;
+            pointer-events: none;
+        }
+
+        .activity-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .activity-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .activity-label {
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            font-weight: 700;
+            width: 1.5rem;
+            height: 1.5rem;
             display: flex;
             align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .auspicious .activity-label {
+            background: var(--color-coral);
+            color: white;
+        }
+
+        .inauspicious .activity-label {
+            background: var(--color-ink-muted);
+            color: white;
+            opacity: 0.6;
+        }
+
+        .activity-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            flex: 1;
+            padding-top: 0.125rem;
+        }
+
+        .activity-item {
+            font-family: var(--font-chinese);
+            font-size: 0.8rem;
+            color: var(--color-ink);
+            padding: 0.25rem 0.5rem;
+            background: var(--color-ivory);
+            border-radius: 2px;
+            border: 1px solid var(--color-cream);
+        }
+
+        .activity-item .en {
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            color: var(--color-ink-muted);
+            display: block;
+            margin-top: 0.125rem;
+        }
+
+        /* ===== Lucky Elements Row ===== */
+        .lucky-row {
+            display: flex;
             justify-content: space-between;
-            padding: 1rem;
-            border: 1px solid #e8e8e6;
-            border-radius: 6px;
-            margin-bottom: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            color: inherit;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-cream);
         }
 
-        .offering-method:hover {
-            border-color: #2c2c2c;
-            background: #fafaf9;
+        .lucky-item {
+            text-align: center;
+            flex: 1;
         }
 
-        .offering-method .method-info {
+        .lucky-item .label {
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            color: var(--color-ink-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25rem;
+        }
+
+        .lucky-item .value {
+            font-family: var(--font-chinese);
+            font-size: 0.95rem;
+            color: var(--color-emerald);
+            font-weight: 600;
+        }
+
+        .lucky-item .value-en {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: var(--color-ink-light);
+        }
+
+        .color-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.25rem;
+            vertical-align: middle;
+            border: 2px solid var(--color-ivory);
+            box-shadow: 0 0 0 1px var(--color-cream);
+        }
+
+        /* ===== Personal Section ===== */
+        .personal-section {
+            margin-top: 1rem;
+            padding: 0.875rem;
+            background: var(--color-emerald);
+            border-radius: 4px;
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
-        .offering-method .method-icon {
-            width: 32px;
-            height: 32px;
+        .personal-section.hidden {
+            display: none;
+        }
+
+        .personal-zodiac {
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: #f5f5f3;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-
-        .offering-method .method-name {
-            font-size: 0.95rem;
-        }
-
-        .offering-method .method-arrow {
-            color: #ccc;
-            font-size: 1.2rem;
-        }
-
-        .offering-divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            gap: 1rem;
-        }
-
-        .offering-divider::before,
-        .offering-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e8e8e6;
-        }
-
-        .offering-divider span {
-            font-size: 0.75rem;
-            color: #999;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        .karma-message {
-            text-align: center;
-            padding: 1.25rem;
-            background: linear-gradient(to bottom, #fafaf9, #f5f5f3);
-            border-radius: 6px;
-            margin-bottom: 1rem;
-        }
-
-        .karma-message p {
-            font-size: 0.9rem;
-            font-style: italic;
-            color: #777;
-            margin-bottom: 0;
-            line-height: 1.6;
-        }
-
-        .honor-confirmation {
-            text-align: center;
-        }
-
-        .honor-confirmation .btn {
-            margin-bottom: 0.5rem;
-        }
-
-        .honor-note {
-            font-size: 0.7rem;
-            color: #bbb;
-            margin-top: 0.5rem;
-        }
-
-        /* Ko-fi button container */
-        .kofi-button-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .kofi-button-container span.kofitext {
-            font-family: 'Cormorant Garamond', serif !important;
-            letter-spacing: 0.1em !important;
-        }
-
-        /* Gratitude message */
-        .gratitude-message {
-            font-size: 0.8rem;
-            font-style: italic;
-            color: #888;
-            background: linear-gradient(to right, transparent, #f5f5f3, transparent);
-            padding: 0.75rem 1rem;
-            margin-bottom: 1.5rem;
+            gap: 0.375rem;
+            padding: 0.375rem 0.625rem;
+            background: rgba(255,255,255,0.12);
             border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Card selection screen */
+        .personal-zodiac .emoji {
+            font-size: 1.25rem;
+        }
+
+        .personal-zodiac .sign {
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .personal-note {
+            flex: 1;
+            color: white;
+        }
+
+        .personal-note .label {
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            color: var(--color-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .personal-note .text {
+            font-family: var(--font-chinese);
+            font-size: 0.8rem;
+            margin-top: 0.125rem;
+            line-height: 1.4;
+        }
+
+        .personal-note .text-en {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* ===== Sealed State ===== */
+        .huangli-sealed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-ivory);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.4s ease;
+        }
+
+        .huangli-sealed.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .seal-icon {
+            font-size: 3rem;
+            color: var(--color-emerald);
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .seal-text {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            color: var(--color-ink-light);
+        }
+
+        .seal-text-en {
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
+            margin-top: 0.25rem;
+            letter-spacing: 0.1em;
+        }
+
+        .seal-btn {
+            margin-top: 1.5rem;
+            padding: 0.625rem 1.5rem;
+            background: var(--color-coral);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .seal-btn:hover {
+            background: var(--color-coral-dark);
+        }
+
+        /* ===== Main Deck ===== */
+        .deck-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .main-deck {
+            width: 90px;
+            height: 126px;
+            background: linear-gradient(145deg, var(--color-ivory) 0%, var(--color-cream) 100%);
+            border-radius: 4px;
+            margin: 0 auto;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease;
+            box-shadow:
+                0 4px 12px rgba(0,0,0,0.15),
+                3px 3px 0 var(--color-emerald-light),
+                6px 6px 0 var(--color-emerald);
+            border: 1px solid var(--color-cream);
+            overflow: hidden;
+        }
+
+        .main-deck:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Coral stripe on deck top */
+        .main-deck::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20%;
+            background: linear-gradient(90deg,
+                var(--color-coral) 0%,
+                var(--color-coral-light) 50%,
+                var(--color-coral) 100%);
+        }
+
+        .main-deck::after {
+            content: '卜';
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-chinese);
+            font-size: 1.75rem;
+            color: var(--color-emerald);
+            opacity: 0.25;
+        }
+
+        .tap-hint {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: var(--color-gold);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 0.875rem;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-link {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+        }
+
+        .footer-link:hover {
+            color: var(--color-gold);
+        }
+
+        /* ===== Card Selection Screen ===== */
         .cards-grid {
             display: flex;
             flex-wrap: wrap;
@@ -453,13 +591,16 @@
         }
 
         .fortune-card {
-            width: 80px;
-            height: 112px;
-            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
-            border-radius: 6px;
+            width: 70px;
+            height: 98px;
+            background: linear-gradient(145deg, var(--color-ivory) 0%, var(--color-cream) 100%);
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--color-cream);
+            overflow: hidden;
         }
 
         .fortune-card:hover {
@@ -467,196 +608,56 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
-        /* Different card back patterns for paid tier */
         .fortune-card::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50%;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 18%;
+            background: linear-gradient(90deg,
+                var(--color-coral) 0%,
+                var(--color-coral-light) 50%,
+                var(--color-coral) 100%);
         }
-
-        .fortune-card.pattern-1::before { width: 30px; height: 30px; }
-        .fortune-card.pattern-2::before { width: 30px; height: 30px; border-radius: 0; transform: translate(-50%, -50%) rotate(45deg); }
-        .fortune-card.pattern-3::before { width: 20px; height: 40px; border-radius: 0; }
-        .fortune-card.pattern-4::before { width: 40px; height: 20px; border-radius: 0; }
-        .fortune-card.pattern-5::before { width: 25px; height: 25px; border-radius: 2px; }
 
         .fortune-card::after {
-            content: '';
+            content: '卜';
             position: absolute;
-            top: 50%;
+            top: 55%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 4px;
-            height: 4px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
+            font-family: var(--font-chinese);
+            font-size: 1.25rem;
+            color: var(--color-emerald);
+            opacity: 0.2;
         }
 
-        /* Reading screen */
-        .reading-card {
-            width: 160px;
-            height: 224px;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            margin: 0 auto 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
-        }
-
-        .reading-card .category {
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            color: #999;
-            text-transform: uppercase;
+        /* Screen titles */
+        .screen-title {
+            font-family: var(--font-chinese);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-ivory);
+            text-align: center;
             margin-bottom: 0.5rem;
         }
 
-        .reading-card .fortune-type {
-            font-size: 1.3rem;
-            font-weight: 400;
-            margin-bottom: 0.5rem;
-        }
-
-        .reading-card .symbol {
-            font-size: 2rem;
-            margin: 1rem 0;
-            opacity: 0.7;
-        }
-
-        .reading-text {
-            margin: 1.5rem 0;
-            padding: 0 0.5rem;
-        }
-
-        .reading-text p {
-            font-size: 0.95rem;
-            line-height: 1.8;
-        }
-
-        /* Detailed reading for paid tier */
-        .detailed-reading {
-            background: #fff;
-            border: 1px solid #e8e8e6;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: left;
-        }
-
-        .detailed-reading h4 {
+        .screen-subtitle {
+            font-family: var(--font-body);
             font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: #999;
-            margin-bottom: 0.75rem;
-        }
-
-        .detailed-reading p {
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            color: #555;
-        }
-
-        .detailed-reading ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .detailed-reading li {
-            font-size: 0.85rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #f0f0f0;
-            color: #555;
-        }
-
-        .detailed-reading li:last-child {
-            border-bottom: none;
-        }
-
-        .detailed-reading li span {
-            color: #999;
-            font-size: 0.75rem;
-            display: block;
-            margin-bottom: 0.25rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        /* Your signs section in paid reading */
-        .your-signs {
-            background: #f9f9f7;
-            border: 1px solid #e8e8e6;
-            border-radius: 8px;
-            padding: 1rem 1.25rem;
-            margin: 1.5rem 0;
-            text-align: left;
-        }
-
-        .your-signs h4 {
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: #999;
-            margin-bottom: 0.5rem;
-        }
-
-        .signs-row {
-            display: flex;
-            gap: 1.5rem;
-            font-size: 0.85rem;
-        }
-
-        .signs-row .sign-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .signs-row .sign-label {
-            font-size: 0.65rem;
-            color: #bbb;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .signs-row .sign-value {
-            color: #2c2c2c;
-        }
-
-        /* Upsell section */
-        .upsell {
-            background: linear-gradient(to bottom, #fafaf9, #f5f5f3);
-            border: 1px solid #e8e8e6;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .upsell h4 {
-            font-size: 1rem;
-            font-weight: 400;
-            margin-bottom: 0.75rem;
-        }
-
-        .upsell p {
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
 
         /* Buttons */
         .btn {
             display: inline-block;
-            padding: 0.875rem 2rem;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.15em;
+            padding: 0.75rem 1.5rem;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             border: none;
             border-radius: 4px;
@@ -666,247 +667,118 @@
         }
 
         .btn-primary {
-            background: #2c2c2c;
-            color: #fff;
+            background: var(--color-coral);
+            color: white;
         }
 
         .btn-primary:hover {
-            background: #444;
+            background: var(--color-coral-dark);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #2c2c2c;
-            border: 1px solid #ddd;
+            color: var(--color-ivory);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .btn-secondary:hover {
-            border-color: #2c2c2c;
+            border-color: var(--color-ivory);
         }
 
         .btn-text {
             background: none;
             border: none;
-            color: #999;
-            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            font-family: var(--font-body);
+            font-size: 0.65rem;
             padding: 0.5rem 1rem;
+            cursor: pointer;
+            letter-spacing: 0.1em;
         }
 
         .btn-text:hover {
-            color: #2c2c2c;
+            color: var(--color-ivory);
         }
 
-        .btn-full {
-            width: 100%;
-            margin: 0;
-        }
-
-        /* Card flip animation */
-        .card-flip-container {
-            perspective: 1000px;
-            width: 160px;
-            height: 224px;
-            margin: 0 auto 2rem;
-        }
-
-        .card-flip-inner {
-            width: 100%;
-            height: 100%;
-            transition: transform 0.8s ease;
-            transform-style: preserve-3d;
-            position: relative;
-        }
-
-        .card-flip-inner.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .card-flip-front,
-        .card-flip-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
+        /* Reading result screen */
+        .reading-card {
+            background: var(--color-ivory);
             border-radius: 8px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
 
-        .card-flip-front {
-            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .reading-card .category {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            color: var(--color-ink-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
         }
 
-        .card-flip-front::before {
-            content: '';
-            width: 50px;
-            height: 50px;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50%;
+        .reading-card .fortune-type {
+            font-family: var(--font-chinese);
+            font-size: 1.25rem;
+            color: var(--color-emerald);
+            margin-bottom: 0.5rem;
         }
 
-        .card-flip-back {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            transform: rotateY(180deg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
+        .reading-card .symbol {
+            font-size: 2rem;
+            color: var(--color-coral);
+            margin: 1rem 0;
         }
 
-        /* Daily Card */
-        .daily-card-section {
-            margin-bottom: 2rem;
+        .reading-card .reading-text {
+            font-family: var(--font-chinese);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--color-ink);
         }
 
-        .daily-card {
-            background: #fff;
-            border: 1px solid #e8e8e6;
-            border-radius: 12px;
-            padding: 1.5rem;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .guidance-section {
+            background: var(--color-ivory);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
-        .daily-card:hover {
-            border-color: #ccc;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .daily-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .daily-card-label {
-            font-size: 0.7rem;
+        .guidance-section h4 {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: #999;
-        }
-
-        .daily-card-date {
-            font-size: 0.85rem;
-            color: #666;
-        }
-
-        .daily-card-content {
-            min-height: 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .daily-card-sealed {
-            text-align: center;
-        }
-
-        .daily-card-sealed .moon-icon {
-            font-size: 2rem;
+            color: var(--color-ink-muted);
             margin-bottom: 0.75rem;
-            opacity: 0.6;
         }
 
-        .daily-card-sealed .reveal-text {
-            font-size: 0.8rem;
-            color: #999;
-            letter-spacing: 0.1em;
+        .guidance-section ul {
+            list-style: none;
+            padding: 0;
         }
 
-        .daily-card-revealed {
-            text-align: center;
-            animation: fadeIn 0.6s ease;
-        }
-
-        .daily-card-revealed .zodiac-badge {
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #999;
-            background: #f5f5f3;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            margin-bottom: 0.75rem;
-            display: inline-block;
-        }
-
-        .daily-card-revealed .affirmation {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #2c2c2c;
-            font-style: italic;
-            margin-bottom: 1rem;
-        }
-
-        .daily-card-revealed .guidance-tip {
+        .guidance-section li {
+            font-family: var(--font-chinese);
             font-size: 0.85rem;
-            color: #666;
-            padding-top: 0.75rem;
-            border-top: 1px solid #f0f0f0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--color-cream);
+            color: var(--color-ink);
         }
 
-        .daily-card-revealed .guidance-tip .tip-label {
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #999;
+        .guidance-section li:last-child {
+            border-bottom: none;
+        }
+
+        .guidance-section li span {
+            font-family: var(--font-body);
+            color: var(--color-ink-muted);
+            font-size: 0.6rem;
             display: block;
             margin-bottom: 0.25rem;
-        }
-
-        .daily-card-already {
-            text-align: center;
-        }
-
-        .daily-card-already p {
-            font-size: 0.85rem;
-            color: #999;
-            margin-bottom: 0;
-        }
-
-        .daily-card-already .checkmark {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            opacity: 0.5;
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #eee;
-        }
-
-        .footer p {
-            font-size: 0.75rem;
-            color: #bbb;
-        }
-
-        .footer a {
-            color: #999;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            color: #2c2c2c;
-        }
-
-        /* Disclaimer styles */
-        .disclaimer-link {
-            font-size: 0.7rem;
-            color: #bbb;
-            margin-top: 0.5rem;
-            cursor: pointer;
-        }
-
-        .disclaimer-link:hover {
-            color: #999;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
 
         /* Modal styles */
@@ -917,7 +789,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -929,7 +801,7 @@
         }
 
         .modal {
-            background: #fff;
+            background: var(--color-ivory);
             border-radius: 8px;
             max-width: 400px;
             width: 100%;
@@ -940,16 +812,19 @@
         }
 
         .modal h3 {
-            font-size: 1.25rem;
-            font-weight: 400;
+            font-family: var(--font-chinese);
+            font-size: 1.1rem;
+            font-weight: 600;
             margin-bottom: 1.5rem;
-            letter-spacing: 0.05em;
+            color: var(--color-ink);
         }
 
         .modal p {
-            font-size: 0.85rem;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
             margin-bottom: 1rem;
-            color: #555;
+            color: var(--color-ink-light);
+            line-height: 1.6;
         }
 
         .modal ul {
@@ -958,8 +833,9 @@
         }
 
         .modal li {
-            font-size: 0.85rem;
-            color: #555;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            color: var(--color-ink-light);
             margin-bottom: 0.5rem;
             line-height: 1.5;
         }
@@ -972,72 +848,142 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #999;
+            color: var(--color-ink-muted);
             line-height: 1;
         }
 
         .modal-close:hover {
-            color: #2c2c2c;
+            color: var(--color-ink);
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .huangli-card {
+            animation: fadeIn 0.5s ease;
         }
     </style>
 </head>
 <body>
     <div class="container">
 
-        <!-- Screen 1: Start -->
+        <!-- Screen 1: Start / Daily Calendar -->
         <div class="screen active" id="screen-start">
-            <h1>Fortune</h1>
-            <p class="subtitle">Your daily ritual awaits</p>
+            <!-- Header -->
+            <header class="app-header">
+                <h1 class="app-title">每日黄历</h1>
+                <p class="app-subtitle">Daily Fortune Calendar</p>
+            </header>
 
-            <!-- Daily Card Section -->
-            <div class="daily-card-section">
-                <div class="daily-card" id="daily-card" onclick="revealDailyCard()">
-                    <div class="daily-card-header">
-                        <span class="daily-card-label">☾ Today's Card</span>
-                        <span class="daily-card-date" id="daily-card-date"></span>
+            <!-- Calendar Card -->
+            <div class="huangli-card">
+                <!-- Top accent bar - coral -->
+                <div class="huangli-topbar">
+                    <span class="topbar-left" id="topbar-year">蛇年</span>
+                    <span class="topbar-right" id="topbar-year-en">Year of the Snake</span>
+                </div>
+
+                <!-- Main content -->
+                <div class="huangli-main">
+                    <!-- Month row -->
+                    <div class="month-row">
+                        <span class="month-cn" id="month-cn">正月</span>
+                        <span class="month-en" id="month-en">January</span>
+                        <span class="year-badge" id="year-badge">2026</span>
                     </div>
-                    <div class="daily-card-content" id="daily-card-content">
-                        <!-- Content populated by JS based on state -->
+
+                    <!-- Large date hero -->
+                    <div class="date-hero">
+                        <span class="date-zodiac-badge" id="day-zodiac">Snake Day</span>
+                        <span class="date-number" id="date-number">30</span>
+                        <span class="date-lunar-badge" id="lunar-day">初二</span>
                     </div>
+
+                    <!-- Weekday -->
+                    <div class="weekday-row">
+                        <span class="weekday-en" id="weekday-en">Thursday</span>
+                        <span class="weekday-cn" id="weekday-cn">星期四</span>
+                    </div>
+
+                    <!-- Activities with decorative border -->
+                    <div class="activities-section">
+                        <div class="activity-row auspicious">
+                            <span class="activity-label">宜</span>
+                            <div class="activity-items" id="auspicious-items">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <div class="activity-row inauspicious">
+                            <span class="activity-label">忌</span>
+                            <div class="activity-items" id="inauspicious-items">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lucky elements -->
+                    <div class="lucky-row">
+                        <div class="lucky-item">
+                            <div class="label">Lucky Color</div>
+                            <div class="value" id="lucky-color">
+                                <span class="color-dot" id="color-dot"></span><span id="color-cn">红</span>
+                            </div>
+                            <div class="value-en" id="color-en">Red</div>
+                        </div>
+                        <div class="lucky-item">
+                            <div class="label">Direction</div>
+                            <div class="value" id="direction-cn">东南</div>
+                            <div class="value-en" id="direction-en">Southeast</div>
+                        </div>
+                        <div class="lucky-item">
+                            <div class="label">Number</div>
+                            <div class="value" id="lucky-numbers">3, 8</div>
+                            <div class="value-en">&nbsp;</div>
+                        </div>
+                    </div>
+
+                    <!-- Personal section (if birthday set) -->
+                    <div class="personal-section hidden" id="personal-section">
+                        <div class="personal-zodiac">
+                            <span class="emoji" id="user-zodiac-emoji">🐉</span>
+                            <span class="sign" id="user-zodiac-cn">龙</span>
+                        </div>
+                        <div class="personal-note">
+                            <div class="label">Today's Fortune</div>
+                            <div class="text" id="personal-fortune-cn">贵人相助，宜主动出击</div>
+                            <div class="text-en" id="personal-fortune-en">Helpful allies. Take initiative.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sealed overlay -->
+                <div class="huangli-sealed" id="sealed" onclick="revealDailyCard()">
+                    <div class="seal-icon">☾</div>
+                    <p class="seal-text">轻触揭晓今日运势</p>
+                    <p class="seal-text-en">Tap to reveal your fortune</p>
+                    <button class="seal-btn">Reveal</button>
                 </div>
             </div>
 
-            <div class="deck-container">
+            <!-- Main deck -->
+            <div class="deck-section">
                 <div class="main-deck" onclick="showScreen('screen-cards-free')"></div>
-                <p class="tap-hint">tap for full reading</p>
+                <p class="tap-hint">Full Reading</p>
             </div>
 
-            <div class="footer">
-                <p class="disclaimer-link" onclick="openModal('disclaimer')">Privacy & Terms</p>
-            </div>
+            <!-- Footer -->
+            <footer class="footer">
+                <span class="footer-link" onclick="openModal('disclaimer')">Privacy & Terms</span>
+            </footer>
         </div>
 
-        <!-- Screen 2: Choose Free or Paid -->
-        <div class="screen" id="screen-choice">
-            <h2>Choose Your Path</h2>
-            <p>What does your heart need today?</p>
-
-            <div class="choice-container">
-                <div class="choice-card" onclick="selectTier('free')">
-                    <h3>Glimpse</h3>
-                    <p class="price">Free</p>
-                    <p class="desc">A gentle insight to guide your day</p>
-                </div>
-
-                <div class="choice-card" onclick="selectTier('paid')">
-                    <h3>Deep Ritual</h3>
-                    <p class="price">$2.99</p>
-                    <p class="desc">Personalized guidance with actionable wisdom</p>
-                </div>
-            </div>
-
-            <button class="btn-text" onclick="showScreen('screen-start')">back</button>
-        </div>
-
-        <!-- Screen 3a: Free Card Selection (3 cards) -->
+        <!-- Screen 2: Card Selection (Free) -->
         <div class="screen" id="screen-cards-free">
-            <h2>Choose Your Card</h2>
-            <p>Trust your intuition</p>
+            <h2 class="screen-title">选择你的命运</h2>
+            <p class="screen-subtitle">Choose Your Card</p>
 
             <div class="cards-grid">
                 <div class="fortune-card" onclick="selectCard('free')"></div>
@@ -1045,177 +991,42 @@
                 <div class="fortune-card" onclick="selectCard('free')"></div>
             </div>
 
-            <button class="btn-text" onclick="showScreen('screen-start')">back</button>
+            <button class="btn-text" onclick="showScreen('screen-start')">← back</button>
         </div>
 
-        <!-- Screen 3b-1: Paid Wish Form -->
-        <div class="screen" id="screen-wish-form">
-            <h2>Set Your Intention</h2>
-            <p>What does your soul need clarity on?</p>
-
-            <div class="form-group">
-                <label>Your Wish</label>
-                <textarea id="wish-input" placeholder="Share what's on your mind..."></textarea>
-                <div class="wish-suggestions" id="wish-suggestions">
-                    <!-- Will be populated by JS -->
-                </div>
+        <!-- Screen 3: Reading Result -->
+        <div class="screen" id="screen-reading">
+            <div class="reading-card">
+                <p class="category">Your Fortune</p>
+                <p class="fortune-type" id="reading-category">Career</p>
+                <p class="symbol" id="reading-symbol">◈</p>
+                <p class="reading-text" id="reading-text">A shift approaches in your professional life.</p>
             </div>
 
-            <div class="form-group">
-                <label>Your Birthday</label>
-                <input type="date" id="birthday-input" onchange="calculateHoroscopes()">
-                <div class="horoscope-display hidden" id="horoscope-display">
-                    <div class="horoscope-row">
-                        <span class="label">Western Zodiac</span>
-                        <span class="value" id="western-zodiac">-</span>
-                    </div>
-                    <div class="horoscope-row">
-                        <span class="label">Chinese Zodiac</span>
-                        <span class="value" id="chinese-zodiac">-</span>
-                    </div>
-                    <div class="horoscope-row">
-                        <span class="label">Element</span>
-                        <span class="value" id="element">-</span>
-                    </div>
-                    <div class="horoscope-row">
-                        <span class="label">Ruling Planet</span>
-                        <span class="value" id="ruling-planet">-</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-primary btn-full" onclick="showScreen('screen-offering')">Continue</button>
-            <button class="btn-text" onclick="showScreen('screen-choice')">back</button>
-        </div>
-
-        <!-- Screen 3b-2: Offering (Honor System) -->
-        <div class="screen" id="screen-offering">
-            <h2>Make Your Offering</h2>
-            <p>Support this ritual with a small gift of gratitude</p>
-
-            <div class="offering-container">
-                <div class="offering-amount">
-                    <p class="price-large">$2.99</p>
-                    <p class="price-label">Suggested Offering</p>
-                </div>
-
-                <div class="kofi-button-container">
-                    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
-                    <script type='text/javascript'>kofiwidget2.init('Make an Offering', '#2c2c2c', 'fortuneapp');kofiwidget2.draw();</script>
-                </div>
-
-                <div class="karma-message">
-                    <p>"The energy you give returns threefold. Your honesty strengthens the reading you're about to receive."</p>
-                </div>
-
-                <div class="honor-confirmation">
-                    <button class="btn btn-primary btn-full" onclick="confirmOffering()">I've Made My Offering</button>
-                    <p class="honor-note">We trust in your integrity</p>
-                </div>
-            </div>
-
-            <button class="btn-text" onclick="showScreen('screen-wish-form')">back</button>
-        </div>
-
-        <!-- Screen 3b-3: Paid Card Selection (30 cards with patterns) -->
-        <div class="screen" id="screen-cards-paid">
-            <h2>Choose Your Card</h2>
-            <p>Thank you for your offering. May your honesty and karma guide you to your fate.</p>
-
-            <div class="cards-grid" id="paid-cards-grid">
-                <!-- Cards will be generated by JS -->
-            </div>
-
-            <button class="btn-text" onclick="showScreen('screen-offering')">back</button>
-        </div>
-
-        <!-- Screen 4a: Free Reading Result -->
-        <div class="screen" id="screen-reading-free">
-            <div class="card-flip-container">
-                <div class="card-flip-inner" id="free-card-flip">
-                    <div class="card-flip-front"></div>
-                    <div class="card-flip-back">
-                        <p class="category">Your Fortune</p>
-                        <p class="fortune-type">Career</p>
-                        <p class="symbol">&#9678;</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="reading-text">
-                <p>A shift approaches in your professional life. Stay alert to unexpected opportunities.</p>
-            </div>
-
-            <div class="upsell">
-                <h4>Ready for Deeper Wisdom?</h4>
-                <p>Unlock personalized guidance, your lucky elements, and actionable steps to honor your path.</p>
-                <button class="btn btn-primary" onclick="selectTier('paid')">Begin Deep Ritual</button>
-            </div>
-
-            <button class="btn btn-secondary" onclick="showScreen('screen-start')">Draw Again</button>
-        </div>
-
-        <!-- Screen 4b: Paid Reading Result -->
-        <div class="screen" id="screen-reading-paid">
-            <div class="card-flip-container">
-                <div class="card-flip-inner" id="paid-card-flip">
-                    <div class="card-flip-front"></div>
-                    <div class="card-flip-back">
-                        <p class="category">Your Fortune</p>
-                        <p class="fortune-type">Career</p>
-                        <p class="symbol">&#9678;</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="your-signs" id="reading-signs">
-                <h4>Your Signs</h4>
-                <div class="signs-row">
-                    <div class="sign-item">
-                        <span class="sign-label">Western</span>
-                        <span class="sign-value" id="reading-western">Aries</span>
-                    </div>
-                    <div class="sign-item">
-                        <span class="sign-label">Chinese</span>
-                        <span class="sign-value" id="reading-chinese">Dragon</span>
-                    </div>
-                    <div class="sign-item">
-                        <span class="sign-label">Element</span>
-                        <span class="sign-value" id="reading-element">Fire</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="reading-text">
-                <p>A significant shift approaches in your professional life. The path you've been considering will soon reveal its true nature. Trust the process, but remain vigilant.</p>
-            </div>
-
-            <div class="detailed-reading">
+            <div class="guidance-section">
                 <h4>Your Guidance</h4>
                 <ul>
-                    <li>
+                    <li id="guidance-object">
                         <span>Lucky Object</span>
-                        A silver key or keychain
+                        A silver key
                     </li>
-                    <li>
+                    <li id="guidance-day">
                         <span>Favorable Day</span>
-                        Thursday of this week
+                        Thursday
                     </li>
-                    <li>
+                    <li id="guidance-action">
                         <span>Action to Take</span>
-                        Reach out to someone you haven't spoken to in months
+                        Reach out to someone
                     </li>
-                    <li>
+                    <li id="guidance-avoid">
                         <span>Thing to Avoid</span>
-                        Making major decisions before noon
+                        Making major decisions
                     </li>
                 </ul>
             </div>
 
-            <button class="btn btn-primary" onclick="showScreen('screen-start')">Draw Again</button>
-
-            <div class="footer">
-                <p>May your path be clear</p>
+            <div style="text-align: center;">
+                <button class="btn btn-primary" onclick="showScreen('screen-start')">Draw Again</button>
             </div>
         </div>
 
@@ -1228,22 +1039,15 @@
             <h3>Privacy & Terms</h3>
 
             <p><strong>For Entertainment Only</strong></p>
-            <p>Fortune Cards is intended for entertainment purposes only. Readings should not be taken as professional advice for financial, medical, legal, or psychological matters.</p>
+            <p>Fortune 黄历 is intended for entertainment purposes only. Readings should not be taken as professional advice for financial, medical, legal, or psychological matters.</p>
 
             <p><strong>Your Privacy</strong></p>
             <ul>
                 <li>Your birthday is stored locally on your device only—never on our servers</li>
-                <li>This allows us to personalize your daily card experience</li>
+                <li>This allows us to personalize your daily fortune experience</li>
                 <li>All information stays in your browser and is never transmitted</li>
                 <li>We do not use cookies or external tracking</li>
                 <li>Clear your browser data anytime to remove all stored information</li>
-            </ul>
-
-            <p><strong>Offerings</strong></p>
-            <ul>
-                <li>Offerings are voluntary and processed through Ko-fi</li>
-                <li>We operate on an honor system - we trust your integrity</li>
-                <li>All offerings are non-refundable</li>
             </ul>
 
             <p><strong>Contact</strong></p>
@@ -1252,264 +1056,162 @@
     </div>
 
     <script>
-        let currentTier = 'free';
-        let userHoroscope = {
-            western: '',
-            chinese: '',
-            element: '',
-            planet: ''
+        // ===== Data Pools =====
+
+        // Chinese zodiac animals with emojis
+        const chineseZodiacs = {
+            'Rat': { cn: '鼠', emoji: '🐀' },
+            'Ox': { cn: '牛', emoji: '🐂' },
+            'Tiger': { cn: '虎', emoji: '🐅' },
+            'Rabbit': { cn: '兔', emoji: '🐇' },
+            'Dragon': { cn: '龙', emoji: '🐉' },
+            'Snake': { cn: '蛇', emoji: '🐍' },
+            'Horse': { cn: '马', emoji: '🐴' },
+            'Goat': { cn: '羊', emoji: '🐐' },
+            'Monkey': { cn: '猴', emoji: '🐵' },
+            'Rooster': { cn: '鸡', emoji: '🐓' },
+            'Dog': { cn: '狗', emoji: '🐕' },
+            'Pig': { cn: '猪', emoji: '🐖' }
         };
 
-        // Wish suggestion pool
-        const wishPool = [
-            "I seek clarity about my next chapter",
-            "I want guidance on matters of the heart",
-            "I need direction on a decision weighing on me",
-            "I wish to understand what's blocking my growth",
-            "I seek peace around a relationship in my life",
-            "I want insight into my career or purpose",
-            "I need wisdom about setting boundaries",
-            "I wish to understand my creative calling",
-            "I seek guidance on trusting myself more",
-            "I want clarity about my self-worth"
+        // Day zodiac cycle (12-day rotation)
+        const dayZodiacs = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'];
+
+        // Lunar months
+        const lunarMonths = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '冬月', '腊月'];
+
+        // Lunar days
+        const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+                          '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+                          '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
+
+        // Weekdays
+        const weekdaysCn = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        const weekdaysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Auspicious activities pool
+        const auspiciousPool = [
+            { cn: '祈福', en: 'Pray' },
+            { cn: '出行', en: 'Travel' },
+            { cn: '求财', en: 'Wealth' },
+            { cn: '开业', en: 'Business' },
+            { cn: '约会', en: 'Date' },
+            { cn: '面试', en: 'Interview' },
+            { cn: '搬家', en: 'Move' },
+            { cn: '签约', en: 'Contract' },
+            { cn: '会友', en: 'Socialize' },
+            { cn: '学习', en: 'Study' },
+            { cn: '投资', en: 'Invest' },
+            { cn: '创作', en: 'Create' }
         ];
 
-        // Fortune pool - 100 fortunes across categories
-        const fortunes = [
-            // CAREER (15)
-            { category: "Career", symbol: "◈", freeReading: "A shift approaches in your professional life.", paidReading: "A significant shift approaches in your professional life. The path you've been considering will soon reveal its true nature. Trust the process, but remain vigilant.", guidance: { luckyObject: "A silver pen", favorableDay: "Thursday", action: "Update your resume or portfolio", avoid: "Gossip in the workplace" }},
-            { category: "Career", symbol: "◈", freeReading: "Recognition for your efforts is near.", paidReading: "Your hard work has not gone unnoticed. Someone in a position of influence is watching your progress with interest. An opportunity for advancement emerges within weeks.", guidance: { luckyObject: "A blue notebook", favorableDay: "Monday", action: "Speak up in your next meeting", avoid: "Downplaying your achievements" }},
-            { category: "Career", symbol: "◈", freeReading: "A new door will open unexpectedly.", paidReading: "An unexpected opportunity arrives through an unlikely source. This may not look like what you imagined, but it leads somewhere better. Stay open to unconventional paths.", guidance: { luckyObject: "A brass key", favorableDay: "Wednesday", action: "Reconnect with a former colleague", avoid: "Dismissing small opportunities" }},
-            { category: "Career", symbol: "◈", freeReading: "Patience in your work will be rewarded.", paidReading: "The seeds you've planted are taking root beneath the surface. What feels like stagnation is actually preparation. Your breakthrough comes after you've nearly given up hope.", guidance: { luckyObject: "A green plant on your desk", favorableDay: "Friday", action: "Complete a long-postponed task", avoid: "Impatience with slower colleagues" }},
-            { category: "Career", symbol: "◈", freeReading: "A mentor figure enters your sphere.", paidReading: "Someone with wisdom to share crosses your path. They may not announce themselves as a guide, but their words carry weight. Listen carefully to advice from unexpected sources.", guidance: { luckyObject: "A leather-bound book", favorableDay: "Tuesday", action: "Ask someone you admire for coffee", avoid: "Prideful rejection of help" }},
-            { category: "Career", symbol: "◈", freeReading: "Your skills are more valuable than you realize.", paidReading: "You possess abilities that others desperately need. What comes naturally to you is rare and precious. Consider how you might package your talents differently.", guidance: { luckyObject: "A gold-colored coin", favorableDay: "Sunday", action: "List your unique skills and strengths", avoid: "Comparing yourself to others" }},
-            { category: "Career", symbol: "◈", freeReading: "A challenging project leads to growth.", paidReading: "A difficult assignment tests your limits but reveals hidden capabilities. Embrace the discomfort—this is where transformation happens. You emerge more capable than before.", guidance: { luckyObject: "A smooth stone", favorableDay: "Saturday", action: "Volunteer for the task others avoid", avoid: "Staying in your comfort zone" }},
-            { category: "Career", symbol: "◈", freeReading: "Trust your instincts in a business matter.", paidReading: "Your gut feeling about a professional situation is accurate. Despite what others say, your intuition sees what logic cannot. Act on your inner knowing.", guidance: { luckyObject: "A compass", favorableDay: "Thursday", action: "Make the decision you've been postponing", avoid: "Seeking too many opinions" }},
-            { category: "Career", symbol: "◈", freeReading: "Collaboration brings unexpected success.", paidReading: "A partnership or team effort yields results far beyond what you could achieve alone. Set aside ego and join forces with someone whose strengths complement your weaknesses.", guidance: { luckyObject: "Two interlinked rings", favorableDay: "Wednesday", action: "Propose a collaboration", avoid: "Insisting on working alone" }},
-            { category: "Career", symbol: "◈", freeReading: "Change your approach to see new results.", paidReading: "The same methods will yield the same outcomes. Innovation is required. Look at your work through fresh eyes—perhaps the perspective of someone outside your field.", guidance: { luckyObject: "A prism or crystal", favorableDay: "Monday", action: "Try a completely different method", avoid: "Rigid adherence to old ways" }},
-            { category: "Career", symbol: "◈", freeReading: "Financial improvement through work approaches.", paidReading: "Your income is set to increase, though perhaps not in the way you expect. Stay alert for side opportunities, raises, or new revenue streams. Value flows toward those who create value.", guidance: { luckyObject: "A jade stone", favorableDay: "Friday", action: "Negotiate or ask for what you deserve", avoid: "Undervaluing your contributions" }},
-            { category: "Career", symbol: "◈", freeReading: "Let go of what no longer serves your growth.", paidReading: "Something in your professional life has run its course. Clinging to it blocks new growth. Release with gratitude and make space for what comes next.", guidance: { luckyObject: "An empty box", favorableDay: "Saturday", action: "Resign from a draining commitment", avoid: "Holding onto outdated roles" }},
-            { category: "Career", symbol: "◈", freeReading: "Your reputation precedes you favorably.", paidReading: "Word of your work has spread further than you know. Someone you've never met speaks well of you. This invisible network opens doors before you even knock.", guidance: { luckyObject: "A business card", favorableDay: "Tuesday", action: "Follow up with past connections", avoid: "Burning bridges carelessly" }},
-            { category: "Career", symbol: "◈", freeReading: "A risk taken now pays dividends later.", paidReading: "The safe path keeps you where you are. A calculated leap of faith—one that scares you slightly—leads to exponential growth. Fortune favors the bold.", guidance: { luckyObject: "A pair of dice", favorableDay: "Thursday", action: "Take the leap you've been considering", avoid: "Paralyzing over-analysis" }},
-            { category: "Career", symbol: "◈", freeReading: "Your next chapter begins with an ending.", paidReading: "Before the new can emerge, the old must conclude. A closing—whether chosen or forced—creates space for your greatest professional chapter yet.", guidance: { luckyObject: "A bookmark", favorableDay: "Sunday", action: "Gracefully close an old chapter", avoid: "Fearing necessary endings" }},
-
-            // LOVE & RELATIONSHIPS (15)
-            { category: "Love", symbol: "♡", freeReading: "An unexpected connection awaits.", paidReading: "Love approaches from an unexpected direction. The one you seek may not match your mental image but will match your heart's true desires. Stay open to surprise.", guidance: { luckyObject: "A rose quartz", favorableDay: "Friday", action: "Say yes to an unusual invitation", avoid: "Dismissing people too quickly" }},
-            { category: "Love", symbol: "♡", freeReading: "Deeper understanding grows in a relationship.", paidReading: "A current relationship deepens through honest conversation. What has been unspoken needs voice. Vulnerability now strengthens your bond immeasurably.", guidance: { luckyObject: "A handwritten letter", favorableDay: "Sunday", action: "Share something you've held back", avoid: "Assuming they already know" }},
-            { category: "Love", symbol: "♡", freeReading: "Healing from the past enables future love.", paidReading: "Old wounds still influence your heart. Before new love can fully enter, past pain needs acknowledgment and release. The healing you do now transforms your future.", guidance: { luckyObject: "A small mirror", favorableDay: "Monday", action: "Journal about past relationships", avoid: "Bringing old baggage forward" }},
-            { category: "Love", symbol: "♡", freeReading: "Self-love attracts the love you deserve.", paidReading: "The relationship you have with yourself sets the template for all others. Tend to your own heart first—this self-respect becomes magnetic to the right partner.", guidance: { luckyObject: "A personal keepsake", favorableDay: "Wednesday", action: "Do something purely for your own joy", avoid: "Seeking validation from others" }},
-            { category: "Love", symbol: "♡", freeReading: "A meaningful conversation changes everything.", paidReading: "Words spoken from the heart have power to transform. A conversation you've been avoiding holds the key to breakthrough. Speak your truth with love.", guidance: { luckyObject: "Two cups", favorableDay: "Tuesday", action: "Initiate the difficult conversation", avoid: "Letting things go unsaid" }},
-            { category: "Love", symbol: "♡", freeReading: "Trust grows through small moments.", paidReading: "Grand gestures matter less than consistent presence. The small daily acts of care build unshakeable trust. Focus on showing up fully in ordinary moments.", guidance: { luckyObject: "A simple ring", favorableDay: "Saturday", action: "Be fully present with loved ones", avoid: "Distraction during quality time" }},
-            { category: "Love", symbol: "♡", freeReading: "A friend may become something more.", paidReading: "Someone already in your life holds romantic potential. What began as friendship has deeper roots. Look again at those closest to you with new eyes.", guidance: { luckyObject: "An old photograph", favorableDay: "Thursday", action: "Spend one-on-one time with a close friend", avoid: "Overlooking the familiar" }},
-            { category: "Love", symbol: "♡", freeReading: "Patience in love will be rewarded.", paidReading: "The heart cannot be rushed. What you desire is making its way to you, but divine timing differs from human impatience. Trust that love arrives precisely when you're ready.", guidance: { luckyObject: "A seed or acorn", favorableDay: "Friday", action: "Release attachment to timelines", avoid: "Forcing connections" }},
-            { category: "Love", symbol: "♡", freeReading: "Forgiveness opens your heart to new possibilities.", paidReading: "Resentment acts as a lock on your heart. Forgiveness—for others and yourself—turns the key. You need not reconcile to release; freedom awaits.", guidance: { luckyObject: "A white feather", favorableDay: "Sunday", action: "Mentally release someone who hurt you", avoid: "Holding onto grudges" }},
-            { category: "Love", symbol: "♡", freeReading: "Express appreciation before it's too late.", paidReading: "Someone in your life needs to hear how much they matter. Don't assume they know. Words of genuine appreciation spoken now prevent future regret.", guidance: { luckyObject: "A greeting card", favorableDay: "Monday", action: "Tell someone why they matter to you", avoid: "Taking loved ones for granted" }},
-            { category: "Love", symbol: "♡", freeReading: "A cycle in love comes to completion.", paidReading: "A romantic pattern that has repeated is ready to resolve. Whether this means deepening commitment or releasing what doesn't work, completion brings peace.", guidance: { luckyObject: "A circle pendant", favorableDay: "Tuesday", action: "Recognize your relationship patterns", avoid: "Repeating past mistakes" }},
-            { category: "Love", symbol: "♡", freeReading: "Distance may strengthen a bond.", paidReading: "Temporary separation—physical or emotional—serves a purpose. Space allows appreciation to grow. What survives distance proves its worth.", guidance: { luckyObject: "A compass rose", favorableDay: "Wednesday", action: "Give space without withdrawing love", avoid: "Smothering or clinging" }},
-            { category: "Love", symbol: "♡", freeReading: "Your heart knows what your mind debates.", paidReading: "Analysis cannot solve matters of the heart. You already know the answer you seek—feel for it beneath the noise of thought. Trust your heart's wisdom.", guidance: { luckyObject: "A heart-shaped stone", favorableDay: "Friday", action: "Meditate on what your heart wants", avoid: "Overthinking feelings" }},
-            { category: "Love", symbol: "♡", freeReading: "A reunion brings closure or renewal.", paidReading: "Someone from your past reenters your story. This return offers either the closure you never received or a second chance at what once was. You'll know which.", guidance: { luckyObject: "An old letter or message", favorableDay: "Thursday", action: "Be open to reconnection", avoid: "Idealizing the past" }},
-            { category: "Love", symbol: "♡", freeReading: "Love yourself first; the rest follows.", paidReading: "You cannot pour from an empty cup. The love you seek externally must first be cultivated within. As you fill your own heart, you become magnetic to lasting love.", guidance: { luckyObject: "A personal journal", favorableDay: "Saturday", action: "Practice genuine self-compassion", avoid: "Self-criticism and harsh judgment" }},
-
-            // WEALTH & ABUNDANCE (15)
-            { category: "Wealth", symbol: "◇", freeReading: "A financial opportunity presents itself.", paidReading: "Money flows toward you from an unexpected channel. This may appear as opportunity, gift, or sudden insight about generating income. Stay alert to unusual prospects.", guidance: { luckyObject: "A gold coin", favorableDay: "Thursday", action: "Research a new income stream", avoid: "Dismissing unconventional ideas" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Review where your resources flow.", paidReading: "Small leaks drain large reservoirs. Examine where your money, time, and energy escape unnoticed. Plugging these subtle drains creates surprising abundance.", guidance: { luckyObject: "A sealed jar", favorableDay: "Saturday", action: "Track all expenses for one week", avoid: "Mindless spending" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Generosity returns multiplied.", paidReading: "What you give circulates back expanded. A generous act—of money, time, or spirit—sets abundance in motion. Give without attachment; receive without guilt.", guidance: { luckyObject: "An open hand symbol", favorableDay: "Sunday", action: "Give unexpectedly to someone in need", avoid: "Hoarding out of fear" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Your relationship with money transforms.", paidReading: "How you think about wealth shapes what you attract. Old beliefs about money—inherited or learned—are ready to shift. Abundance is your birthright.", guidance: { luckyObject: "A prosperity symbol", favorableDay: "Monday", action: "Write new beliefs about abundance", avoid: "Scarcity thinking" }},
-            { category: "Wealth", symbol: "◇", freeReading: "An investment of time pays off.", paidReading: "Something you've invested in—whether learning, a project, or a relationship—begins to yield returns. Patience with long-term growth outperforms quick gains.", guidance: { luckyObject: "A growing plant", favorableDay: "Wednesday", action: "Continue investing in your growth", avoid: "Expecting instant returns" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Simplify to amplify your prosperity.", paidReading: "Complexity obscures abundance. By simplifying your finances, possessions, or commitments, you create clarity. In that clarity, prosperity finds room to grow.", guidance: { luckyObject: "A single key", favorableDay: "Tuesday", action: "Eliminate one financial complexity", avoid: "Overcomplicating money matters" }},
-            { category: "Wealth", symbol: "◇", freeReading: "A debt—financial or karmic—resolves.", paidReading: "Something owed comes to completion. This may be money repaid, a favor returned, or karmic balance restored. Accounts settle in unexpected ways.", guidance: { luckyObject: "A balanced scale", favorableDay: "Friday", action: "Pay off or forgive a small debt", avoid: "Keeping score obsessively" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Value your skills more highly.", paidReading: "You undercharge for what you offer—whether in work, services, or energy. Others perceive your worth more clearly than you do. Raise your prices, literal or figurative.", guidance: { luckyObject: "A price tag", favorableDay: "Thursday", action: "Raise your rates or ask for more", avoid: "Undervaluing your contributions" }},
-            { category: "Wealth", symbol: "◇", freeReading: "An old possession holds hidden value.", paidReading: "Something you own—forgotten or overlooked—has worth you haven't recognized. This could be literal value or potential waiting to be unlocked. Look again at what you have.", guidance: { luckyObject: "An antique item", favorableDay: "Saturday", action: "Inventory forgotten possessions", avoid: "Assuming you lack resources" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Share knowledge to increase prosperity.", paidReading: "What you know has market value. Teaching, mentoring, or packaging your expertise creates new income streams. Your wisdom, properly shared, generates abundance.", guidance: { luckyObject: "A book", favorableDay: "Monday", action: "Teach someone what you know", avoid: "Keeping knowledge to yourself" }},
-            { category: "Wealth", symbol: "◇", freeReading: "A risk with money requires careful thought.", paidReading: "A financial opportunity presents both promise and peril. Neither blind faith nor paralyzing fear serves you. Gather information, then trust your informed intuition.", guidance: { luckyObject: "A magnifying glass", favorableDay: "Wednesday", action: "Research before committing money", avoid: "Impulsive financial decisions" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Abundance flows when gratitude grows.", paidReading: "Appreciation magnetizes more of what you appreciate. Before seeking more, deeply acknowledge what you have. This gratitude opens channels for greater flow.", guidance: { luckyObject: "A gratitude journal", favorableDay: "Sunday", action: "List everything you're grateful for", avoid: "Focusing only on lack" }},
-            { category: "Wealth", symbol: "◇", freeReading: "A partnership improves finances.", paidReading: "Joining resources with another multiplies what either could achieve alone. A financial partnership or collaboration has favorable stars. Choose partners whose values align.", guidance: { luckyObject: "Two coins", favorableDay: "Tuesday", action: "Explore a financial collaboration", avoid: "Going it entirely alone" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Release attachment to a specific outcome.", paidReading: "Gripping too tightly to how wealth should arrive blocks its flow. Hold your intentions clearly but release attachment to the method. Abundance finds creative paths.", guidance: { luckyObject: "An open window", favorableDay: "Friday", action: "Let go of how you think it should happen", avoid: "Rigid expectations about money" }},
-            { category: "Wealth", symbol: "◇", freeReading: "Your financial foundation strengthens.", paidReading: "The groundwork you're laying now supports future prosperity. Though progress may seem slow, you're building something stable. Trust the foundation forming beneath you.", guidance: { luckyObject: "A cornerstone", favorableDay: "Saturday", action: "Strengthen your financial basics", avoid: "Skipping foundational steps" }},
-
-            // HEALTH & WELLNESS (15)
-            { category: "Health", symbol: "✧", freeReading: "Listen to what your body whispers.", paidReading: "Your body communicates constantly—through energy, discomfort, and intuition. A message now demands attention. Address the whisper before it becomes a shout.", guidance: { luckyObject: "A smooth stone for massage", favorableDay: "Monday", action: "Rest when tiredness appears", avoid: "Ignoring physical signals" }},
-            { category: "Health", symbol: "✧", freeReading: "A small change creates lasting impact.", paidReading: "One modest adjustment to daily habits ripples outward dramatically. Don't seek dramatic transformation—seek the small sustainable shift that compounds over time.", guidance: { luckyObject: "A water bottle", favorableDay: "Tuesday", action: "Implement one small healthy habit", avoid: "Extreme unsustainable changes" }},
-            { category: "Health", symbol: "✧", freeReading: "Movement brings breakthrough.", paidReading: "Physical motion unlocks mental and emotional stagnation. When stuck in any area of life, move your body. Answers come through action, not just thought.", guidance: { luckyObject: "Walking shoes", favorableDay: "Wednesday", action: "Take a long walk in nature", avoid: "Sedentary problem-solving" }},
-            { category: "Health", symbol: "✧", freeReading: "Rest is not weakness but wisdom.", paidReading: "The drive to constant productivity depletes vital reserves. Rest is not earned through exhaustion but taken as medicine. Your body craves restoration.", guidance: { luckyObject: "A soft pillow", favorableDay: "Sunday", action: "Schedule genuine rest time", avoid: "Glorifying exhaustion" }},
-            { category: "Health", symbol: "✧", freeReading: "What you consume affects more than body.", paidReading: "Diet extends beyond food to include media, conversations, and environments. Notice what you take in and how it affects your energy. Curate your consumption consciously.", guidance: { luckyObject: "A clean empty bowl", favorableDay: "Friday", action: "Fast from something depleting", avoid: "Mindless consumption" }},
-            { category: "Health", symbol: "✧", freeReading: "An old pattern is ready to release.", paidReading: "A habit, addiction, or pattern that no longer serves you loosens its grip. The momentum for change is with you now. What once seemed impossible becomes achievable.", guidance: { luckyObject: "A broken chain", favorableDay: "Saturday", action: "Take the first step to break a habit", avoid: "Believing change is impossible" }},
-            { category: "Health", symbol: "✧", freeReading: "Nature holds healing you need.", paidReading: "Time in natural settings restores what indoor life depletes. Trees, water, earth, and sky offer medicine no pharmacy can match. Seek nature as prescription.", guidance: { luckyObject: "A leaf or flower", favorableDay: "Thursday", action: "Spend meaningful time outdoors", avoid: "Extended indoor isolation" }},
-            { category: "Health", symbol: "✧", freeReading: "Stress manifests physically.", paidReading: "Emotional tension lodges in your body. A physical symptom may have psychological roots. Address the underlying stress to heal the surface manifestation.", guidance: { luckyObject: "A stress ball", favorableDay: "Monday", action: "Identify sources of chronic stress", avoid: "Treating only symptoms" }},
-            { category: "Health", symbol: "✧", freeReading: "Sleep holds answers you seek.", paidReading: "Your unconscious mind processes during sleep. A question held before rest receives answer upon waking. Honor sleep as sacred time for healing and insight.", guidance: { luckyObject: "A dream journal", favorableDay: "Sunday", action: "Prioritize sleep quality", avoid: "Sacrificing sleep for productivity" }},
-            { category: "Health", symbol: "✧", freeReading: "Your breath carries untapped power.", paidReading: "Breath connects mind, body, and spirit. Conscious breathing—often forgotten—regulates nervous system and clears energy. Return to breath as daily practice.", guidance: { luckyObject: "A small bell", favorableDay: "Tuesday", action: "Practice deep breathing daily", avoid: "Shallow stress breathing" }},
-            { category: "Health", symbol: "✧", freeReading: "Joy is medicine for what ails you.", paidReading: "The healing power of genuine joy is underrated. What brings you pure delight? This is not indulgence but necessity. Joy strengthens immunity and spirit alike.", guidance: { luckyObject: "Something that makes you smile", favorableDay: "Friday", action: "Do something purely for joy", avoid: "Deferring pleasure indefinitely" }},
-            { category: "Health", symbol: "✧", freeReading: "A health answer comes from unexpected source.", paidReading: "The solution to a health concern arrives through unusual channels—a chance conversation, a book, an alternative approach. Stay open to guidance from unexpected directions.", guidance: { luckyObject: "An open book", favorableDay: "Wednesday", action: "Research alternative approaches", avoid: "Dismissing unconventional wisdom" }},
-            { category: "Health", symbol: "✧", freeReading: "Emotional release improves physical state.", paidReading: "Suppressed emotions create physical density. Tears, laughter, or expressive movement releases what's stored in tissue. Let emotions flow to let health improve.", guidance: { luckyObject: "A tissue or handkerchief", favorableDay: "Thursday", action: "Allow yourself to feel fully", avoid: "Suppressing emotions" }},
-            { category: "Health", symbol: "✧", freeReading: "Balance is your body's natural state.", paidReading: "Your body knows how to heal when given proper conditions. Remove obstacles more than add interventions. Trust the innate wisdom seeking equilibrium.", guidance: { luckyObject: "A balanced stone stack", favorableDay: "Saturday", action: "Remove one health obstacle", avoid: "Over-intervention" }},
-            { category: "Health", symbol: "✧", freeReading: "Prevention now prevents crisis later.", paidReading: "Small attention to health today prevents larger intervention tomorrow. The body sends early warnings before emergencies. Heed the gentle signals now.", guidance: { luckyObject: "A calendar", favorableDay: "Monday", action: "Schedule a health check-up", avoid: "Postponing preventive care" }},
-
-            // PERSONAL GROWTH (15)
-            { category: "Growth", symbol: "❋", freeReading: "You are ready for the next level.", paidReading: "The discomfort you feel is the edge of your current container. You've outgrown it. Expansion requires the courage to leave familiar limitations behind.", guidance: { luckyObject: "A butterfly image", favorableDay: "Thursday", action: "Commit to your next challenge", avoid: "Playing small when you're ready for more" }},
-            { category: "Growth", symbol: "❋", freeReading: "A teacher appears when the student is ready.", paidReading: "Someone enters your life carrying exactly the lesson you need. This teacher may not look traditional—could be a child, a stranger, even an adversary. Learn from everyone.", guidance: { luckyObject: "An empty notebook", favorableDay: "Monday", action: "Approach life as a student", avoid: "Thinking you know it all" }},
-            { category: "Growth", symbol: "❋", freeReading: "What you resist persists.", paidReading: "The thing you avoid keeps reappearing because it carries a lesson. Facing what you resist dissolves its power. Turn toward discomfort with curiosity.", guidance: { luckyObject: "A small mirror", favorableDay: "Tuesday", action: "Face something you've been avoiding", avoid: "Running from recurring challenges" }},
-            { category: "Growth", symbol: "❋", freeReading: "Your comfort zone is your limitation zone.", paidReading: "Safety has become stagnation. Growth requires venturing beyond the known. The discomfort of expansion beats the slow decay of comfort.", guidance: { luckyObject: "A compass", favorableDay: "Wednesday", action: "Do one thing that scares you", avoid: "Excessive comfort-seeking" }},
-            { category: "Growth", symbol: "❋", freeReading: "Old identity must die for new self to emerge.", paidReading: "Who you've been isn't who you're becoming. Grief for your old self is natural but don't cling. The person you're growing into needs room.", guidance: { luckyObject: "A phoenix image", favorableDay: "Saturday", action: "Release an outdated self-image", avoid: "Clinging to who you were" }},
-            { category: "Growth", symbol: "❋", freeReading: "Solitude brings clarity you seek.", paidReading: "Time alone with your thoughts—without distraction—reveals answers obscured by noise. Schedule solitude as sacred practice, not punishment.", guidance: { luckyObject: "A candle", favorableDay: "Sunday", action: "Spend quality time alone", avoid: "Constant distraction" }},
-            { category: "Growth", symbol: "❋", freeReading: "Your words create your world.", paidReading: "The language you use—internally and externally—shapes reality. Notice the stories you tell and consider writing new ones. Words are spells; cast them wisely.", guidance: { luckyObject: "A quality pen", favorableDay: "Thursday", action: "Notice and revise negative self-talk", avoid: "Careless language" }},
-            { category: "Growth", symbol: "❋", freeReading: "Forgiveness frees you more than them.", paidReading: "Holding onto grievance poisons the holder. Forgiveness doesn't condone—it releases you from the burden of carrying resentment. Set yourself free.", guidance: { luckyObject: "A white stone", favorableDay: "Friday", action: "Genuinely forgive one person", avoid: "Nurturing resentment" }},
-            { category: "Growth", symbol: "❋", freeReading: "Fear is a compass pointing toward growth.", paidReading: "What scares you often indicates your next evolution. Fear marks the threshold of expansion. Follow fear like a guide to your becoming.", guidance: { luckyObject: "A skeleton key", favorableDay: "Tuesday", action: "Move toward what frightens you", avoid: "Letting fear make decisions" }},
-            { category: "Growth", symbol: "❋", freeReading: "Gratitude accelerates transformation.", paidReading: "Appreciation for where you are speeds arrival at where you're going. Growth from gratitude differs from growth from lack—it's sustainable and joyful.", guidance: { luckyObject: "A gratitude stone", favorableDay: "Sunday", action: "Start each day with gratitude", avoid: "Focusing only on what's missing" }},
-            { category: "Growth", symbol: "❋", freeReading: "Comparison steals your unique journey.", paidReading: "Others' paths illuminate possibilities but your journey is unique. Their timeline isn't yours; their lessons aren't your lessons. Walk your own path fully.", guidance: { luckyObject: "A personal talisman", favorableDay: "Monday", action: "Celebrate your unique journey", avoid: "Measuring against others" }},
-            { category: "Growth", symbol: "❋", freeReading: "Service to others elevates your spirit.", paidReading: "Growth through giving creates its own reward. When stuck in personal problems, helping others shifts perspective dramatically. Service is secret medicine.", guidance: { luckyObject: "An offering bowl", favorableDay: "Wednesday", action: "Perform anonymous service", avoid: "Excessive self-focus" }},
-            { category: "Growth", symbol: "❋", freeReading: "Your intuition strengthens with trust.", paidReading: "Inner knowing is a muscle that strengthens through use. Each time you trust and act on intuition, it grows clearer. Begin with small matters.", guidance: { luckyObject: "A clear crystal", favorableDay: "Thursday", action: "Act on a gut feeling today", avoid: "Ignoring inner guidance" }},
-            { category: "Growth", symbol: "❋", freeReading: "The obstacle is the way.", paidReading: "What blocks you also builds you. The very challenge frustrating you contains the growth you need. Don't seek to avoid obstacles—transform through them.", guidance: { luckyObject: "A rough stone", favorableDay: "Saturday", action: "Embrace your current challenge", avoid: "Seeking only easy paths" }},
-            { category: "Growth", symbol: "❋", freeReading: "Small daily progress trumps rare giant leaps.", paidReading: "Consistent small steps outpace occasional dramatic efforts. The compound effect of daily dedication creates transformation impossible to achieve through sporadic intensity.", guidance: { luckyObject: "A calendar marked with progress", favorableDay: "Monday", action: "Commit to daily small actions", avoid: "Waiting for motivation" }},
-
-            // CREATIVITY (10)
-            { category: "Creativity", symbol: "✺", freeReading: "Creative energy seeks expression through you.", paidReading: "Ideas press against you from within, seeking birth. Make space for creative expression—not perfection, just expression. What wants to emerge through you?", guidance: { luckyObject: "A blank canvas or page", favorableDay: "Friday", action: "Create something, anything, today", avoid: "Perfectionism that blocks creation" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Play unlocks what seriousness cannot.", paidReading: "Approaching your work with playfulness opens doors locked by grim determination. The muse responds to joy. Give yourself permission to play.", guidance: { luckyObject: "A toy or game", favorableDay: "Wednesday", action: "Approach a project playfully", avoid: "Taking yourself too seriously" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Constraints inspire unexpected solutions.", paidReading: "Limitation is creativity's secret fuel. Rather than resisting constraints, embrace them as creative catalysts. Boundaries force innovation.", guidance: { luckyObject: "A small frame", favorableDay: "Tuesday", action: "Impose a creative constraint", avoid: "Waiting for perfect conditions" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Your creative blocks are doors in disguise.", paidReading: "Where you feel stuck holds hidden treasure. The block itself points toward breakthrough. Examine the resistance—the answer hides within it.", guidance: { luckyObject: "A key", favorableDay: "Thursday", action: "Explore what's blocking you", avoid: "Avoiding creative challenges" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Collaboration sparks unexpected brilliance.", paidReading: "Another mind complements your creative process. What you can't see alone becomes visible in partnership. Seek a creative collaborator or sounding board.", guidance: { luckyObject: "Interlinked circles", favorableDay: "Saturday", action: "Share your work with someone", avoid: "Creating in complete isolation" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Let your creations be imperfect and alive.", paidReading: "Perfection is the enemy of completion. Release work while it still feels vulnerable—that's often when it's most powerful. Imperfect and done beats perfect and imagined.", guidance: { luckyObject: "A wabi-sabi object", favorableDay: "Monday", action: "Release an imperfect creation", avoid: "Endless polishing" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Boredom signals creative hunger.", paidReading: "When boredom strikes, creativity starves. This restlessness calls for new input, experiences, or projects. Feed your creative mind something fresh.", guidance: { luckyObject: "A new book or experience", favorableDay: "Sunday", action: "Seek novel experiences", avoid: "Numbing boredom with passive consumption" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Your unique voice is your greatest asset.", paidReading: "Stop imitating and start expressing. Your peculiar perspective—the thing that feels too weird—is exactly what the world needs. No one else can offer your voice.", guidance: { luckyObject: "A signature item", favorableDay: "Friday", action: "Express without filtering", avoid: "Copying others' styles" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Rest feeds creative wells.", paidReading: "Creativity depletes like any resource. Periods of rest and input refill wells run dry by output. Honor fallow time as essential to creative cycles.", guidance: { luckyObject: "A sleeping cat image", favorableDay: "Sunday", action: "Schedule creative rest", avoid: "Constant output without input" }},
-            { category: "Creativity", symbol: "✺", freeReading: "Begin before you feel ready.", paidReading: "Readiness is a myth that delays creation forever. Start messy, start scared, start confused—just start. Clarity comes through action, not before it.", guidance: { luckyObject: "A starter's whistle", favorableDay: "Tuesday", action: "Begin the project you've postponed", avoid: "Waiting to feel ready" }},
-
-            // FAMILY (8)
-            { category: "Family", symbol: "⌂", freeReading: "A family pattern is ready to break.", paidReading: "Inherited dynamics that have repeated for generations reach a turning point with you. You have power to transform what you received before passing it on.", guidance: { luckyObject: "A family photo", favorableDay: "Sunday", action: "Consciously choose a different response", avoid: "Blindly repeating patterns" }},
-            { category: "Family", symbol: "⌂", freeReading: "Healing in one heals the whole.", paidReading: "As you transform, your family system shifts. Your growth—even if others resist—creates ripples. Lead by example; preach through change.", guidance: { luckyObject: "A connected chain", favorableDay: "Monday", action: "Focus on your own growth", avoid: "Trying to change others directly" }},
-            { category: "Family", symbol: "⌂", freeReading: "Boundaries strengthen rather than break bonds.", paidReading: "Saying no where needed actually preserves relationships. Boundaries aren't walls but fences with gates. Establish limits with love.", guidance: { luckyObject: "A small fence symbol", favorableDay: "Tuesday", action: "Set one needed boundary", avoid: "Resentful over-giving" }},
-            { category: "Family", symbol: "⌂", freeReading: "An ancestor's gift awakens in you.", paidReading: "Talents, wisdom, or strength from your lineage activate now. You carry more than genetics—you carry gifts waiting to express. Honor your inheritance.", guidance: { luckyObject: "A heritage item", favorableDay: "Saturday", action: "Learn about your ancestors", avoid: "Disconnecting from your roots" }},
-            { category: "Family", symbol: "⌂", freeReading: "See family members with fresh eyes.", paidReading: "Those closest to us become invisible through familiarity. Look again at family members as if meeting them new. Discover who they've become while you weren't watching.", guidance: { luckyObject: "A magnifying glass", favorableDay: "Wednesday", action: "Have a real conversation with family", avoid: "Relating only to old versions of people" }},
-            { category: "Family", symbol: "⌂", freeReading: "Home requires tending like a garden.", paidReading: "Domestic harmony doesn't happen automatically—it's cultivated. Small investments in home life yield large returns in peace and connection. Tend your home space.", guidance: { luckyObject: "A small plant", favorableDay: "Friday", action: "Improve one aspect of home life", avoid: "Neglecting your living space" }},
-            { category: "Family", symbol: "⌂", freeReading: "Chosen family matters as much as blood.", paidReading: "Family extends beyond genetics to those you choose. Honor the bonds you've created with the same reverence as those you inherited. Both are real.", guidance: { luckyObject: "A friendship bracelet", favorableDay: "Thursday", action: "Appreciate your chosen family", avoid: "Devaluing non-blood connections" }},
-            { category: "Family", symbol: "⌂", freeReading: "A child or young person brings a message.", paidReading: "Wisdom comes from unexpected sources—including the young. A child in your life carries insight you need. Listen without condescension to youthful perspectives.", guidance: { luckyObject: "A child's drawing", favorableDay: "Sunday", action: "Really listen to a young person", avoid: "Dismissing the wisdom of youth" }},
-
-            // TRAVEL & ADVENTURE (7)
-            { category: "Travel", symbol: "↗", freeReading: "A journey—physical or metaphorical—awaits.", paidReading: "Movement is imminent. This may be literal travel or a journey of mind and spirit. Either way, you're not meant to stay where you are. Prepare to move.", guidance: { luckyObject: "A compass", favorableDay: "Thursday", action: "Plan a trip or new experience", avoid: "Excessive attachment to staying put" }},
-            { category: "Travel", symbol: "↗", freeReading: "Adventure refreshes what routine depletes.", paidReading: "The sameness of daily life has dulled your senses. Novel experience reawakens what familiarity put to sleep. Seek adventure as medicine.", guidance: { luckyObject: "A map", favorableDay: "Saturday", action: "Do something completely new", avoid: "Endless repetition of the same" }},
-            { category: "Travel", symbol: "↗", freeReading: "A stranger in a strange land brings gifts.", paidReading: "Being out of your element—uncomfortable as it feels—delivers gifts unavailable at home. Embrace the foreigner's perspective. Disorientation precedes reorientation.", guidance: { luckyObject: "A foreign coin", favorableDay: "Wednesday", action: "Explore unfamiliar territory", avoid: "Never leaving your comfort zone" }},
-            { category: "Travel", symbol: "↗", freeReading: "Return home with new eyes.", paidReading: "Sometimes the journey's purpose is to transform how you see where you started. After travels—of any kind—return home changed. See the familiar anew.", guidance: { luckyObject: "A souvenir", favorableDay: "Sunday", action: "Appreciate home after time away", avoid: "Taking familiar places for granted" }},
-            { category: "Travel", symbol: "↗", freeReading: "A detour leads somewhere better than planned.", paidReading: "Disruption to your intended route serves a purpose. What looks like delay or obstacle redirects you toward something better. Trust the detour.", guidance: { luckyObject: "A winding road image", favorableDay: "Tuesday", action: "Embrace unexpected changes of plan", avoid: "Rigid attachment to itineraries" }},
-            { category: "Travel", symbol: "↗", freeReading: "Travel light to go far.", paidReading: "What you carry determines how far you can go. This applies to luggage, possessions, and emotional baggage alike. Lighten your load to lengthen your journey.", guidance: { luckyObject: "A small bag", favorableDay: "Friday", action: "Release what weighs you down", avoid: "Accumulating unnecessary burdens" }},
-            { category: "Travel", symbol: "↗", freeReading: "The destination matters less than the journey.", paidReading: "Fixation on arrival robs the journey of its gifts. Where you end up matters less than who you become en route. Savor the traveling, not just the arrival.", guidance: { luckyObject: "A walking stick", favorableDay: "Monday", action: "Focus on the process, not the goal", avoid: "Obsessing over destinations" }}
+        // Inauspicious activities pool
+        const inauspiciousPool = [
+            { cn: '动土', en: 'Construct' },
+            { cn: '争执', en: 'Conflict' },
+            { cn: '远行', en: 'Long trip' },
+            { cn: '熬夜', en: 'Stay up' },
+            { cn: '冲动', en: 'Impulse' },
+            { cn: '借贷', en: 'Borrow' },
+            { cn: '诉讼', en: 'Lawsuit' },
+            { cn: '分手', en: 'Break up' }
         ];
 
-        // Track currently selected fortune
-        let selectedFortune = null;
-
-        // Karma messages pool
-        const karmaMessages = [
-            "The energy you give returns threefold. Your honesty strengthens the reading you're about to receive.",
-            "True fortune favors those who walk with integrity. What you give, the universe remembers.",
-            "An honest heart opens clearer paths. Your sincerity amplifies the guidance ahead.",
-            "The cards see all. Those who give freely receive the clearest visions.",
-            "Karma is the universe's perfect accountant. Your honesty today shapes your tomorrow."
+        // Lucky colors
+        const luckyColors = [
+            { cn: '红', en: 'Red', hex: '#C23A3A' },
+            { cn: '金', en: 'Gold', hex: '#C9A962' },
+            { cn: '绿', en: 'Green', hex: '#1B5E4A' },
+            { cn: '蓝', en: 'Blue', hex: '#3A6EA5' },
+            { cn: '紫', en: 'Purple', hex: '#6B4E8B' },
+            { cn: '粉', en: 'Pink', hex: '#E88B7D' },
+            { cn: '白', en: 'White', hex: '#F5F5F5' },
+            { cn: '黑', en: 'Black', hex: '#2C2C2C' }
         ];
 
-        // Daily card content pool - organized by zodiac sign
-        // Each has an affirmation/reflection + guidance tip
-        const dailyCards = {
-            // Generic (for users without birthday)
-            generic: [
-                { type: 'affirmation', message: "I am open to receiving the guidance the universe has for me today.", tip: "Lucky color: soft lavender", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I trust my inner wisdom to guide me through whatever comes.", tip: "Pause before reacting to unexpected news", tipLabel: "Today's Guidance" },
-                { type: 'reflection', message: "What would you do today if you knew you couldn't fail?", tip: "Lucky number: 7", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I release what no longer serves me and welcome new possibilities.", tip: "Reach out to someone you've been thinking about", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What small act of self-care have you been postponing?", tip: "Avoid making major decisions before noon", tipLabel: "Today's Caution" },
-                { type: 'affirmation', message: "My intuition is a gift, and I choose to honor it.", tip: "Lucky direction: East", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I am worthy of the abundance flowing toward me.", tip: "Take a different route than usual", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What truth have you been avoiding that needs your attention?", tip: "Lucky color: sage green", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I choose peace over worry, trust over fear.", tip: "Spend time near water today", tipLabel: "Today's Guidance" },
-                { type: 'reflection', message: "If your future self could send you one message, what would it be?", tip: "Lucky number: 3", tipLabel: "Today's Element" },
+        // Lucky directions
+        const luckyDirections = [
+            { cn: '东', en: 'East' },
+            { cn: '东南', en: 'Southeast' },
+            { cn: '南', en: 'South' },
+            { cn: '西南', en: 'Southwest' },
+            { cn: '西', en: 'West' },
+            { cn: '西北', en: 'Northwest' },
+            { cn: '北', en: 'North' },
+            { cn: '东北', en: 'Northeast' }
+        ];
+
+        // Lucky number pairs
+        const luckyNumberPairs = ['1, 6', '2, 7', '3, 8', '4, 9', '5, 10', '6, 8', '3, 6', '8, 9'];
+
+        // Personal fortunes by zodiac
+        const personalFortunes = {
+            'Rat': [
+                { cn: '机遇来临，把握时机', en: 'Opportunity knocks. Seize it.' },
+                { cn: '财运亨通，小心守财', en: 'Wealth flows. Guard it wisely.' }
             ],
-            // Fire signs: Aries, Leo, Sagittarius
-            Aries: [
-                { type: 'affirmation', message: "My courage inspires others. I lead with heart and conviction.", tip: "Channel your energy into one focused goal", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "Where might patience serve you better than speed today?", tip: "Lucky color: bold red", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I trust my instincts—they have never led me astray.", tip: "Avoid starting new projects after 4pm", tipLabel: "Today's Caution" },
-                { type: 'affirmation', message: "My passion is my power. I use it wisely.", tip: "Take three deep breaths before important conversations", tipLabel: "Today's Guidance" },
-                { type: 'reflection', message: "What battle might you win by choosing not to fight?", tip: "Lucky number: 9", tipLabel: "Today's Element" },
+            'Ox': [
+                { cn: '稳步前进，终有收获', en: 'Steady progress brings rewards.' },
+                { cn: '贵人相助，事半功倍', en: 'Helpful allies double your success.' }
             ],
-            Leo: [
-                { type: 'affirmation', message: "My light uplifts everyone around me. I shine without apology.", tip: "Share genuine praise with someone today", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "How can you lead with warmth instead of force today?", tip: "Lucky color: gold", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I am creative, generous, and worthy of admiration.", tip: "Create something, even if just for yourself", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "My heart is big enough for self-love and love for others.", tip: "Avoid seeking validation externally", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "What would happen if you let others take the spotlight today?", tip: "Lucky number: 1", tipLabel: "Today's Element" },
+            'Tiger': [
+                { cn: '勇往直前，无惧挑战', en: 'Charge forward fearlessly.' },
+                { cn: '适当收敛，蓄势待发', en: 'Conserve energy for the right moment.' }
             ],
-            Sagittarius: [
-                { type: 'affirmation', message: "Every experience expands my wisdom. I am a lifelong learner.", tip: "Say yes to an unexpected invitation", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What adventure is calling to you that you've been ignoring?", tip: "Lucky color: purple", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "My optimism is contagious. I spread hope wherever I go.", tip: "Learn one new thing today", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "Freedom and commitment can coexist in my life.", tip: "Avoid overcommitting your time", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "What truth needs to be spoken with kindness today?", tip: "Lucky number: 5", tipLabel: "Today's Element" },
+            'Rabbit': [
+                { cn: '和气生财，以柔克刚', en: 'Gentle wins. Softness conquers.' },
+                { cn: '桃花运旺，注意选择', en: 'Romance blooms. Choose wisely.' }
             ],
-            // Earth signs: Taurus, Virgo, Capricorn
-            Taurus: [
-                { type: 'affirmation', message: "I am grounded, stable, and deeply connected to abundance.", tip: "Enjoy a sensory pleasure mindfully today", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "Where might flexibility serve you better than stubbornness?", tip: "Lucky color: forest green", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I deserve comfort and beauty in my daily life.", tip: "Declutter one small space", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "My patience is a strength, not a weakness.", tip: "Avoid rushed financial decisions", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "What are you holding onto that you've already outgrown?", tip: "Lucky number: 6", tipLabel: "Today's Element" },
+            'Dragon': [
+                { cn: '贵人相助，宜主动出击', en: 'Helpful allies. Take initiative.' },
+                { cn: '龙腾虎跃，大展宏图', en: 'Soar high. Dream big today.' }
             ],
-            Virgo: [
-                { type: 'affirmation', message: "My attention to detail is a gift. I use it with compassion.", tip: "Release perfectionism in one area today", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What would self-compassion look like for you right now?", tip: "Lucky color: navy blue", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I am enough exactly as I am, imperfections and all.", tip: "Do something without planning first", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "My service to others matters, but so does serving myself.", tip: "Avoid overanalyzing small decisions", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "How can you help without trying to fix everything?", tip: "Lucky number: 8", tipLabel: "Today's Element" },
+            'Snake': [
+                { cn: '静观其变，后发制人', en: 'Watch and wait. Strike last.' },
+                { cn: '智慧通达，洞察先机', en: 'Wisdom guides. See ahead.' }
             ],
-            Capricorn: [
-                { type: 'affirmation', message: "My ambition serves a greater purpose. Success is my birthright.", tip: "Celebrate a recent accomplishment", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "When did you last rest without guilt?", tip: "Lucky color: charcoal", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I balance achievement with presence. The journey matters.", tip: "Take a break you've been postponing", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "I am worthy beyond my productivity and accomplishments.", tip: "Avoid working through lunch", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "What would happen if you chose ease over effort today?", tip: "Lucky number: 4", tipLabel: "Today's Element" },
+            'Horse': [
+                { cn: '快马加鞭，一往无前', en: 'Full speed ahead. No stopping.' },
+                { cn: '注意休息，养精蓄锐', en: 'Rest now. Store your energy.' }
             ],
-            // Air signs: Gemini, Libra, Aquarius
-            Gemini: [
-                { type: 'affirmation', message: "My curiosity is a superpower. I embrace all my facets.", tip: "Have a meaningful conversation with someone new", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What scattered energy could you focus into one direction?", tip: "Lucky color: bright yellow", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I communicate with clarity and heart. My words have power.", tip: "Write down your thoughts before sharing", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "Both sides of me are valid. I contain multitudes.", tip: "Avoid gossip and idle chatter", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "What conversation have you been avoiding that needs to happen?", tip: "Lucky number: 2", tipLabel: "Today's Element" },
+            'Goat': [
+                { cn: '温和待人，贵人自来', en: 'Be gentle. Allies will come.' },
+                { cn: '艺术创作，灵感迸发', en: 'Creative spark ignites today.' }
             ],
-            Libra: [
-                { type: 'affirmation', message: "I create harmony while honoring my own needs.", tip: "Make a decision you've been postponing", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What would you choose if you couldn't consider others' opinions?", tip: "Lucky color: rose pink", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "My peace matters. I choose relationships that honor me.", tip: "Spend time in a beautiful environment", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "I can set boundaries and still be loving.", tip: "Avoid people-pleasing at your expense", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "Where have you abandoned yourself to keep the peace?", tip: "Lucky number: 7", tipLabel: "Today's Element" },
+            'Monkey': [
+                { cn: '灵活应变，化险为夷', en: 'Adapt quickly. Turn danger to safety.' },
+                { cn: '小心口舌，谨言慎行', en: 'Watch your words carefully.' }
             ],
-            Aquarius: [
-                { type: 'affirmation', message: "My uniqueness is my contribution to the world.", tip: "Share an unconventional idea", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "How can you balance independence with intimacy?", tip: "Lucky color: electric blue", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I belong, even when I feel different. My tribe exists.", tip: "Connect with like-minded souls", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "My emotions are valid, even when logic can't explain them.", tip: "Avoid detaching when feelings arise", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "What cause or vision deserves more of your attention?", tip: "Lucky number: 11", tipLabel: "Today's Element" },
+            'Rooster': [
+                { cn: '早起有福，勤奋致富', en: 'Early bird wins. Work brings wealth.' },
+                { cn: '注意细节，避免疏漏', en: 'Mind the details. Avoid mistakes.' }
             ],
-            // Water signs: Cancer, Scorpio, Pisces
-            Cancer: [
-                { type: 'affirmation', message: "My sensitivity is wisdom. I nurture myself as I nurture others.", tip: "Create a cozy moment for yourself", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What emotions are asking to be felt, not fixed?", tip: "Lucky color: silver", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I protect my energy while keeping my heart open.", tip: "Set one boundary today", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "Home is within me. I carry my safety wherever I go.", tip: "Avoid absorbing others' moods", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "Who in your inner circle needs your presence today?", tip: "Lucky number: 2", tipLabel: "Today's Element" },
+            'Dog': [
+                { cn: '忠诚待人，福报自来', en: 'Loyalty brings blessings.' },
+                { cn: '保护所爱，守护家人', en: 'Protect loved ones today.' }
             ],
-            Scorpio: [
-                { type: 'affirmation', message: "My depth is my power. I transform pain into wisdom.", tip: "Release one thing you've been gripping", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What are you ready to let die so something new can live?", tip: "Lucky color: deep burgundy", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I trust others without losing my discernment.", tip: "Share a secret with someone safe", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "Vulnerability is not weakness. It is my hidden strength.", tip: "Avoid obsessing over what you can't control", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "What truth have you been hiding from yourself?", tip: "Lucky number: 8", tipLabel: "Today's Element" },
-            ],
-            Pisces: [
-                { type: 'affirmation', message: "My dreams are messages. I honor my inner world.", tip: "Spend time near water today", tipLabel: "Today's Action" },
-                { type: 'reflection', message: "What creative impulse have you been suppressing?", tip: "Lucky color: sea foam", tipLabel: "Today's Element" },
-                { type: 'affirmation', message: "I am compassionate without losing myself in others.", tip: "Create or appreciate art today", tipLabel: "Today's Guidance" },
-                { type: 'affirmation', message: "My imagination is a portal. I use it to heal and create.", tip: "Avoid escapism through substances or screens", tipLabel: "Today's Caution" },
-                { type: 'reflection', message: "What spiritual practice is calling to you?", tip: "Lucky number: 12", tipLabel: "Today's Element" },
+            'Pig': [
+                { cn: '享受生活，知足常乐', en: 'Enjoy life. Contentment is key.' },
+                { cn: '财运旺盛，适合投资', en: 'Wealth luck strong. Good for investing.' }
             ]
         };
+
+        // Fortune pool for card readings
+        const fortunes = [
+            { category: "Career", categoryEn: "事业", symbol: "◈", reading: "A shift approaches in your professional life. Stay alert to unexpected opportunities.", guidance: { object: "A silver pen", day: "Thursday", action: "Update your resume or portfolio", avoid: "Gossip in the workplace" }},
+            { category: "Career", categoryEn: "事业", symbol: "◈", reading: "Recognition for your efforts is near. Someone in a position of influence notices your progress.", guidance: { object: "A blue notebook", day: "Monday", action: "Speak up in your next meeting", avoid: "Downplaying your achievements" }},
+            { category: "Love", categoryEn: "感情", symbol: "♡", reading: "An unexpected connection awaits. The one you seek may not match your expectations but will match your heart.", guidance: { object: "A rose quartz", day: "Friday", action: "Say yes to an unusual invitation", avoid: "Dismissing people too quickly" }},
+            { category: "Love", categoryEn: "感情", symbol: "♡", reading: "Deeper understanding grows in a relationship. Honest conversation strengthens your bond.", guidance: { object: "A handwritten letter", day: "Sunday", action: "Share something you've held back", avoid: "Assuming they already know" }},
+            { category: "Wealth", categoryEn: "财运", symbol: "◇", reading: "A financial opportunity presents itself. Stay alert to unusual prospects and side opportunities.", guidance: { object: "A gold coin", day: "Thursday", action: "Research a new income stream", avoid: "Dismissing unconventional ideas" }},
+            { category: "Wealth", categoryEn: "财运", symbol: "◇", reading: "Small leaks drain large reservoirs. Examine where your resources escape unnoticed.", guidance: { object: "A sealed jar", day: "Saturday", action: "Track all expenses for one week", avoid: "Mindless spending" }},
+            { category: "Health", categoryEn: "健康", symbol: "✧", reading: "Listen to what your body whispers. A message now demands attention before it becomes urgent.", guidance: { object: "A smooth stone", day: "Monday", action: "Rest when tiredness appears", avoid: "Ignoring physical signals" }},
+            { category: "Health", categoryEn: "健康", symbol: "✧", reading: "Movement brings breakthrough. Physical motion unlocks mental and emotional stagnation.", guidance: { object: "Walking shoes", day: "Wednesday", action: "Take a long walk in nature", avoid: "Sedentary problem-solving" }},
+            { category: "Growth", categoryEn: "成长", symbol: "❋", reading: "You are ready for the next level. The discomfort you feel is the edge of your current container.", guidance: { object: "A butterfly image", day: "Thursday", action: "Commit to your next challenge", avoid: "Playing small when you're ready for more" }},
+            { category: "Growth", categoryEn: "成长", symbol: "❋", reading: "What you resist persists. Facing what you avoid dissolves its power over you.", guidance: { object: "A small mirror", day: "Tuesday", action: "Face something you've been avoiding", avoid: "Running from recurring challenges" }},
+            { category: "Creativity", categoryEn: "创意", symbol: "✺", reading: "Creative energy seeks expression through you. Make space for creation—not perfection, just expression.", guidance: { object: "A blank canvas", day: "Friday", action: "Create something today", avoid: "Perfectionism that blocks creation" }},
+            { category: "Family", categoryEn: "家庭", symbol: "⌂", reading: "A family pattern is ready to break. You have power to transform what you received before passing it on.", guidance: { object: "A family photo", day: "Sunday", action: "Choose a different response", avoid: "Blindly repeating patterns" }}
+        ];
 
         // ===== localStorage Management =====
         function getUserData() {
@@ -1528,71 +1230,137 @@
             return new Date().toISOString().split('T')[0];
         }
 
-        function isDailyCardAvailable() {
-            const userData = getUserData();
-            const today = getTodayString();
-            return userData.dailyCard?.lastRevealDate !== today;
+        // ===== Deterministic random based on date =====
+        function seededRandom(seed) {
+            const x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
         }
 
-        function updateStreak() {
-            const userData = getUserData();
-            const today = new Date();
-            const todayStr = getTodayString();
-
-            if (!userData.streak) {
-                userData.streak = { current: 0, longest: 0, lastVisitDate: null };
-            }
-
-            if (userData.streak.lastVisitDate) {
-                const lastVisit = new Date(userData.streak.lastVisitDate);
-                const daysDiff = Math.floor((today - lastVisit) / (1000 * 60 * 60 * 24));
-
-                if (daysDiff === 1) {
-                    userData.streak.current++;
-                    userData.streak.longest = Math.max(userData.streak.current, userData.streak.longest);
-                } else if (daysDiff > 1) {
-                    userData.streak.current = 1;
-                }
-                // daysDiff === 0 means same day, don't change
-            } else {
-                userData.streak.current = 1;
-            }
-
-            userData.streak.lastVisitDate = todayStr;
-            saveUserData(userData);
-        }
-
-        // Deterministic daily card selection based on date + zodiac
-        function getDailyCardSeed(dateStr, zodiac) {
+        function getDateSeed(dateStr) {
             let hash = 0;
-            const str = dateStr + (zodiac || 'generic');
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
+            for (let i = 0; i < dateStr.length; i++) {
+                const char = dateStr.charCodeAt(i);
                 hash = ((hash << 5) - hash) + char;
                 hash = hash & hash;
             }
             return Math.abs(hash);
         }
 
-        function getDailyCard() {
-            const userData = getUserData();
-            const today = getTodayString();
-            const zodiac = userData.westernZodiac || null;
-
-            // Get cards for user's zodiac or generic
-            const cards = zodiac && dailyCards[zodiac] ? dailyCards[zodiac] : dailyCards.generic;
-
-            // Use date-based seed for consistent daily selection
-            const seed = getDailyCardSeed(today, zodiac);
-            const index = seed % cards.length;
+        // ===== Lunar Calendar (Simplified) =====
+        // This is a simplified approximation. For production, use a proper lunar calendar library.
+        function getLunarDate(date) {
+            // Approximate lunar date based on day of year
+            // This is NOT accurate but provides variety for the mockup
+            const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
+            const lunarDay = ((dayOfYear + 15) % 30) + 1; // Offset to roughly align
+            const lunarMonth = Math.floor((dayOfYear + 15) / 30) % 12;
 
             return {
-                card: cards[index],
-                zodiac: zodiac,
-                isPersonalized: !!zodiac
+                month: lunarMonths[lunarMonth],
+                day: lunarDays[lunarDay - 1] || '初一'
             };
         }
 
+        // ===== Get Year Animal =====
+        function getYearAnimal(year) {
+            const animals = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'];
+            const startYear = 1900;
+            const index = (year - startYear) % 12;
+            return animals[index >= 0 ? index : index + 12];
+        }
+
+        // ===== Get Day Zodiac =====
+        function getDayZodiac(date) {
+            // Day zodiac cycles every 12 days
+            const baseDate = new Date(2024, 0, 1); // Known Rat day
+            const daysDiff = Math.floor((date - baseDate) / 86400000);
+            const index = ((daysDiff % 12) + 12) % 12;
+            return dayZodiacs[index];
+        }
+
+        // ===== Render Daily Calendar =====
+        function renderDailyCalendar() {
+            const today = new Date();
+            const todayStr = getTodayString();
+            const seed = getDateSeed(todayStr);
+
+            // Year info
+            const yearAnimal = getYearAnimal(today.getFullYear());
+            const yearData = chineseZodiacs[yearAnimal];
+            document.getElementById('topbar-year').textContent = yearData.cn + '年';
+            document.getElementById('topbar-year-en').textContent = 'Year of the ' + yearAnimal;
+
+            // Date info
+            document.getElementById('date-number').textContent = today.getDate();
+            document.getElementById('month-en').textContent = monthsEn[today.getMonth()];
+            document.getElementById('year-badge').textContent = today.getFullYear();
+            document.getElementById('weekday-en').textContent = weekdaysEn[today.getDay()];
+            document.getElementById('weekday-cn').textContent = weekdaysCn[today.getDay()];
+
+            // Lunar date
+            const lunar = getLunarDate(today);
+            document.getElementById('month-cn').textContent = lunar.month;
+            document.getElementById('lunar-day').textContent = lunar.day;
+
+            // Day zodiac
+            const dayZodiac = getDayZodiac(today);
+            document.getElementById('day-zodiac').textContent = dayZodiac + ' Day';
+
+            // Auspicious activities (pick 3-4 based on seed)
+            const auspiciousCount = 3 + Math.floor(seededRandom(seed) * 2);
+            const shuffledAuspicious = [...auspiciousPool].sort((a, b) => seededRandom(seed + a.cn.charCodeAt(0)) - 0.5);
+            const todayAuspicious = shuffledAuspicious.slice(0, auspiciousCount);
+
+            const auspiciousHtml = todayAuspicious.map(item =>
+                `<div class="activity-item">${item.cn}<span class="en">${item.en}</span></div>`
+            ).join('');
+            document.getElementById('auspicious-items').innerHTML = auspiciousHtml;
+
+            // Inauspicious activities (pick 2-3)
+            const inauspiciousCount = 2 + Math.floor(seededRandom(seed + 1) * 2);
+            const shuffledInauspicious = [...inauspiciousPool].sort((a, b) => seededRandom(seed + 100 + a.cn.charCodeAt(0)) - 0.5);
+            const todayInauspicious = shuffledInauspicious.slice(0, inauspiciousCount);
+
+            const inauspiciousHtml = todayInauspicious.map(item =>
+                `<div class="activity-item">${item.cn}<span class="en">${item.en}</span></div>`
+            ).join('');
+            document.getElementById('inauspicious-items').innerHTML = inauspiciousHtml;
+
+            // Lucky color
+            const colorIndex = Math.floor(seededRandom(seed + 200) * luckyColors.length);
+            const color = luckyColors[colorIndex];
+            document.getElementById('color-cn').textContent = color.cn;
+            document.getElementById('color-en').textContent = color.en;
+            document.getElementById('color-dot').style.background = color.hex;
+
+            // Lucky direction
+            const dirIndex = Math.floor(seededRandom(seed + 300) * luckyDirections.length);
+            const direction = luckyDirections[dirIndex];
+            document.getElementById('direction-cn').textContent = direction.cn;
+            document.getElementById('direction-en').textContent = direction.en;
+
+            // Lucky numbers
+            const numIndex = Math.floor(seededRandom(seed + 400) * luckyNumberPairs.length);
+            document.getElementById('lucky-numbers').textContent = luckyNumberPairs[numIndex];
+
+            // Personal section (if user has birthday/zodiac set)
+            const userData = getUserData();
+            if (userData.chineseZodiac) {
+                const userZodiac = userData.chineseZodiac;
+                const zodiacData = chineseZodiacs[userZodiac];
+                const fortunes = personalFortunes[userZodiac] || personalFortunes['Dragon'];
+                const fortuneIndex = Math.floor(seededRandom(seed + 500) * fortunes.length);
+                const fortune = fortunes[fortuneIndex];
+
+                document.getElementById('user-zodiac-emoji').textContent = zodiacData.emoji;
+                document.getElementById('user-zodiac-cn').textContent = zodiacData.cn;
+                document.getElementById('personal-fortune-cn').textContent = fortune.cn;
+                document.getElementById('personal-fortune-en').textContent = fortune.en;
+                document.getElementById('personal-section').classList.remove('hidden');
+            }
+        }
+
+        // ===== Daily Card Reveal =====
         function revealDailyCard() {
             const userData = getUserData();
             const today = getTodayString();
@@ -1602,278 +1370,58 @@
                 return;
             }
 
-            // Update streak and mark as revealed
-            updateStreak();
-
+            // Mark as revealed
             userData.dailyCard = {
                 lastRevealDate: today,
                 revealed: true
             };
-
-            if (!userData.firstVisitDate) {
-                userData.firstVisitDate = today;
-            }
-
             saveUserData(userData);
-            renderDailyCard();
+
+            // Hide sealed overlay
+            document.getElementById('sealed').classList.add('hidden');
         }
 
-        function renderDailyCard() {
+        // ===== Check if already revealed today =====
+        function checkDailyState() {
             const userData = getUserData();
             const today = getTodayString();
-            const contentEl = document.getElementById('daily-card-content');
-            const cardEl = document.getElementById('daily-card');
 
-            // Format date nicely
-            const dateObj = new Date();
-            const options = { month: 'long', day: 'numeric' };
-            document.getElementById('daily-card-date').textContent = dateObj.toLocaleDateString('en-US', options);
-
-            // Check state
-            const isRevealed = userData.dailyCard?.lastRevealDate === today && userData.dailyCard?.revealed;
-
-            if (!isRevealed) {
-                // Show sealed card
-                cardEl.style.cursor = 'pointer';
-                contentEl.innerHTML = `
-                    <div class="daily-card-sealed">
-                        <div class="moon-icon">☾</div>
-                        <p class="reveal-text">tap to reveal today's message</p>
-                    </div>
-                `;
+            if (userData.dailyCard?.lastRevealDate === today && userData.dailyCard?.revealed) {
+                document.getElementById('sealed').classList.add('hidden');
             } else {
-                // Show revealed card
-                const { card, zodiac, isPersonalized } = getDailyCard();
-                cardEl.style.cursor = 'default';
-
-                const zodiacBadge = isPersonalized
-                    ? `<span class="zodiac-badge">${zodiac}</span>`
-                    : '';
-
-                const messagePrefix = card.type === 'reflection' ? '' : '';
-
-                contentEl.innerHTML = `
-                    <div class="daily-card-revealed">
-                        ${zodiacBadge}
-                        <p class="affirmation">${messagePrefix}${card.message}</p>
-                        <div class="guidance-tip">
-                            <span class="tip-label">${card.tipLabel}</span>
-                            ${card.tip}
-                        </div>
-                    </div>
-                `;
+                document.getElementById('sealed').classList.remove('hidden');
             }
         }
 
-        // Initialize daily card on page load
-        function initDailyCard() {
-            renderDailyCard();
-
-            // Pre-fill birthday if we have it stored
-            const userData = getUserData();
-            if (userData.birthday) {
-                document.getElementById('birthday-input').value = userData.birthday;
-                // Don't auto-show horoscope, let them trigger it
-            }
-        }
-
+        // ===== Screen Navigation =====
         function showScreen(screenId) {
-            // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-
-            // Show target screen
             document.getElementById(screenId).classList.add('active');
 
-            // Reset card flips and re-render daily card when going back to start
             if (screenId === 'screen-start') {
-                document.getElementById('free-card-flip').classList.remove('flipped');
-                document.getElementById('paid-card-flip').classList.remove('flipped');
-                renderDailyCard(); // Re-render in case zodiac was just set
-            }
-
-            // Generate wish suggestions when showing wish form
-            if (screenId === 'screen-wish-form') {
-                generateWishSuggestions();
-            }
-
-            // Randomize karma message when showing offering screen
-            if (screenId === 'screen-offering') {
-                randomizeKarmaMessage();
+                renderDailyCalendar();
+                checkDailyState();
             }
         }
 
-        function selectTier(tier) {
-            currentTier = tier;
-            if (tier === 'free') {
-                showScreen('screen-cards-free');
-            } else {
-                showScreen('screen-wish-form');
-            }
-        }
-
-        function generateWishSuggestions() {
-            const container = document.getElementById('wish-suggestions');
-            container.innerHTML = '';
-
-            // Get 3 random wishes
-            const shuffled = [...wishPool].sort(() => 0.5 - Math.random());
-            const selected = shuffled.slice(0, 3);
-
-            selected.forEach(wish => {
-                const chip = document.createElement('span');
-                chip.className = 'wish-chip';
-                chip.textContent = wish.length > 30 ? wish.substring(0, 30) + '...' : wish;
-                chip.onclick = () => {
-                    document.getElementById('wish-input').value = wish;
-                };
-                container.appendChild(chip);
-            });
-        }
-
-        function randomizeKarmaMessage() {
-            const messageEl = document.querySelector('.karma-message p');
-            const randomMessage = karmaMessages[Math.floor(Math.random() * karmaMessages.length)];
-            messageEl.textContent = '"' + randomMessage + '"';
-        }
-
-        function calculateHoroscopes() {
-            const input = document.getElementById('birthday-input').value;
-            if (!input) return;
-
-            const date = new Date(input);
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const year = date.getFullYear();
-
-            // Western Zodiac
-            const western = getWesternZodiac(month, day);
-            userHoroscope.western = western.sign;
-            userHoroscope.element = western.element;
-            userHoroscope.planet = western.planet;
-
-            // Chinese Zodiac
-            userHoroscope.chinese = getChineseZodiac(year);
-
-            // Update display
-            document.getElementById('western-zodiac').textContent = userHoroscope.western;
-            document.getElementById('chinese-zodiac').textContent = userHoroscope.chinese;
-            document.getElementById('element').textContent = userHoroscope.element;
-            document.getElementById('ruling-planet').textContent = userHoroscope.planet;
-
-            // Show the horoscope display
-            document.getElementById('horoscope-display').classList.remove('hidden');
-
-            // Persist birthday and zodiac data to localStorage
-            const userData = getUserData();
-            userData.birthday = input;
-            userData.westernZodiac = userHoroscope.western;
-            userData.chineseZodiac = userHoroscope.chinese;
-            userData.element = userHoroscope.element;
-            userData.rulingPlanet = userHoroscope.planet;
-            saveUserData(userData);
-        }
-
-        function getWesternZodiac(month, day) {
-            const signs = [
-                { sign: 'Capricorn', element: 'Earth', planet: 'Saturn', start: [1, 1], end: [1, 19] },
-                { sign: 'Aquarius', element: 'Air', planet: 'Uranus', start: [1, 20], end: [2, 18] },
-                { sign: 'Pisces', element: 'Water', planet: 'Neptune', start: [2, 19], end: [3, 20] },
-                { sign: 'Aries', element: 'Fire', planet: 'Mars', start: [3, 21], end: [4, 19] },
-                { sign: 'Taurus', element: 'Earth', planet: 'Venus', start: [4, 20], end: [5, 20] },
-                { sign: 'Gemini', element: 'Air', planet: 'Mercury', start: [5, 21], end: [6, 20] },
-                { sign: 'Cancer', element: 'Water', planet: 'Moon', start: [6, 21], end: [7, 22] },
-                { sign: 'Leo', element: 'Fire', planet: 'Sun', start: [7, 23], end: [8, 22] },
-                { sign: 'Virgo', element: 'Earth', planet: 'Mercury', start: [8, 23], end: [9, 22] },
-                { sign: 'Libra', element: 'Air', planet: 'Venus', start: [9, 23], end: [10, 22] },
-                { sign: 'Scorpio', element: 'Water', planet: 'Pluto', start: [10, 23], end: [11, 21] },
-                { sign: 'Sagittarius', element: 'Fire', planet: 'Jupiter', start: [11, 22], end: [12, 21] },
-                { sign: 'Capricorn', element: 'Earth', planet: 'Saturn', start: [12, 22], end: [12, 31] }
-            ];
-
-            for (const zodiac of signs) {
-                const [startMonth, startDay] = zodiac.start;
-                const [endMonth, endDay] = zodiac.end;
-
-                if (month === startMonth && day >= startDay) return zodiac;
-                if (month === endMonth && day <= endDay) return zodiac;
-            }
-
-            return signs[0]; // Default to Capricorn
-        }
-
-        function getChineseZodiac(year) {
-            const animals = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake',
-                           'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'];
-            const startYear = 1900; // Year of the Rat
-            const index = (year - startYear) % 12;
-            return animals[index >= 0 ? index : index + 12];
-        }
-
-        function confirmOffering() {
-            // Move to card selection
-            generatePaidCards();
-            showScreen('screen-cards-paid');
-        }
-
+        // ===== Card Selection =====
         function selectCard(tier) {
             // Pick a random fortune
-            selectedFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+            const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
 
-            if (tier === 'free') {
-                // Update free reading display
-                document.querySelector('#screen-reading-free .fortune-type').textContent = selectedFortune.category;
-                document.querySelector('#screen-reading-free .symbol').textContent = selectedFortune.symbol;
-                document.querySelector('#screen-reading-free .reading-text p').textContent = selectedFortune.freeReading;
+            // Update reading display
+            document.getElementById('reading-category').textContent = fortune.category;
+            document.getElementById('reading-symbol').textContent = fortune.symbol;
+            document.getElementById('reading-text').textContent = fortune.reading;
+            document.getElementById('guidance-object').innerHTML = '<span>Lucky Object</span>' + fortune.guidance.object;
+            document.getElementById('guidance-day').innerHTML = '<span>Favorable Day</span>' + fortune.guidance.day;
+            document.getElementById('guidance-action').innerHTML = '<span>Action to Take</span>' + fortune.guidance.action;
+            document.getElementById('guidance-avoid').innerHTML = '<span>Thing to Avoid</span>' + fortune.guidance.avoid;
 
-                showScreen('screen-reading-free');
-                setTimeout(() => {
-                    document.getElementById('free-card-flip').classList.add('flipped');
-                }, 300);
-            } else {
-                // Update paid reading display
-                document.querySelector('#screen-reading-paid .fortune-type').textContent = selectedFortune.category;
-                document.querySelector('#screen-reading-paid .symbol').textContent = selectedFortune.symbol;
-                document.querySelector('#screen-reading-paid .reading-text p').textContent = selectedFortune.paidReading;
-
-                // Update guidance
-                document.querySelector('#screen-reading-paid .detailed-reading li:nth-child(1)').innerHTML =
-                    '<span>Lucky Object</span>' + selectedFortune.guidance.luckyObject;
-                document.querySelector('#screen-reading-paid .detailed-reading li:nth-child(2)').innerHTML =
-                    '<span>Favorable Day</span>' + selectedFortune.guidance.favorableDay;
-                document.querySelector('#screen-reading-paid .detailed-reading li:nth-child(3)').innerHTML =
-                    '<span>Action to Take</span>' + selectedFortune.guidance.action;
-                document.querySelector('#screen-reading-paid .detailed-reading li:nth-child(4)').innerHTML =
-                    '<span>Thing to Avoid</span>' + selectedFortune.guidance.avoid;
-
-                // Update reading with user's horoscope data
-                if (userHoroscope.western) {
-                    document.getElementById('reading-western').textContent = userHoroscope.western;
-                    document.getElementById('reading-chinese').textContent = userHoroscope.chinese;
-                    document.getElementById('reading-element').textContent = userHoroscope.element;
-                }
-
-                showScreen('screen-reading-paid');
-                setTimeout(() => {
-                    document.getElementById('paid-card-flip').classList.add('flipped');
-                }, 300);
-            }
+            showScreen('screen-reading');
         }
 
-        function generatePaidCards() {
-            const grid = document.getElementById('paid-cards-grid');
-            grid.innerHTML = '';
-
-            const patterns = ['pattern-1', 'pattern-2', 'pattern-3', 'pattern-4', 'pattern-5'];
-
-            for (let i = 0; i < 30; i++) {
-                const card = document.createElement('div');
-                card.className = 'fortune-card ' + patterns[i % 5];
-                card.onclick = () => selectCard('paid');
-                grid.appendChild(card);
-            }
-        }
-
-        // Modal functions
+        // ===== Modal Functions =====
         function openModal(name) {
             document.getElementById('modal-' + name).classList.add('active');
         }
@@ -1888,8 +1436,11 @@
             }
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', initDailyCard);
+        // ===== Initialize =====
+        document.addEventListener('DOMContentLoaded', function() {
+            renderDailyCalendar();
+            checkDailyState();
+        });
     </script>
 </body>
 </html>
