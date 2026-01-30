@@ -770,36 +770,355 @@
             color: var(--color-ink);
         }
 
-        /* ===== Donation Section ===== */
-        .donation-section {
+        /* ===== Upsell Section ===== */
+        .upsell-section {
             text-align: center;
             padding: 1.5rem;
-            background: var(--color-paper);
+            background: linear-gradient(to bottom, var(--color-paper), var(--color-paper-dark));
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.08);
         }
 
-        .donation-text {
+        .upsell-section h4 {
             font-family: var(--font-chinese);
             font-size: 1rem;
             color: var(--color-ink);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
         }
 
-        .donation-subtext {
+        .upsell-section p {
             font-family: var(--font-body);
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--color-ink-muted);
             margin-bottom: 1rem;
+            line-height: 1.5;
         }
 
-        .donation-section .btn {
+        .upsell-section .btn {
             display: block;
             width: 100%;
             margin-bottom: 0.5rem;
         }
 
-        .donation-section .btn-text {
+        .upsell-section .btn-text {
+            display: block;
+            width: 100%;
+            margin: 0;
+        }
+
+        /* ===== Form Styles ===== */
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 6px;
+            resize: none;
+            height: 100px;
+            background: var(--color-paper);
+            color: var(--color-ink);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .form-group input[type="date"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 6px;
+            background: var(--color-paper);
+            color: var(--color-ink);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input[type="date"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* Wish suggestions */
+        .wish-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .wish-chip {
+            padding: 0.5rem 0.75rem;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            background: var(--color-paper);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--color-ink-light);
+        }
+
+        .wish-chip:hover {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        /* Horoscope display */
+        .horoscope-display {
+            background: var(--color-paper);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .horoscope-display.hidden {
+            display: none;
+        }
+
+        .horoscope-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.85rem;
+        }
+
+        .horoscope-row:last-child {
+            border-bottom: none;
+        }
+
+        .horoscope-row .label {
+            font-family: var(--font-body);
+            color: var(--color-ink-muted);
+            font-size: 0.7rem;
+        }
+
+        .horoscope-row .value {
+            font-family: var(--font-chinese);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        /* ===== Offering Screen ===== */
+        .offering-container {
+            background: var(--color-paper);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .offering-amount {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .offering-amount .price-large {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: var(--color-primary);
+        }
+
+        .offering-amount .price-label {
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .kofi-link {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--color-accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .kofi-link:hover {
+            background: var(--color-accent-light);
+        }
+
+        .karma-message {
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(to bottom, transparent, var(--color-paper-dark));
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .karma-message p {
+            font-family: var(--font-chinese);
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--color-ink-light);
+            line-height: 1.6;
+        }
+
+        .honor-note {
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== Paid Cards Grid (30 cards) ===== */
+        .cards-grid-paid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .cards-grid-paid .fortune-card {
+            width: 50px;
+            height: 70px;
+        }
+
+        .cards-grid-paid .fortune-card::before {
+            font-size: 0.9rem;
+        }
+
+        /* Card patterns for paid tier */
+        .fortune-card.pattern-1::after { content: ''; width: 20px; height: 20px; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .fortune-card.pattern-2::after { content: ''; width: 16px; height: 16px; border: 1px solid rgba(255,255,255,0.15); transform: translate(-50%, -50%) rotate(45deg); position: absolute; top: 50%; left: 50%; }
+        .fortune-card.pattern-3::after { content: ''; width: 10px; height: 20px; border: 1px solid rgba(255,255,255,0.15); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .fortune-card.pattern-4::after { content: ''; width: 20px; height: 10px; border: 1px solid rgba(255,255,255,0.15); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .fortune-card.pattern-5::after { content: ''; width: 14px; height: 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 2px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+        /* ===== Paid Reading Signs Section ===== */
+        .your-signs {
+            background: var(--color-primary);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .your-signs h4 {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .signs-row {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .signs-row .sign-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .signs-row .sign-label {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .signs-row .sign-value {
+            font-family: var(--font-chinese);
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        /* ===== Detailed Reading ===== */
+        .detailed-reading {
+            background: var(--color-paper);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .detailed-reading h4 {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .detailed-reading p {
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: var(--color-ink);
+            line-height: 1.8;
+        }
+
+        .detailed-reading ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detailed-reading li {
+            font-family: var(--font-chinese);
+            font-size: 0.85rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            color: var(--color-ink);
+        }
+
+        .detailed-reading li:last-child {
+            border-bottom: none;
+        }
+
+        .detailed-reading li span {
+            font-family: var(--font-body);
+            color: var(--color-ink-muted);
+            font-size: 0.6rem;
+            display: block;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Full width button */
+        .btn-full {
             display: block;
             width: 100%;
             margin: 0;
@@ -973,13 +1292,142 @@
                 </ul>
             </div>
 
-            <!-- Donation Section -->
-            <div class="donation-section">
-                <p class="donation-text">Did this reading resonate with you?</p>
-                <p class="donation-subtext">Support our work and unlock deeper insights</p>
-                <a href="https://buy.stripe.com/test_placeholder" class="btn btn-primary" target="_blank">Support Us ☆</a>
+            <!-- Upsell Section -->
+            <div class="upsell-section">
+                <h4>Seek Deeper Guidance?</h4>
+                <p>Unlock personalized insights based on your zodiac signs, with detailed actions and timing.</p>
+                <button class="btn btn-primary" onclick="showScreen('screen-wish-form')">Get Deeper Insights</button>
                 <button class="btn-text" onclick="showScreen('screen-start')">Maybe later</button>
             </div>
+        </div>
+
+        <!-- Screen 4: Wish Form (Paid Flow) -->
+        <div class="screen" id="screen-wish-form">
+            <h2 class="screen-title">设定你的意向</h2>
+            <p class="screen-subtitle">Set Your Intention</p>
+
+            <div class="form-group">
+                <label>Your Wish 心愿</label>
+                <textarea id="wish-input" placeholder="Share what guidance you seek..."></textarea>
+                <div class="wish-suggestions" id="wish-suggestions">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Your Birthday 生日</label>
+                <input type="date" id="birthday-input" onchange="calculateHoroscopes()">
+                <div class="horoscope-display hidden" id="horoscope-display">
+                    <div class="horoscope-row">
+                        <span class="label">Western Zodiac</span>
+                        <span class="value" id="western-zodiac">-</span>
+                    </div>
+                    <div class="horoscope-row">
+                        <span class="label">Chinese Zodiac</span>
+                        <span class="value" id="chinese-zodiac">-</span>
+                    </div>
+                    <div class="horoscope-row">
+                        <span class="label">Element</span>
+                        <span class="value" id="element">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-full" onclick="showScreen('screen-offering')">Continue</button>
+            <button class="btn-text" onclick="showScreen('screen-reading')">← back</button>
+        </div>
+
+        <!-- Screen 5: Offering (Ko-fi) -->
+        <div class="screen" id="screen-offering">
+            <h2 class="screen-title">诚心供养</h2>
+            <p class="screen-subtitle">Make Your Offering</p>
+
+            <div class="offering-container">
+                <div class="offering-amount">
+                    <p class="price-large">$2.99</p>
+                    <p class="price-label">Suggested Offering</p>
+                </div>
+
+                <a href="https://ko-fi.com/fortuneapp" class="kofi-link" target="_blank">☕ Support on Ko-fi</a>
+
+                <div class="karma-message">
+                    <p>"The energy you give returns threefold. Your honesty strengthens the reading you're about to receive."</p>
+                </div>
+
+                <button class="btn btn-primary btn-full" onclick="confirmOffering()">I've Made My Offering</button>
+                <p class="honor-note">We trust in your integrity</p>
+            </div>
+
+            <button class="btn-text" onclick="showScreen('screen-wish-form')">← back</button>
+        </div>
+
+        <!-- Screen 6: Paid Card Selection (30 cards) -->
+        <div class="screen" id="screen-cards-paid">
+            <h2 class="screen-title">选择你的命运</h2>
+            <p class="screen-subtitle">Thank you for your offering. Let your intuition guide you.</p>
+
+            <div class="cards-grid-paid" id="paid-cards-grid">
+                <!-- Generated by JS -->
+            </div>
+
+            <button class="btn-text" onclick="showScreen('screen-offering')">← back</button>
+        </div>
+
+        <!-- Screen 7: Paid Reading Result -->
+        <div class="screen" id="screen-reading-paid">
+            <div class="your-signs" id="reading-signs">
+                <h4>Your Signs</h4>
+                <div class="signs-row">
+                    <div class="sign-item">
+                        <span class="sign-label">Western</span>
+                        <span class="sign-value" id="reading-western">Aries</span>
+                    </div>
+                    <div class="sign-item">
+                        <span class="sign-label">Chinese</span>
+                        <span class="sign-value" id="reading-chinese">Dragon</span>
+                    </div>
+                    <div class="sign-item">
+                        <span class="sign-label">Element</span>
+                        <span class="sign-value" id="reading-element">Fire</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reading-card">
+                <p class="category">Your Fortune</p>
+                <p class="fortune-type" id="paid-reading-category">Career</p>
+                <p class="symbol" id="paid-reading-symbol">◈</p>
+                <p class="reading-text" id="paid-reading-text">A shift approaches in your professional life.</p>
+            </div>
+
+            <div class="detailed-reading">
+                <h4>Personalized Guidance</h4>
+                <p id="paid-zodiac-insight">As a Dragon in the Year of the Snake, you have natural allies in positions of power...</p>
+                <ul>
+                    <li id="paid-guidance-object">
+                        <span>Lucky Object</span>
+                        A silver key
+                    </li>
+                    <li id="paid-guidance-day">
+                        <span>Favorable Day</span>
+                        Thursday
+                    </li>
+                    <li id="paid-guidance-action">
+                        <span>Action to Take</span>
+                        Reach out to someone
+                    </li>
+                    <li id="paid-guidance-avoid">
+                        <span>Thing to Avoid</span>
+                        Making major decisions
+                    </li>
+                    <li id="paid-guidance-timing">
+                        <span>Best Timing</span>
+                        Morning hours (6am-10am)
+                    </li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary btn-full" onclick="showScreen('screen-start')">Return Home</button>
         </div>
 
     </div>
@@ -1347,21 +1795,242 @@
                 renderDailyCalendar();
                 checkDailyState();
             }
+
+            if (screenId === 'screen-wish-form') {
+                generateWishSuggestions();
+                // Pre-fill birthday if saved
+                const userData = getUserData();
+                if (userData.birthday) {
+                    document.getElementById('birthday-input').value = userData.birthday;
+                    calculateHoroscopes();
+                }
+            }
         }
 
         // ===== Card Selection =====
         function selectCard(tier) {
             const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
 
-            document.getElementById('reading-category').textContent = fortune.category;
-            document.getElementById('reading-symbol').textContent = fortune.symbol;
-            document.getElementById('reading-text').textContent = fortune.reading;
-            document.getElementById('guidance-object').innerHTML = '<span>Lucky Object</span>' + fortune.guidance.object;
-            document.getElementById('guidance-day').innerHTML = '<span>Favorable Day</span>' + fortune.guidance.day;
-            document.getElementById('guidance-action').innerHTML = '<span>Action to Take</span>' + fortune.guidance.action;
-            document.getElementById('guidance-avoid').innerHTML = '<span>Thing to Avoid</span>' + fortune.guidance.avoid;
+            if (tier === 'free') {
+                document.getElementById('reading-category').textContent = fortune.category;
+                document.getElementById('reading-symbol').textContent = fortune.symbol;
+                document.getElementById('reading-text').textContent = fortune.reading;
+                document.getElementById('guidance-object').innerHTML = '<span>Lucky Object</span>' + fortune.guidance.object;
+                document.getElementById('guidance-day').innerHTML = '<span>Favorable Day</span>' + fortune.guidance.day;
+                document.getElementById('guidance-action').innerHTML = '<span>Action to Take</span>' + fortune.guidance.action;
+                document.getElementById('guidance-avoid').innerHTML = '<span>Thing to Avoid</span>' + fortune.guidance.avoid;
 
-            showScreen('screen-reading');
+                showScreen('screen-reading');
+            } else {
+                // Paid reading
+                document.getElementById('paid-reading-category').textContent = fortune.category;
+                document.getElementById('paid-reading-symbol').textContent = fortune.symbol;
+                document.getElementById('paid-reading-text').textContent = fortune.reading;
+
+                // Update signs from user horoscope
+                document.getElementById('reading-western').textContent = userHoroscope.western || 'Unknown';
+                document.getElementById('reading-chinese').textContent = userHoroscope.chinese || 'Unknown';
+                document.getElementById('reading-element').textContent = userHoroscope.element || 'Unknown';
+
+                // Generate personalized zodiac insight
+                const zodiacInsight = generateZodiacInsight(userHoroscope, fortune.category);
+                document.getElementById('paid-zodiac-insight').textContent = zodiacInsight;
+
+                // Update guidance
+                document.getElementById('paid-guidance-object').innerHTML = '<span>Lucky Object</span>' + fortune.guidance.object;
+                document.getElementById('paid-guidance-day').innerHTML = '<span>Favorable Day</span>' + fortune.guidance.day;
+                document.getElementById('paid-guidance-action').innerHTML = '<span>Action to Take</span>' + fortune.guidance.action;
+                document.getElementById('paid-guidance-avoid').innerHTML = '<span>Thing to Avoid</span>' + fortune.guidance.avoid;
+
+                // Add timing based on zodiac
+                const timing = getZodiacTiming(userHoroscope.chinese);
+                document.getElementById('paid-guidance-timing').innerHTML = '<span>Best Timing</span>' + timing;
+
+                showScreen('screen-reading-paid');
+            }
+        }
+
+        // ===== User Horoscope State =====
+        let userHoroscope = {
+            western: '',
+            chinese: '',
+            element: '',
+            planet: ''
+        };
+
+        // ===== Wish Suggestions =====
+        const wishPool = [
+            "I seek clarity about my career path",
+            "I want guidance in matters of love",
+            "I wish to understand my finances",
+            "I need direction on a big decision",
+            "I seek peace about my health",
+            "I want to improve relationships"
+        ];
+
+        function generateWishSuggestions() {
+            const container = document.getElementById('wish-suggestions');
+            container.innerHTML = '';
+
+            const shuffled = [...wishPool].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 3);
+
+            selected.forEach(wish => {
+                const chip = document.createElement('span');
+                chip.className = 'wish-chip';
+                chip.textContent = wish.length > 25 ? wish.substring(0, 25) + '...' : wish;
+                chip.onclick = () => {
+                    document.getElementById('wish-input').value = wish;
+                };
+                container.appendChild(chip);
+            });
+        }
+
+        // ===== Horoscope Calculation =====
+        function calculateHoroscopes() {
+            const input = document.getElementById('birthday-input').value;
+            if (!input) return;
+
+            const date = new Date(input);
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const year = date.getFullYear();
+
+            // Western Zodiac
+            const western = getWesternZodiac(month, day);
+            userHoroscope.western = western.sign;
+            userHoroscope.element = western.element;
+            userHoroscope.planet = western.planet;
+
+            // Chinese Zodiac
+            userHoroscope.chinese = getYearAnimal(year);
+
+            // Update display
+            document.getElementById('western-zodiac').textContent = userHoroscope.western;
+            document.getElementById('chinese-zodiac').textContent = userHoroscope.chinese;
+            document.getElementById('element').textContent = userHoroscope.element;
+
+            // Show the horoscope display
+            document.getElementById('horoscope-display').classList.remove('hidden');
+
+            // Save to localStorage for personal section
+            const userData = getUserData();
+            userData.chineseZodiac = userHoroscope.chinese;
+            userData.westernZodiac = userHoroscope.western;
+            userData.birthday = input;
+            saveUserData(userData);
+        }
+
+        function getWesternZodiac(month, day) {
+            const signs = [
+                { sign: 'Capricorn', element: 'Earth', planet: 'Saturn', start: [1, 1], end: [1, 19] },
+                { sign: 'Aquarius', element: 'Air', planet: 'Uranus', start: [1, 20], end: [2, 18] },
+                { sign: 'Pisces', element: 'Water', planet: 'Neptune', start: [2, 19], end: [3, 20] },
+                { sign: 'Aries', element: 'Fire', planet: 'Mars', start: [3, 21], end: [4, 19] },
+                { sign: 'Taurus', element: 'Earth', planet: 'Venus', start: [4, 20], end: [5, 20] },
+                { sign: 'Gemini', element: 'Air', planet: 'Mercury', start: [5, 21], end: [6, 20] },
+                { sign: 'Cancer', element: 'Water', planet: 'Moon', start: [6, 21], end: [7, 22] },
+                { sign: 'Leo', element: 'Fire', planet: 'Sun', start: [7, 23], end: [8, 22] },
+                { sign: 'Virgo', element: 'Earth', planet: 'Mercury', start: [8, 23], end: [9, 22] },
+                { sign: 'Libra', element: 'Air', planet: 'Venus', start: [9, 23], end: [10, 22] },
+                { sign: 'Scorpio', element: 'Water', planet: 'Pluto', start: [10, 23], end: [11, 21] },
+                { sign: 'Sagittarius', element: 'Fire', planet: 'Jupiter', start: [11, 22], end: [12, 21] },
+                { sign: 'Capricorn', element: 'Earth', planet: 'Saturn', start: [12, 22], end: [12, 31] }
+            ];
+
+            for (const zodiac of signs) {
+                const [startMonth, startDay] = zodiac.start;
+                const [endMonth, endDay] = zodiac.end;
+
+                if (month === startMonth && day >= startDay) return zodiac;
+                if (month === endMonth && day <= endDay) return zodiac;
+            }
+
+            return signs[0];
+        }
+
+        // ===== Generate Zodiac Insight =====
+        function generateZodiacInsight(horoscope, category) {
+            const yearAnimal = getYearAnimal(new Date().getFullYear());
+            const insights = {
+                'Career': [
+                    `As a ${horoscope.chinese} in the Year of the ${yearAnimal}, your natural leadership qualities are amplified. This is a time for strategic moves.`,
+                    `Your ${horoscope.element} nature combined with ${horoscope.chinese} energy suggests patience will bring greater rewards than haste.`,
+                    `The ${yearAnimal} year favors those with ${horoscope.chinese} qualities. Trust your instincts in professional matters.`
+                ],
+                'Love': [
+                    `${horoscope.chinese} hearts are especially magnetic this ${yearAnimal} year. Open yourself to unexpected connections.`,
+                    `Your ${horoscope.western} Sun brings depth to relationships. The ${yearAnimal} energy amplifies emotional wisdom.`,
+                    `As a ${horoscope.element} sign ${horoscope.chinese}, your approach to love benefits from grounding and patience.`
+                ],
+                'Wealth': [
+                    `The ${yearAnimal} year brings financial opportunities for ${horoscope.chinese} signs who remain vigilant.`,
+                    `Your ${horoscope.element} nature grounds your ${horoscope.chinese} energy, favoring steady wealth building over speculation.`,
+                    `${horoscope.chinese} intuition combined with ${horoscope.western} practicality creates powerful financial insight.`
+                ],
+                'Health': [
+                    `${horoscope.chinese} vitality is enhanced during the ${yearAnimal} year. Honor your body's natural rhythms.`,
+                    `Your ${horoscope.element} constitution benefits from balance. The ${horoscope.chinese} in you seeks movement and freedom.`,
+                    `As a ${horoscope.western} with ${horoscope.chinese} energy, prioritize rest as much as activity.`
+                ],
+                'Growth': [
+                    `The ${yearAnimal} year challenges ${horoscope.chinese} signs to evolve. Embrace the discomfort of expansion.`,
+                    `Your ${horoscope.element} foundation supports the ${horoscope.chinese} desire for transformation.`,
+                    `${horoscope.western} wisdom meets ${horoscope.chinese} intuition—trust this powerful combination.`
+                ],
+                'Creativity': [
+                    `${horoscope.chinese} creative fire burns bright in the ${yearAnimal} year. Express what has been dormant.`,
+                    `Your ${horoscope.element} nature channels ${horoscope.chinese} inspiration into tangible form.`,
+                    `As a ${horoscope.western}, your creative vision is enhanced by ${horoscope.chinese} spontaneity.`
+                ],
+                'Family': [
+                    `${horoscope.chinese} loyalty and ${horoscope.western} wisdom guide family harmony this ${yearAnimal} year.`,
+                    `Your ${horoscope.element} nature brings stability to ${horoscope.chinese} family dynamics.`,
+                    `The ${yearAnimal} year invites ${horoscope.chinese} signs to heal ancestral patterns.`
+                ]
+            };
+
+            const categoryInsights = insights[category] || insights['Growth'];
+            return categoryInsights[Math.floor(Math.random() * categoryInsights.length)];
+        }
+
+        // ===== Zodiac Timing =====
+        function getZodiacTiming(chineseZodiac) {
+            const timings = {
+                'Rat': 'Late night (11pm-1am)',
+                'Ox': 'Early morning (1am-3am)',
+                'Tiger': 'Dawn (3am-5am)',
+                'Rabbit': 'Sunrise (5am-7am)',
+                'Dragon': 'Morning (7am-9am)',
+                'Snake': 'Mid-morning (9am-11am)',
+                'Horse': 'Midday (11am-1pm)',
+                'Goat': 'Early afternoon (1pm-3pm)',
+                'Monkey': 'Afternoon (3pm-5pm)',
+                'Rooster': 'Evening (5pm-7pm)',
+                'Dog': 'Dusk (7pm-9pm)',
+                'Pig': 'Night (9pm-11pm)'
+            };
+            return timings[chineseZodiac] || 'Morning hours';
+        }
+
+        // ===== Confirm Offering & Generate Paid Cards =====
+        function confirmOffering() {
+            generatePaidCards();
+            showScreen('screen-cards-paid');
+        }
+
+        function generatePaidCards() {
+            const container = document.getElementById('paid-cards-grid');
+            container.innerHTML = '';
+
+            const patterns = ['pattern-1', 'pattern-2', 'pattern-3', 'pattern-4', 'pattern-5'];
+
+            for (let i = 0; i < 30; i++) {
+                const card = document.createElement('div');
+                card.className = 'fortune-card ' + patterns[i % 5];
+                card.onclick = () => selectCard('paid');
+                container.appendChild(card);
+            }
         }
 
         // ===== Modal Functions =====
