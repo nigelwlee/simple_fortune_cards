@@ -3,36 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortune 黄历 - Mockup V2 (Modern Teal)</title>
+    <title>Fortune 黄历 - V7 (V2 Structure + Fire Horse Style)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* ===== CSS Variables - Modern Teal Theme ===== */
+        /* ===== CSS Variables - Fire Horse on V2 Structure ===== */
         :root {
-            /* Primary - Deep Teal */
-            --color-primary: #1D5C5C;
-            --color-primary-light: #2A7A7A;
-            --color-primary-dark: #0F3D3D;
+            /* Warm cream background */
+            --color-cream: #F5F0E8;
+            --color-cream-dark: #E8E0D4;
 
-            /* Accent - Warm Coral/Red */
-            --color-accent: #A61911;
-            --color-accent-light: #C83028;
+            /* Vermillion red - the hero color */
+            --color-red: #C94234;
+            --color-red-dark: #A33428;
+            --color-red-light: #E85A4C;
 
-            /* Neutrals */
-            --color-paper: #F8F4EC;
-            --color-paper-dark: #EDE8DC;
-            --color-ink: #1A1A1A;
-            --color-ink-light: #4A4A4A;
-            --color-ink-muted: #8A8A8A;
+            /* Ink tones */
+            --color-ink: #2C2824;
+            --color-ink-light: #5C5650;
+            --color-ink-muted: #9A938A;
 
             /* Gold accent */
             --color-gold: #C9A962;
 
             /* Typography */
-            --font-display: 'DM Serif Display', serif;
+            --font-display: 'Cormorant Garamond', serif;
             --font-chinese: 'Noto Serif SC', serif;
-            --font-english: 'Space Grotesk', sans-serif;
             --font-body: 'Inter', sans-serif;
         }
 
@@ -45,7 +42,7 @@
 
         body {
             font-family: var(--font-body);
-            background: #E8E4DC;
+            background: var(--color-cream-dark);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -69,33 +66,33 @@
             font-family: var(--font-chinese);
             font-size: 1.75rem;
             font-weight: 600;
-            color: var(--color-primary);
+            color: var(--color-red);
             letter-spacing: 0.15em;
         }
 
         .app-subtitle {
-            font-family: var(--font-english);
-            font-size: 0.65rem;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-style: italic;
             color: var(--color-ink-muted);
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
+            letter-spacing: 0.15em;
             margin-top: 0.25rem;
         }
 
         /* ===== Calendar Card Container ===== */
         .huangli-card {
-            background: var(--color-paper);
+            background: var(--color-cream);
             border-radius: 4px;
             box-shadow:
-                0 8px 32px rgba(0,0,0,0.12),
-                0 2px 8px rgba(0,0,0,0.08);
+                0 8px 32px rgba(0,0,0,0.1),
+                0 2px 8px rgba(0,0,0,0.06);
             position: relative;
             overflow: hidden;
         }
 
-        /* Top accent bar (like the red header in reference) */
+        /* Top accent bar */
         .huangli-topbar {
-            background: var(--color-accent);
+            background: var(--color-red);
             padding: 0.625rem 1rem;
             display: flex;
             justify-content: space-between;
@@ -110,10 +107,11 @@
         }
 
         .topbar-right {
-            font-family: var(--font-english);
-            font-size: 0.65rem;
-            color: rgba(255,255,255,0.8);
-            letter-spacing: 0.1em;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-style: italic;
+            color: rgba(255,255,255,0.9);
+            letter-spacing: 0.05em;
         }
 
         /* ===== Main Content Area ===== */
@@ -140,78 +138,82 @@
 
         .month-en {
             font-family: var(--font-display);
-            font-size: 1.1rem;
-            color: var(--color-primary);
+            font-size: 1.2rem;
+            color: var(--color-red);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
         }
 
         .year-badge {
-            font-family: var(--font-english);
-            font-size: 0.7rem;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-style: italic;
             color: var(--color-ink-muted);
         }
 
         /* Large Date Number - Hero Element */
         .date-hero {
             text-align: center;
-            padding: 1rem 0;
+            padding: 1.5rem 2.5rem;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .date-number {
             font-family: var(--font-display);
-            font-size: 8rem;
+            font-size: 7rem;
             font-weight: 400;
-            line-height: 0.85;
-            color: var(--color-primary);
+            line-height: 1;
+            color: var(--color-red);
             letter-spacing: -0.02em;
         }
 
         .date-lunar-badge {
             position: absolute;
-            right: 0;
+            right: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
             writing-mode: vertical-rl;
             font-family: var(--font-chinese);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--color-ink-light);
             letter-spacing: 0.2em;
         }
 
         .date-zodiac-badge {
             position: absolute;
-            left: 0;
+            left: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
             writing-mode: vertical-rl;
             text-orientation: mixed;
-            font-family: var(--font-english);
+            font-family: var(--font-display);
             font-size: 0.6rem;
+            font-style: italic;
             color: var(--color-ink-muted);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
         /* Weekday row */
         .weekday-row {
             text-align: center;
             padding: 0.75rem 0;
-            border-top: 1px solid rgba(0,0,0,0.08);
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            background: var(--color-paper-dark);
+            border-top: 1px solid var(--color-gold);
+            border-bottom: 1px solid var(--color-gold);
+            background: white;
             margin: 0 -1.25rem;
             padding-left: 1.25rem;
             padding-right: 1.25rem;
         }
 
         .weekday-en {
-            font-family: var(--font-english);
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--color-primary);
-            letter-spacing: 0.2em;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--color-red);
+            letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
@@ -226,7 +228,7 @@
         .activities-section {
             margin-top: 1rem;
             padding: 1rem;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 4px;
             position: relative;
         }
@@ -238,9 +240,10 @@
             left: 4px;
             right: 4px;
             bottom: 4px;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid var(--color-gold);
             border-radius: 2px;
             pointer-events: none;
+            opacity: 0.3;
         }
 
         .activity-row {
@@ -257,13 +260,13 @@
         .activity-label {
             font-family: var(--font-chinese);
             font-size: 0.9rem;
-            font-weight: 700;
+            font-weight: 600;
             width: 1.25rem;
             flex-shrink: 0;
         }
 
         .auspicious .activity-label {
-            color: var(--color-accent);
+            color: var(--color-red);
         }
 
         .inauspicious .activity-label {
@@ -289,6 +292,7 @@
         .activity-item .en {
             font-family: var(--font-body);
             font-size: 0.55rem;
+            font-weight: 300;
             color: var(--color-ink-muted);
             display: block;
             margin-top: 0.125rem;
@@ -309,24 +313,25 @@
         }
 
         .lucky-item .label {
-            font-family: var(--font-body);
-            font-size: 0.55rem;
+            font-family: var(--font-display);
+            font-size: 0.6rem;
+            font-style: italic;
             color: var(--color-ink-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.05em;
             margin-bottom: 0.25rem;
         }
 
         .lucky-item .value {
             font-family: var(--font-chinese);
             font-size: 0.9rem;
-            color: var(--color-primary);
+            color: var(--color-red);
             font-weight: 600;
         }
 
         .lucky-item .value-en {
             font-family: var(--font-body);
-            font-size: 0.6rem;
+            font-size: 0.55rem;
+            font-weight: 300;
             color: var(--color-ink-light);
         }
 
@@ -337,14 +342,15 @@
             border-radius: 50%;
             margin-right: 0.25rem;
             vertical-align: middle;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 2px solid var(--color-cream);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
         }
 
         /* ===== Personal Section ===== */
         .personal-section {
             margin-top: 1rem;
             padding: 0.875rem;
-            background: var(--color-primary);
+            background: var(--color-red);
             border-radius: 4px;
             display: flex;
             align-items: center;
@@ -377,11 +383,11 @@
         }
 
         .personal-note .label {
-            font-family: var(--font-body);
-            font-size: 0.55rem;
-            color: rgba(255,255,255,0.7);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-family: var(--font-display);
+            font-size: 0.6rem;
+            font-style: italic;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 0.05em;
         }
 
         .personal-note .text {
@@ -393,8 +399,9 @@
 
         .personal-note .text-en {
             font-family: var(--font-body);
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.8);
+            font-size: 0.55rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.85);
         }
 
         /* ===== Sealed State ===== */
@@ -404,14 +411,14 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--color-paper);
+            background: var(--color-cream);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 10;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s ease;
         }
 
         .huangli-sealed.hidden {
@@ -421,9 +428,9 @@
 
         .seal-icon {
             font-size: 3rem;
-            color: var(--color-primary);
+            color: var(--color-red);
             margin-bottom: 1rem;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         .seal-text {
@@ -433,11 +440,30 @@
         }
 
         .seal-text-en {
-            font-family: var(--font-body);
-            font-size: 0.7rem;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-style: italic;
             color: var(--color-ink-muted);
             margin-top: 0.25rem;
+        }
+
+        .seal-btn {
+            margin-top: 1.5rem;
+            padding: 0.625rem 1.5rem;
+            background: var(--color-red);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-style: italic;
             letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .seal-btn:hover {
+            background: var(--color-red-dark);
         }
 
         /* ===== Main Deck ===== */
@@ -449,15 +475,15 @@
         .main-deck {
             width: 100px;
             height: 140px;
-            background: linear-gradient(145deg, var(--color-accent) 0%, #7A120D 100%);
+            background: linear-gradient(145deg, var(--color-red) 0%, var(--color-red-dark) 100%);
             border-radius: 6px;
             margin: 0 auto;
             cursor: pointer;
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow:
-                0 4px 12px rgba(29, 92, 92, 0.3),
-                3px 3px 0 var(--color-paper-dark),
+                0 4px 12px rgba(201, 66, 52, 0.25),
+                3px 3px 0 var(--color-cream),
                 6px 6px 0 var(--color-gold);
         }
 
@@ -477,11 +503,10 @@
         }
 
         .tap-hint {
-            font-family: var(--font-body);
-            font-size: 0.65rem;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-style: italic;
             color: var(--color-ink-muted);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
             margin-top: 0.875rem;
         }
 
@@ -493,10 +518,14 @@
 
         .footer-link {
             font-family: var(--font-body);
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: var(--color-ink-muted);
             text-decoration: none;
             letter-spacing: 0.1em;
+        }
+
+        .footer-link:hover {
+            color: var(--color-red);
         }
 
         /* ===== Animations ===== */
@@ -537,7 +566,7 @@
 
                 <!-- Large date hero -->
                 <div class="date-hero">
-                    <span class="date-zodiac-badge">Year of Snake</span>
+                    <span class="date-zodiac-badge">Snake Day</span>
                     <span class="date-number">30</span>
                     <span class="date-lunar-badge">初二</span>
                 </div>
@@ -572,7 +601,7 @@
                     <div class="lucky-item">
                         <div class="label">Lucky Color</div>
                         <div class="value">
-                            <span class="color-dot" style="background: #C45C4A;"></span>红
+                            <span class="color-dot" style="background: #C94234;"></span>红
                         </div>
                         <div class="value-en">Red</div>
                     </div>
@@ -607,6 +636,7 @@
                 <div class="seal-icon">☾</div>
                 <p class="seal-text">轻触揭晓今日运势</p>
                 <p class="seal-text-en">tap to reveal</p>
+                <button class="seal-btn">Reveal Fortune</button>
             </div>
         </div>
 

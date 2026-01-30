@@ -8,31 +8,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== CSS Variables - Mahjong Parlor Palette ===== */
+        /* ===== CSS Variables - Modern Teal Theme ===== */
         :root {
-            /* Primary - Emerald Green (silk brocade) */
-            --color-emerald: #1B5E4A;
-            --color-emerald-light: #2A7A62;
-            --color-emerald-dark: #0F3D31;
+            /* Primary - Deep Teal */
+            --color-primary: #1D5C5C;
+            --color-primary-light: #2A7A7A;
+            --color-primary-dark: #0F3D3D;
 
-            /* Accent - Coral Pink (mahjong tile backs) */
-            --color-coral: #E88B7D;
-            --color-coral-light: #F4ADA3;
-            --color-coral-dark: #D4695A;
+            /* Accent - Deep Red */
+            --color-accent: #A61911;
+            --color-accent-light: #C83028;
+            --color-accent-dark: #7A120D;
 
-            /* Traditional - Lacquer Red */
-            --color-red: #C23A3A;
-
-            /* Neutrals - Ivory & Ink */
-            --color-ivory: #FDF8F3;
-            --color-cream: #F5EDE4;
+            /* Neutrals */
+            --color-paper: #F8F4EC;
+            --color-paper-dark: #EDE8DC;
             --color-ink: #1A1A1A;
             --color-ink-light: #4A4A4A;
-            --color-ink-muted: #8A8A7A;
+            --color-ink-muted: #8A8A8A;
 
             /* Gold accent */
             --color-gold: #C9A962;
-            --color-gold-light: #E0D4B0;
 
             /* Typography */
             --font-display: 'DM Serif Display', serif;
@@ -50,17 +46,13 @@
 
         body {
             font-family: var(--font-body);
-            background: var(--color-emerald);
+            background: #E8E4DC;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             color: var(--color-ink);
-            /* Subtle texture */
-            background-image:
-                radial-gradient(circle at 30% 20%, rgba(255,255,255,0.04) 0%, transparent 50%),
-                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.04) 0%, transparent 50%);
         }
 
         .container {
@@ -86,16 +78,16 @@
 
         .app-title {
             font-family: var(--font-chinese);
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 600;
-            color: var(--color-ivory);
-            letter-spacing: 0.2em;
+            color: var(--color-primary);
+            letter-spacing: 0.15em;
         }
 
         .app-subtitle {
             font-family: var(--font-english);
-            font-size: 0.6rem;
-            color: var(--color-gold);
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
             letter-spacing: 0.3em;
             text-transform: uppercase;
             margin-top: 0.25rem;
@@ -103,21 +95,18 @@
 
         /* ===== Calendar Card Container ===== */
         .huangli-card {
-            background: var(--color-ivory);
+            background: var(--color-paper);
             border-radius: 4px;
             box-shadow:
-                0 8px 32px rgba(0,0,0,0.2),
-                0 2px 8px rgba(0,0,0,0.1);
+                0 8px 32px rgba(0,0,0,0.12),
+                0 2px 8px rgba(0,0,0,0.08);
             position: relative;
             overflow: hidden;
         }
 
-        /* Top accent bar - Coral (like mahjong tile) */
+        /* Top accent bar */
         .huangli-topbar {
-            background: linear-gradient(90deg,
-                var(--color-coral) 0%,
-                var(--color-coral-light) 50%,
-                var(--color-coral) 100%);
+            background: var(--color-accent);
             padding: 0.625rem 1rem;
             display: flex;
             justify-content: space-between;
@@ -129,13 +118,12 @@
             font-size: 0.8rem;
             color: white;
             letter-spacing: 0.1em;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .topbar-right {
             font-family: var(--font-english);
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.9);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.8);
             letter-spacing: 0.1em;
         }
 
@@ -152,7 +140,7 @@
             align-items: baseline;
             margin-bottom: 0.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--color-cream);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
         }
 
         .month-cn {
@@ -164,7 +152,7 @@
         .month-en {
             font-family: var(--font-display);
             font-size: 1.1rem;
-            color: var(--color-emerald);
+            color: var(--color-primary);
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
@@ -187,13 +175,13 @@
             font-size: 8rem;
             font-weight: 400;
             line-height: 0.85;
-            color: var(--color-emerald);
+            color: var(--color-primary);
             letter-spacing: -0.02em;
         }
 
         .date-lunar-badge {
             position: absolute;
-            right: 0.5rem;
+            right: 0;
             top: 50%;
             transform: translateY(-50%);
             writing-mode: vertical-rl;
@@ -205,26 +193,25 @@
 
         .date-zodiac-badge {
             position: absolute;
-            left: 0.5rem;
+            left: 0;
             top: 50%;
             transform: translateY(-50%);
             writing-mode: vertical-rl;
             text-orientation: mixed;
             font-family: var(--font-english);
-            font-size: 0.55rem;
-            color: var(--color-coral-dark);
+            font-size: 0.6rem;
+            color: var(--color-ink-muted);
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            font-weight: 500;
         }
 
         /* Weekday row */
         .weekday-row {
             text-align: center;
             padding: 0.75rem 0;
-            border-top: 1px solid var(--color-cream);
-            border-bottom: 1px solid var(--color-cream);
-            background: var(--color-cream);
+            border-top: 1px solid rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            background: var(--color-paper-dark);
             margin: 0 -1.25rem;
             padding-left: 1.25rem;
             padding-right: 1.25rem;
@@ -232,9 +219,9 @@
 
         .weekday-en {
             font-family: var(--font-english);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: var(--color-emerald);
+            color: var(--color-primary);
             letter-spacing: 0.2em;
             text-transform: uppercase;
         }
@@ -250,7 +237,7 @@
         .activities-section {
             margin-top: 1rem;
             padding: 1rem;
-            border: 1px solid var(--color-cream);
+            border: 1px solid rgba(0,0,0,0.1);
             border-radius: 4px;
             position: relative;
         }
@@ -262,7 +249,7 @@
             left: 4px;
             right: 4px;
             bottom: 4px;
-            border: 1px solid var(--color-gold-light);
+            border: 1px solid rgba(0,0,0,0.05);
             border-radius: 2px;
             pointer-events: none;
         }
@@ -282,24 +269,16 @@
             font-family: var(--font-chinese);
             font-size: 0.9rem;
             font-weight: 700;
-            width: 1.5rem;
-            height: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
+            width: 1.25rem;
             flex-shrink: 0;
         }
 
         .auspicious .activity-label {
-            background: var(--color-coral);
-            color: white;
+            color: var(--color-accent);
         }
 
         .inauspicious .activity-label {
-            background: var(--color-ink-muted);
-            color: white;
-            opacity: 0.6;
+            color: var(--color-ink-muted);
         }
 
         .activity-items {
@@ -307,7 +286,6 @@
             flex-wrap: wrap;
             gap: 0.5rem;
             flex: 1;
-            padding-top: 0.125rem;
         }
 
         .activity-item {
@@ -315,14 +293,13 @@
             font-size: 0.8rem;
             color: var(--color-ink);
             padding: 0.25rem 0.5rem;
-            background: var(--color-ivory);
+            background: rgba(0,0,0,0.03);
             border-radius: 2px;
-            border: 1px solid var(--color-cream);
         }
 
         .activity-item .en {
             font-family: var(--font-body);
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             color: var(--color-ink-muted);
             display: block;
             margin-top: 0.125rem;
@@ -334,7 +311,7 @@
             justify-content: space-between;
             margin-top: 1rem;
             padding-top: 1rem;
-            border-top: 1px solid var(--color-cream);
+            border-top: 1px solid rgba(0,0,0,0.08);
         }
 
         .lucky-item {
@@ -344,7 +321,7 @@
 
         .lucky-item .label {
             font-family: var(--font-body);
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             color: var(--color-ink-muted);
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -353,14 +330,14 @@
 
         .lucky-item .value {
             font-family: var(--font-chinese);
-            font-size: 0.95rem;
-            color: var(--color-emerald);
+            font-size: 0.9rem;
+            color: var(--color-primary);
             font-weight: 600;
         }
 
         .lucky-item .value-en {
             font-family: var(--font-body);
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             color: var(--color-ink-light);
         }
 
@@ -371,15 +348,14 @@
             border-radius: 50%;
             margin-right: 0.25rem;
             vertical-align: middle;
-            border: 2px solid var(--color-ivory);
-            box-shadow: 0 0 0 1px var(--color-cream);
+            border: 1px solid rgba(0,0,0,0.1);
         }
 
         /* ===== Personal Section ===== */
         .personal-section {
             margin-top: 1rem;
             padding: 0.875rem;
-            background: var(--color-emerald);
+            background: var(--color-primary);
             border-radius: 4px;
             display: flex;
             align-items: center;
@@ -395,9 +371,8 @@
             align-items: center;
             gap: 0.375rem;
             padding: 0.375rem 0.625rem;
-            background: rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.15);
             border-radius: 4px;
-            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .personal-zodiac .emoji {
@@ -418,8 +393,8 @@
 
         .personal-note .label {
             font-family: var(--font-body);
-            font-size: 0.5rem;
-            color: var(--color-gold);
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.7);
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
@@ -433,8 +408,8 @@
 
         .personal-note .text-en {
             font-family: var(--font-body);
-            font-size: 0.55rem;
-            color: rgba(255,255,255,0.7);
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.8);
         }
 
         /* ===== Sealed State ===== */
@@ -444,7 +419,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--color-ivory);
+            background: var(--color-paper);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -461,7 +436,7 @@
 
         .seal-icon {
             font-size: 3rem;
-            color: var(--color-emerald);
+            color: var(--color-primary);
             margin-bottom: 1rem;
             opacity: 0.6;
         }
@@ -474,30 +449,10 @@
 
         .seal-text-en {
             font-family: var(--font-body);
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: var(--color-ink-muted);
             margin-top: 0.25rem;
             letter-spacing: 0.1em;
-        }
-
-        .seal-btn {
-            margin-top: 1.5rem;
-            padding: 0.625rem 1.5rem;
-            background: var(--color-coral);
-            color: white;
-            border: none;
-            border-radius: 100px;
-            font-family: var(--font-body);
-            font-size: 0.6rem;
-            font-weight: 500;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .seal-btn:hover {
-            background: var(--color-coral-dark);
         }
 
         /* ===== Main Deck ===== */
@@ -507,57 +462,40 @@
         }
 
         .main-deck {
-            width: 90px;
-            height: 126px;
-            background: linear-gradient(145deg, var(--color-ivory) 0%, var(--color-cream) 100%);
-            border-radius: 4px;
+            width: 100px;
+            height: 140px;
+            background: linear-gradient(145deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+            border-radius: 6px;
             margin: 0 auto;
             cursor: pointer;
             position: relative;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow:
-                0 4px 12px rgba(0,0,0,0.15),
-                3px 3px 0 var(--color-emerald-light),
-                6px 6px 0 var(--color-emerald);
-            border: 1px solid var(--color-cream);
-            overflow: hidden;
+                0 4px 12px rgba(166, 25, 17, 0.3),
+                3px 3px 0 var(--color-paper-dark),
+                6px 6px 0 var(--color-gold);
         }
 
         .main-deck:hover {
             transform: translateY(-4px);
         }
 
-        /* Coral stripe on deck top */
         .main-deck::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 20%;
-            background: linear-gradient(90deg,
-                var(--color-coral) 0%,
-                var(--color-coral-light) 50%,
-                var(--color-coral) 100%);
-        }
-
-        .main-deck::after {
             content: '卜';
             position: absolute;
-            top: 55%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: var(--font-chinese);
-            font-size: 1.75rem;
-            color: var(--color-emerald);
-            opacity: 0.25;
+            font-size: 2rem;
+            color: rgba(255,255,255,0.2);
         }
 
         .tap-hint {
             font-family: var(--font-body);
-            font-size: 0.55rem;
-            color: var(--color-gold);
-            letter-spacing: 0.2em;
+            font-size: 0.65rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             margin-top: 0.875rem;
         }
@@ -570,15 +508,15 @@
 
         .footer-link {
             font-family: var(--font-body);
-            font-size: 0.55rem;
-            color: rgba(255,255,255,0.5);
+            font-size: 0.6rem;
+            color: var(--color-ink-muted);
             text-decoration: none;
             letter-spacing: 0.1em;
             cursor: pointer;
         }
 
         .footer-link:hover {
-            color: var(--color-gold);
+            color: var(--color-primary);
         }
 
         /* ===== Card Selection Screen ===== */
@@ -593,14 +531,12 @@
         .fortune-card {
             width: 70px;
             height: 98px;
-            background: linear-gradient(145deg, var(--color-ivory) 0%, var(--color-cream) 100%);
+            background: linear-gradient(145deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid var(--color-cream);
-            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .fortune-card:hover {
@@ -609,28 +545,14 @@
         }
 
         .fortune-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 18%;
-            background: linear-gradient(90deg,
-                var(--color-coral) 0%,
-                var(--color-coral-light) 50%,
-                var(--color-coral) 100%);
-        }
-
-        .fortune-card::after {
             content: '卜';
             position: absolute;
-            top: 55%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: var(--font-chinese);
             font-size: 1.25rem;
-            color: var(--color-emerald);
-            opacity: 0.2;
+            color: rgba(255,255,255,0.2);
         }
 
         /* Screen titles */
@@ -638,7 +560,7 @@
             font-family: var(--font-chinese);
             font-size: 1.25rem;
             font-weight: 600;
-            color: var(--color-ivory);
+            color: var(--color-primary);
             text-align: center;
             margin-bottom: 0.5rem;
         }
@@ -646,7 +568,7 @@
         .screen-subtitle {
             font-family: var(--font-body);
             font-size: 0.75rem;
-            color: rgba(255,255,255,0.7);
+            color: var(--color-ink-muted);
             text-align: center;
             margin-bottom: 1.5rem;
         }
@@ -667,28 +589,18 @@
         }
 
         .btn-primary {
-            background: var(--color-coral);
+            background: var(--color-accent);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--color-coral-dark);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--color-ivory);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--color-ivory);
+            background: var(--color-accent-light);
         }
 
         .btn-text {
             background: none;
             border: none;
-            color: rgba(255,255,255,0.5);
+            color: var(--color-ink-muted);
             font-family: var(--font-body);
             font-size: 0.65rem;
             padding: 0.5rem 1rem;
@@ -697,16 +609,17 @@
         }
 
         .btn-text:hover {
-            color: var(--color-ivory);
+            color: var(--color-primary);
         }
 
         /* Reading result screen */
         .reading-card {
-            background: var(--color-ivory);
+            background: var(--color-paper);
             border-radius: 8px;
             padding: 2rem 1.5rem;
             text-align: center;
             margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .reading-card .category {
@@ -721,13 +634,13 @@
         .reading-card .fortune-type {
             font-family: var(--font-chinese);
             font-size: 1.25rem;
-            color: var(--color-emerald);
+            color: var(--color-primary);
             margin-bottom: 0.5rem;
         }
 
         .reading-card .symbol {
             font-size: 2rem;
-            color: var(--color-coral);
+            color: var(--color-accent);
             margin: 1rem 0;
         }
 
@@ -739,10 +652,11 @@
         }
 
         .guidance-section {
-            background: var(--color-ivory);
+            background: var(--color-paper);
             border-radius: 8px;
             padding: 1.25rem;
             margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .guidance-section h4 {
@@ -763,7 +677,7 @@
             font-family: var(--font-chinese);
             font-size: 0.85rem;
             padding: 0.5rem 0;
-            border-bottom: 1px solid var(--color-cream);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
             color: var(--color-ink);
         }
 
@@ -789,7 +703,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.5);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -801,7 +715,7 @@
         }
 
         .modal {
-            background: var(--color-ivory);
+            background: var(--color-paper);
             border-radius: 8px;
             max-width: 400px;
             width: 100%;
@@ -880,7 +794,7 @@
 
             <!-- Calendar Card -->
             <div class="huangli-card">
-                <!-- Top accent bar - coral -->
+                <!-- Top accent bar -->
                 <div class="huangli-topbar">
                     <span class="topbar-left" id="topbar-year">蛇年</span>
                     <span class="topbar-right" id="topbar-year-en">Year of the Snake</span>
@@ -963,8 +877,7 @@
                 <div class="huangli-sealed" id="sealed" onclick="revealDailyCard()">
                     <div class="seal-icon">☾</div>
                     <p class="seal-text">轻触揭晓今日运势</p>
-                    <p class="seal-text-en">Tap to reveal your fortune</p>
-                    <button class="seal-btn">Reveal</button>
+                    <p class="seal-text-en">tap to reveal</p>
                 </div>
             </div>
 
@@ -1120,12 +1033,12 @@
 
         // Lucky colors
         const luckyColors = [
-            { cn: '红', en: 'Red', hex: '#C23A3A' },
+            { cn: '红', en: 'Red', hex: '#A61911' },
             { cn: '金', en: 'Gold', hex: '#C9A962' },
-            { cn: '绿', en: 'Green', hex: '#1B5E4A' },
+            { cn: '绿', en: 'Green', hex: '#1D5C5C' },
             { cn: '蓝', en: 'Blue', hex: '#3A6EA5' },
             { cn: '紫', en: 'Purple', hex: '#6B4E8B' },
-            { cn: '粉', en: 'Pink', hex: '#E88B7D' },
+            { cn: '粉', en: 'Pink', hex: '#D4A5A5' },
             { cn: '白', en: 'White', hex: '#F5F5F5' },
             { cn: '黑', en: 'Black', hex: '#2C2C2C' }
         ];
@@ -1247,12 +1160,9 @@
         }
 
         // ===== Lunar Calendar (Simplified) =====
-        // This is a simplified approximation. For production, use a proper lunar calendar library.
         function getLunarDate(date) {
-            // Approximate lunar date based on day of year
-            // This is NOT accurate but provides variety for the mockup
             const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
-            const lunarDay = ((dayOfYear + 15) % 30) + 1; // Offset to roughly align
+            const lunarDay = ((dayOfYear + 15) % 30) + 1;
             const lunarMonth = Math.floor((dayOfYear + 15) / 30) % 12;
 
             return {
@@ -1271,8 +1181,7 @@
 
         // ===== Get Day Zodiac =====
         function getDayZodiac(date) {
-            // Day zodiac cycles every 12 days
-            const baseDate = new Date(2024, 0, 1); // Known Rat day
+            const baseDate = new Date(2024, 0, 1);
             const daysDiff = Math.floor((date - baseDate) / 86400000);
             const index = ((daysDiff % 12) + 12) % 12;
             return dayZodiacs[index];
@@ -1306,7 +1215,7 @@
             const dayZodiac = getDayZodiac(today);
             document.getElementById('day-zodiac').textContent = dayZodiac + ' Day';
 
-            // Auspicious activities (pick 3-4 based on seed)
+            // Auspicious activities
             const auspiciousCount = 3 + Math.floor(seededRandom(seed) * 2);
             const shuffledAuspicious = [...auspiciousPool].sort((a, b) => seededRandom(seed + a.cn.charCodeAt(0)) - 0.5);
             const todayAuspicious = shuffledAuspicious.slice(0, auspiciousCount);
@@ -1316,7 +1225,7 @@
             ).join('');
             document.getElementById('auspicious-items').innerHTML = auspiciousHtml;
 
-            // Inauspicious activities (pick 2-3)
+            // Inauspicious activities
             const inauspiciousCount = 2 + Math.floor(seededRandom(seed + 1) * 2);
             const shuffledInauspicious = [...inauspiciousPool].sort((a, b) => seededRandom(seed + 100 + a.cn.charCodeAt(0)) - 0.5);
             const todayInauspicious = shuffledInauspicious.slice(0, inauspiciousCount);
@@ -1343,7 +1252,7 @@
             const numIndex = Math.floor(seededRandom(seed + 400) * luckyNumberPairs.length);
             document.getElementById('lucky-numbers').textContent = luckyNumberPairs[numIndex];
 
-            // Personal section (if user has birthday/zodiac set)
+            // Personal section
             const userData = getUserData();
             if (userData.chineseZodiac) {
                 const userZodiac = userData.chineseZodiac;
@@ -1365,19 +1274,16 @@
             const userData = getUserData();
             const today = getTodayString();
 
-            // If already revealed today, do nothing
             if (userData.dailyCard?.lastRevealDate === today && userData.dailyCard?.revealed) {
                 return;
             }
 
-            // Mark as revealed
             userData.dailyCard = {
                 lastRevealDate: today,
                 revealed: true
             };
             saveUserData(userData);
 
-            // Hide sealed overlay
             document.getElementById('sealed').classList.add('hidden');
         }
 
@@ -1406,10 +1312,8 @@
 
         // ===== Card Selection =====
         function selectCard(tier) {
-            // Pick a random fortune
             const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
 
-            // Update reading display
             document.getElementById('reading-category').textContent = fortune.category;
             document.getElementById('reading-symbol').textContent = fortune.symbol;
             document.getElementById('reading-text').textContent = fortune.reading;

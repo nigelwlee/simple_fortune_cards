@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune 黄历 - V6 (Editorial Fire Horse)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS Variables - Fire Horse Editorial ===== */
+        :root {
+            /* Warm cream background */
+            --color-cream: #F5F0E8;
+            --color-cream-dark: #E8E0D4;
+
+            /* Vermillion red - the hero color */
+            --color-red: #C94234;
+            --color-red-dark: #A33428;
+            --color-red-light: #E85A4C;
+
+            /* Ink tones */
+            --color-ink: #2C2824;
+            --color-ink-light: #5C5650;
+            --color-ink-muted: #9A938A;
+
+            /* Gold accent */
+            --color-gold: #C9A962;
+
+            /* Watercolor tones (for decorative elements) */
+            --color-teal: #4A8B8B;
+            --color-ochre: #D4A054;
+            --color-sage: #7A9A6A;
+
+            /* Typography */
+            --font-display: 'Cormorant Garamond', serif;
+            --font-chinese: 'Noto Serif SC', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* ===== Base Styles ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-cream);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--color-ink);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        /* ===== Main Card ===== */
+        .huangli-card {
+            background: var(--color-cream);
+            position: relative;
+            padding-bottom: 0;
+            overflow: hidden;
+        }
+
+        /* ===== Hero Section ===== */
+        .hero-section {
+            text-align: center;
+            padding: 2.5rem 1.5rem 2rem;
+        }
+
+        .hero-welcome {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: var(--color-red);
+            line-height: 1.1;
+            margin-bottom: 0.25rem;
+        }
+
+        .hero-title .italic {
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .hero-title .year-animal {
+            display: block;
+            font-size: 2.2rem;
+            margin-top: 0.25rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-date {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--color-ink-light);
+            margin-top: 1.5rem;
+            font-style: italic;
+        }
+
+        .hero-date .day-number {
+            font-size: 3.5rem;
+            font-style: normal;
+            font-weight: 500;
+            color: var(--color-red);
+            display: block;
+            line-height: 1;
+            margin: 0.5rem 0;
+        }
+
+        .hero-lunar {
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            color: var(--color-ink-light);
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== Divider ===== */
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: var(--color-red);
+            margin: 1.5rem auto;
+            opacity: 0.4;
+        }
+
+        /* ===== Fortune Message ===== */
+        .fortune-message {
+            text-align: center;
+            padding: 0 2rem 2rem;
+        }
+
+        .fortune-text {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--color-ink-light);
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .fortune-text strong {
+            font-weight: 500;
+            color: var(--color-ink);
+        }
+
+        /* ===== Activities Section ===== */
+        .activities-section {
+            padding: 1.5rem 2rem;
+            background: rgba(255,255,255,0.4);
+            border-top: 1px solid var(--color-cream-dark);
+            border-bottom: 1px solid var(--color-cream-dark);
+        }
+
+        .activity-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .activity-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .activity-label {
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .activity-label .cn {
+            font-family: var(--font-chinese);
+            font-size: 0.9rem;
+            color: var(--color-red);
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .activity-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .activity-item {
+            font-family: var(--font-chinese);
+            font-size: 0.85rem;
+            color: var(--color-ink);
+        }
+
+        .activity-item .en {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            font-weight: 300;
+            color: var(--color-ink-muted);
+            margin-left: 0.25rem;
+        }
+
+        .activity-item::after {
+            content: '·';
+            margin-left: 0.75rem;
+            color: var(--color-ink-muted);
+        }
+
+        .activity-item:last-child::after {
+            display: none;
+        }
+
+        /* ===== Lucky Elements ===== */
+        .lucky-section {
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .lucky-item {
+            flex: 1;
+        }
+
+        .lucky-item .label {
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-bottom: 0.375rem;
+        }
+
+        .lucky-item .value {
+            font-family: var(--font-chinese);
+            font-size: 1rem;
+            color: var(--color-ink);
+        }
+
+        .lucky-item .value-en {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            font-weight: 300;
+            color: var(--color-ink-muted);
+        }
+
+        .color-swatch {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 0.25rem;
+            vertical-align: middle;
+            border: 2px solid var(--color-cream);
+            box-shadow: 0 0 0 1px var(--color-cream-dark);
+        }
+
+        /* ===== Personal Section ===== */
+        .personal-section {
+            padding: 1.25rem 2rem;
+            background: var(--color-red);
+            color: white;
+            text-align: center;
+        }
+
+        .personal-zodiac {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .personal-zodiac .emoji {
+            font-size: 1.5rem;
+        }
+
+        .personal-zodiac .sign {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        .personal-fortune {
+            font-family: var(--font-chinese);
+            font-size: 0.85rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .personal-fortune .en {
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            font-weight: 300;
+            opacity: 0.8;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== Scalloped Border ===== */
+        .scallop-border {
+            height: 16px;
+            background: var(--color-red);
+            position: relative;
+        }
+
+        .scallop-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 16px;
+            background:
+                radial-gradient(circle at 50% 100%, var(--color-cream) 8px, transparent 8px);
+            background-size: 16px 16px;
+            background-position: 0 0;
+        }
+
+        /* ===== Watercolor Footer ===== */
+        .watercolor-footer {
+            height: 100px;
+            background: linear-gradient(to bottom,
+                var(--color-cream) 0%,
+                var(--color-cream) 10%,
+                transparent 10%
+            );
+            position: relative;
+            overflow: hidden;
+        }
+
+        .watercolor-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                linear-gradient(135deg,
+                    var(--color-teal) 0%,
+                    var(--color-sage) 25%,
+                    var(--color-ochre) 50%,
+                    var(--color-red-light) 75%,
+                    var(--color-teal) 100%
+                );
+            opacity: 0.6;
+            filter: blur(20px);
+        }
+
+        .watercolor-footer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 80%, var(--color-sage) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 60%, var(--color-ochre) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 70%, var(--color-teal) 0%, transparent 50%),
+                radial-gradient(ellipse at 35% 90%, var(--color-red-light) 0%, transparent 35%);
+            opacity: 0.7;
+        }
+
+        /* ===== Deck Section ===== */
+        .deck-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .main-deck {
+            width: 80px;
+            height: 112px;
+            background: var(--color-red);
+            border-radius: 4px;
+            margin: 0 auto;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow:
+                0 4px 12px rgba(0,0,0,0.1),
+                3px 3px 0 var(--color-cream-dark),
+                6px 6px 0 var(--color-ink-muted);
+        }
+
+        .main-deck:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.15),
+                3px 3px 0 var(--color-cream-dark),
+                6px 6px 0 var(--color-ink-muted);
+        }
+
+        .main-deck::before {
+            content: '卜';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-chinese);
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.2);
+        }
+
+        .tap-hint {
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            font-style: italic;
+            color: var(--color-ink-muted);
+            margin-top: 0.875rem;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-link {
+            font-family: var(--font-body);
+            font-size: 0.55rem;
+            color: var(--color-ink-muted);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-link:hover {
+            color: var(--color-red);
+        }
+
+        /* ===== Sealed State ===== */
+        .huangli-sealed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .huangli-sealed.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .seal-welcome {
+            font-family: var(--font-display);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .seal-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: var(--color-red);
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .seal-title .italic {
+            font-style: italic;
+        }
+
+        .seal-subtitle {
+            font-family: var(--font-chinese);
+            font-size: 1.1rem;
+            color: var(--color-ink-light);
+            letter-spacing: 0.15em;
+            margin-bottom: 2rem;
+        }
+
+        .seal-btn {
+            padding: 0.75rem 2rem;
+            background: var(--color-red);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-style: italic;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .seal-btn:hover {
+            background: var(--color-red-dark);
+            transform: scale(1.02);
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .huangli-card {
+            animation: fadeIn 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Calendar Card -->
+        <div class="huangli-card">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <p class="hero-welcome">Today's Fortune</p>
+                <h1 class="hero-title">
+                    WELCOME <span class="italic">to</span><br>
+                    THE YEAR <span class="italic">of the</span>
+                    <span class="year-animal">SNAKE</span>
+                </h1>
+
+                <p class="hero-date">
+                    Thursday, January
+                    <span class="day-number">30</span>
+                </p>
+                <p class="hero-lunar">正月 · 初二 · First Lunar Month</p>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- Fortune Message -->
+            <section class="fortune-message">
+                <p class="fortune-text">
+                    A day defined by intuitive wisdom and quiet confidence.
+                    Trust in timing that reveals itself gradually,
+                    and embrace the <strong>joy of patient progress.</strong>
+                </p>
+            </section>
+
+            <!-- Activities -->
+            <section class="activities-section">
+                <div class="activity-group">
+                    <div class="activity-label">
+                        <span class="cn">宜</span> Auspicious
+                    </div>
+                    <div class="activity-items">
+                        <span class="activity-item">祈福<span class="en">Pray</span></span>
+                        <span class="activity-item">出行<span class="en">Travel</span></span>
+                        <span class="activity-item">求财<span class="en">Wealth</span></span>
+                    </div>
+                </div>
+                <div class="activity-group">
+                    <div class="activity-label">
+                        <span class="cn">忌</span> Avoid
+                    </div>
+                    <div class="activity-items">
+                        <span class="activity-item">动土<span class="en">Construct</span></span>
+                        <span class="activity-item">争执<span class="en">Conflict</span></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Lucky Elements -->
+            <section class="lucky-section">
+                <div class="lucky-item">
+                    <div class="label">Color</div>
+                    <div class="value">
+                        <span class="color-swatch" style="background: #C94234;"></span>红
+                    </div>
+                    <div class="value-en">Red</div>
+                </div>
+                <div class="lucky-item">
+                    <div class="label">Direction</div>
+                    <div class="value">东南</div>
+                    <div class="value-en">Southeast</div>
+                </div>
+                <div class="lucky-item">
+                    <div class="label">Number</div>
+                    <div class="value">3, 8</div>
+                    <div class="value-en">&nbsp;</div>
+                </div>
+            </section>
+
+            <!-- Personal Section -->
+            <section class="personal-section" id="personal-section">
+                <div class="personal-zodiac">
+                    <span class="emoji">🐉</span>
+                    <span class="sign">Year of the Dragon</span>
+                </div>
+                <p class="personal-fortune">
+                    贵人相助，宜主动出击
+                    <span class="en">Helpful allies today. Take initiative.</span>
+                </p>
+            </section>
+
+            <!-- Scalloped Border -->
+            <div class="scallop-border"></div>
+
+            <!-- Watercolor Footer -->
+            <div class="watercolor-footer"></div>
+
+            <!-- Sealed Overlay -->
+            <div class="huangli-sealed hidden" id="sealed" onclick="reveal()">
+                <p class="seal-welcome">Your Daily Fortune</p>
+                <h2 class="seal-title">
+                    WELCOME <span class="italic">to</span><br>
+                    TODAY'S <span class="italic">reading</span>
+                </h2>
+                <p class="seal-subtitle">轻触揭晓今日运势</p>
+                <button class="seal-btn">Reveal Fortune</button>
+            </div>
+        </div>
+
+        <!-- Deck Section -->
+        <div class="deck-section">
+            <div class="main-deck"></div>
+            <p class="tap-hint">Draw a full reading</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <a href="#" class="footer-link">Privacy & Terms</a>
+        </footer>
+    </div>
+
+    <script>
+        function reveal() {
+            document.getElementById('sealed').classList.add('hidden');
+        }
+        // To test sealed state: document.getElementById('sealed').classList.remove('hidden');
+    </script>
+</body>
+</html>
