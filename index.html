@@ -3,29 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortune 黄历 - Daily Fortune Calendar</title>
+    <title>Fortune 黄历 - Daily Fortune Ritual</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== CSS Variables - Modern Teal Theme ===== */
+        /* ===== CSS Variables - Feminine Floral Theme ===== */
         :root {
-            /* Primary - Deep Teal */
-            --color-primary: #1D5C5C;
-            --color-primary-light: #2A7A7A;
-            --color-primary-dark: #0F3D3D;
+            /* Primary - Deep Rose/Burgundy */
+            --color-primary: #8B2942;
+            --color-primary-light: #A63D56;
+            --color-primary-dark: #6B1F33;
 
-            /* Accent - Deep Red */
-            --color-accent: #A61911;
-            --color-accent-light: #C83028;
-            --color-accent-dark: #7A120D;
+            /* Accent - Warm Gold */
+            --color-accent: #C9A962;
+            --color-accent-light: #D4B87A;
+            --color-accent-dark: #B08A4A;
 
-            /* Neutrals */
-            --color-paper: #F8F4EC;
-            --color-paper-dark: #EDE8DC;
-            --color-ink: #1A1A1A;
-            --color-ink-light: #4A4A4A;
-            --color-ink-muted: #8A8A8A;
+            /* Soft Sage for florals */
+            --color-sage: #8FA89A;
+            --color-sage-light: #B5C9BC;
+
+            /* Neutrals - Warm cream */
+            --color-paper: #FDF8F3;
+            --color-paper-dark: #F5EDE4;
+            --color-ink: #2C2424;
+            --color-ink-light: #5A4A4A;
+            --color-ink-muted: #9A8A8A;
 
             /* Gold accent */
             --color-gold: #C9A962;
@@ -46,18 +50,35 @@
 
         body {
             font-family: var(--font-body);
-            background: #E8E4DC;
+            background: linear-gradient(180deg, #F5EDE4 0%, #E8DFD4 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             color: var(--color-ink);
+            position: relative;
+        }
+
+        /* Subtle floral background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.35'%3E%3C!-- Main flower --%3E%3Cg fill='none' stroke='%23C9A962' stroke-width='0.8'%3E%3C!-- Center --%3E%3Ccircle cx='60' cy='60' r='6' fill='%23C9A962' fill-opacity='0.15'/%3E%3C!-- 5 petals radiating out --%3E%3Cellipse cx='60' cy='42' rx='8' ry='14'/%3E%3Cellipse cx='77' cy='52' rx='8' ry='14' transform='rotate(72 77 52)'/%3E%3Cellipse cx='71' cy='74' rx='8' ry='14' transform='rotate(144 71 74)'/%3E%3Cellipse cx='49' cy='74' rx='8' ry='14' transform='rotate(-144 49 74)'/%3E%3Cellipse cx='43' cy='52' rx='8' ry='14' transform='rotate(-72 43 52)'/%3E%3C/g%3E%3C!-- Small bud top-left --%3E%3Cg fill='none' stroke='%23C9A962' stroke-width='0.6'%3E%3Cellipse cx='20' cy='20' rx='5' ry='8'/%3E%3Cellipse cx='15' cy='25' rx='4' ry='7' transform='rotate(-30 15 25)'/%3E%3Cellipse cx='25' cy='25' rx='4' ry='7' transform='rotate(30 25 25)'/%3E%3C/g%3E%3C!-- Small bud bottom-right --%3E%3Cg fill='none' stroke='%23C9A962' stroke-width='0.6'%3E%3Cellipse cx='100' cy='100' rx='5' ry='8'/%3E%3Cellipse cx='95' cy='105' rx='4' ry='7' transform='rotate(-30 95 105)'/%3E%3Cellipse cx='105' cy='105' rx='4' ry='7' transform='rotate(30 105 105)'/%3E%3C/g%3E%3C!-- Leaves --%3E%3Cg fill='none' stroke='%238FA89A' stroke-width='0.7'%3E%3Cpath d='M30 85 Q40 80 50 85 Q40 90 30 85'/%3E%3Cpath d='M35 80 Q42 78 35 85' stroke-width='0.4'/%3E%3Cpath d='M70 35 Q80 30 90 35 Q80 40 70 35'/%3E%3Cpath d='M75 30 Q82 28 75 35' stroke-width='0.4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-size: 140px 140px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
             width: 100%;
             max-width: 380px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Screen states */
@@ -96,21 +117,35 @@
         /* ===== Calendar Card Container ===== */
         .huangli-card {
             background: var(--color-paper);
-            border-radius: 4px;
+            border-radius: 8px;
             box-shadow:
-                0 8px 32px rgba(0,0,0,0.12),
-                0 2px 8px rgba(0,0,0,0.08);
+                0 8px 32px rgba(139, 41, 66, 0.12),
+                0 2px 8px rgba(0,0,0,0.06);
             position: relative;
             overflow: hidden;
         }
 
-        /* Top accent bar */
+        /* Top accent bar with floral pattern */
         .huangli-topbar {
-            background: var(--color-accent);
-            padding: 0.625rem 1rem;
+            background: var(--color-primary);
+            padding: 0.75rem 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle floral pattern overlay on topbar */
+        .huangli-topbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5c2 4 6 8 10 8s8-4 10-8c-2 4-2 10 0 14-4-2-10-2-14 0 4-4 4-10 0-14-4 4-10 4-14 0 2 4 2 10 0 14 4-2 10-2 14 0-4-4-8-4-10-8z' fill='rgba(255,255,255,0.06)' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
         }
 
         .topbar-left {
@@ -118,19 +153,48 @@
             font-size: 0.8rem;
             color: white;
             letter-spacing: 0.1em;
+            position: relative;
+            z-index: 1;
         }
 
         .topbar-right {
             font-family: var(--font-english);
             font-size: 0.65rem;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.85);
             letter-spacing: 0.1em;
+            position: relative;
+            z-index: 1;
         }
 
         /* ===== Main Content Area ===== */
         .huangli-main {
             padding: 1.25rem;
             position: relative;
+        }
+
+        /* Decorative corner florals */
+        .huangli-main::before,
+        .huangli-main::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C9A962' stroke-width='0.5' opacity='0.3'%3E%3Cpath d='M10 40c10-15 25-20 30-20s20 5 30 20'/%3E%3Cpath d='M20 50c8-10 18-15 20-15s12 5 20 15'/%3E%3Ccircle cx='40' cy='25' r='8'/%3E%3Ccircle cx='25' cy='35' r='5'/%3E%3Ccircle cx='55' cy='35' r='5'/%3E%3Cpath d='M40 5c0 10-5 18-5 20s5 10 5 20'/%3E%3Cpath d='M35 25c-8 3-15 8-15 10s7 7 15 10'/%3E%3Cpath d='M45 25c8 3 15 8 15 10s-7 7-15 10'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .huangli-main::before {
+            top: 0;
+            right: 0;
+            transform: rotate(0deg);
+        }
+
+        .huangli-main::after {
+            bottom: 0;
+            left: 0;
+            transform: rotate(180deg);
         }
 
         /* Month header row */
@@ -140,7 +204,7 @@
             align-items: baseline;
             margin-bottom: 0.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(201, 169, 98, 0.3);
         }
 
         .month-cn {
@@ -205,16 +269,30 @@
             text-transform: uppercase;
         }
 
-        /* Weekday row */
+        /* Weekday row with floral divider */
         .weekday-row {
             text-align: center;
             padding: 0.75rem 0;
-            border-top: 1px solid rgba(0,0,0,0.08);
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            background: var(--color-paper-dark);
+            border-top: 1px solid rgba(201, 169, 98, 0.3);
+            border-bottom: 1px solid rgba(201, 169, 98, 0.3);
+            background: linear-gradient(90deg, transparent 0%, rgba(201, 169, 98, 0.08) 50%, transparent 100%);
             margin: 0 -1.25rem;
             padding-left: 1.25rem;
             padding-right: 1.25rem;
+            position: relative;
+        }
+
+        /* Small floral accent in center */
+        .weekday-row::before {
+            content: '✿';
+            position: absolute;
+            left: 50%;
+            top: -0.5rem;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: var(--color-accent);
+            background: var(--color-paper);
+            padding: 0 0.5rem;
         }
 
         .weekday-en {
@@ -233,25 +311,34 @@
             margin-left: 0.5rem;
         }
 
-        /* ===== Activities Section with decorative border ===== */
+        /* ===== Activities Section with floral border ===== */
         .activities-section {
             margin-top: 1rem;
             padding: 1rem;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 4px;
+            border: 1px solid rgba(201, 169, 98, 0.4);
+            border-radius: 6px;
             position: relative;
+            background: linear-gradient(135deg, rgba(253, 248, 243, 0.5) 0%, rgba(245, 237, 228, 0.5) 100%);
+        }
+
+        /* Decorative corner dots */
+        .activities-section::before,
+        .activities-section::after {
+            content: '❀';
+            position: absolute;
+            font-size: 0.7rem;
+            color: var(--color-accent);
+            opacity: 0.6;
         }
 
         .activities-section::before {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            right: 4px;
-            bottom: 4px;
-            border: 1px solid rgba(0,0,0,0.05);
-            border-radius: 2px;
-            pointer-events: none;
+            top: -0.4rem;
+            left: 1rem;
+        }
+
+        .activities-section::after {
+            bottom: -0.4rem;
+            right: 1rem;
         }
 
         .activity-row {
@@ -269,12 +356,22 @@
             font-family: var(--font-chinese);
             font-size: 0.9rem;
             font-weight: 700;
-            width: 1.25rem;
+            width: 2.5rem;
             flex-shrink: 0;
+            text-align: center;
+        }
+
+        .activity-label .en {
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            font-weight: 500;
+            display: block;
+            margin-top: 0.125rem;
+            letter-spacing: 0.05em;
         }
 
         .auspicious .activity-label {
-            color: var(--color-accent);
+            color: var(--color-primary);
         }
 
         .inauspicious .activity-label {
@@ -292,9 +389,10 @@
             font-family: var(--font-chinese);
             font-size: 0.8rem;
             color: var(--color-ink);
-            padding: 0.25rem 0.5rem;
-            background: rgba(0,0,0,0.03);
-            border-radius: 2px;
+            padding: 0.25rem 0.6rem;
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(201, 169, 98, 0.2);
         }
 
         .activity-item .en {
@@ -311,7 +409,7 @@
             justify-content: space-between;
             margin-top: 1rem;
             padding-top: 1rem;
-            border-top: 1px solid rgba(0,0,0,0.08);
+            border-top: 1px solid rgba(201, 169, 98, 0.3);
         }
 
         .lucky-item {
@@ -355,11 +453,26 @@
         .personal-section {
             margin-top: 1rem;
             padding: 0.875rem;
-            background: var(--color-primary);
-            border-radius: 4px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border-radius: 6px;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle floral overlay on personal section */
+        .personal-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='60' viewBox='0 0 100 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='1'%3E%3Ccircle cx='80' cy='30' r='15'/%3E%3Ccircle cx='80' cy='30' r='10'/%3E%3Ccircle cx='80' cy='30' r='5'/%3E%3Cpath d='M65 30c0-8 7-15 15-15M65 30c0 8 7 15 15 15'/%3E%3Cpath d='M80 15c8 0 15 7 15 15M80 45c8 0 15-7 15-15'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right center;
         }
 
         .personal-section.hidden {
@@ -373,6 +486,8 @@
             padding: 0.375rem 0.625rem;
             background: rgba(255,255,255,0.15);
             border-radius: 4px;
+            position: relative;
+            z-index: 1;
         }
 
         .personal-zodiac .emoji {
@@ -389,6 +504,8 @@
         .personal-note {
             flex: 1;
             color: white;
+            position: relative;
+            z-index: 1;
         }
 
         .personal-note .label {
@@ -412,7 +529,7 @@
             color: rgba(255,255,255,0.8);
         }
 
-        /* ===== Sealed State ===== */
+        /* ===== Sealed State with Floral Motif ===== */
         .huangli-sealed {
             position: absolute;
             top: 0;
@@ -434,11 +551,20 @@
             pointer-events: none;
         }
 
+        /* Large floral motif for sealed state */
+        .seal-floral {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1rem;
+            opacity: 0.4;
+        }
+
         .seal-icon {
             font-size: 3rem;
             color: var(--color-primary);
             margin-bottom: 1rem;
             opacity: 0.6;
+            display: none;
         }
 
         .seal-text {
@@ -455,7 +581,7 @@
             letter-spacing: 0.1em;
         }
 
-        /* ===== Main Deck ===== */
+        /* ===== Main Deck with Floral Pattern ===== */
         .deck-section {
             margin-top: 2rem;
             text-align: center;
@@ -464,23 +590,38 @@
         .main-deck {
             width: 100px;
             height: 140px;
-            background: linear-gradient(145deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
-            border-radius: 6px;
+            background: linear-gradient(145deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border-radius: 8px;
             margin: 0 auto;
             cursor: pointer;
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow:
-                0 4px 12px rgba(166, 25, 17, 0.3),
+                0 4px 12px rgba(139, 41, 66, 0.25),
                 3px 3px 0 var(--color-paper-dark),
-                6px 6px 0 var(--color-gold);
+                6px 6px 0 var(--color-accent);
+            overflow: hidden;
         }
 
         .main-deck:hover {
             transform: translateY(-4px);
         }
 
+        /* Floral pattern on card back */
         .main-deck::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='140' viewBox='0 0 100 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.12)' stroke-width='1'%3E%3Ccircle cx='50' cy='70' r='25'/%3E%3Ccircle cx='50' cy='70' r='18'/%3E%3Ccircle cx='50' cy='70' r='10'/%3E%3Cpath d='M50 45c-5 5-10 15-10 25s5 20 10 25'/%3E%3Cpath d='M50 45c5 5 10 15 10 25s-5 20-10 25'/%3E%3Cpath d='M25 70c5-5 15-10 25-10s20 5 25 10'/%3E%3Cpath d='M25 70c5 5 15 10 25 10s20-5 25-10'/%3E%3Ccircle cx='50' cy='45' r='6'/%3E%3Ccircle cx='50' cy='95' r='6'/%3E%3Ccircle cx='25' cy='70' r='6'/%3E%3Ccircle cx='75' cy='70' r='6'/%3E%3C/g%3E%3C/svg%3E");
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Chinese character overlay */
+        .main-deck::after {
             content: '卜';
             position: absolute;
             top: 50%;
@@ -488,7 +629,8 @@
             transform: translate(-50%, -50%);
             font-family: var(--font-chinese);
             font-size: 2rem;
-            color: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.25);
+            z-index: 1;
         }
 
         .tap-hint {
@@ -531,12 +673,12 @@
         .fortune-card {
             width: 70px;
             height: 98px;
-            background: linear-gradient(145deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+            background: linear-gradient(145deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(139, 41, 66, 0.2);
         }
 
         .fortune-card:hover {
@@ -589,12 +731,12 @@
         }
 
         .btn-primary {
-            background: var(--color-accent);
+            background: var(--color-primary);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--color-accent-light);
+            background: var(--color-primary-light);
         }
 
         .btn-text {
@@ -640,7 +782,7 @@
 
         .reading-card .symbol {
             font-size: 2rem;
-            color: var(--color-accent);
+            color: var(--color-primary);
             margin: 1rem 0;
         }
 
@@ -957,7 +1099,7 @@
             display: block;
             width: 100%;
             padding: 1rem;
-            background: var(--color-accent);
+            background: var(--color-primary);
             color: white;
             text-decoration: none;
             border-radius: 6px;
@@ -971,7 +1113,7 @@
         }
 
         .kofi-link:hover {
-            background: var(--color-accent-light);
+            background: var(--color-primary-light);
         }
 
         .karma-message {
@@ -1143,7 +1285,7 @@
             <!-- Header -->
             <header class="app-header">
                 <h1 class="app-title">每日黄历</h1>
-                <p class="app-subtitle">Daily Fortune Calendar</p>
+                <p class="app-subtitle">Daily Fortune Ritual</p>
             </header>
 
             <!-- Calendar Card -->
@@ -1179,13 +1321,13 @@
                     <!-- Activities with decorative border -->
                     <div class="activities-section">
                         <div class="activity-row auspicious">
-                            <span class="activity-label">宜</span>
+                            <span class="activity-label">宜<span class="en">Do</span></span>
                             <div class="activity-items" id="auspicious-items">
                                 <!-- Populated by JS -->
                             </div>
                         </div>
                         <div class="activity-row inauspicious">
-                            <span class="activity-label">忌</span>
+                            <span class="activity-label">忌<span class="en">Don't</span></span>
                             <div class="activity-items" id="inauspicious-items">
                                 <!-- Populated by JS -->
                             </div>
@@ -1229,7 +1371,33 @@
 
                 <!-- Sealed overlay -->
                 <div class="huangli-sealed" id="sealed" onclick="revealDailyCard()">
-                    <div class="seal-icon">☾</div>
+                    <!-- Peony SVG motif -->
+                    <svg class="seal-floral" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" stroke="#8B2942" stroke-width="1.5">
+                            <!-- Center bloom -->
+                            <circle cx="60" cy="60" r="12"/>
+                            <circle cx="60" cy="60" r="8"/>
+                            <circle cx="60" cy="60" r="4"/>
+
+                            <!-- Petals -->
+                            <path d="M60 48c-6 0-12 6-12 12s6 12 12 12c-6 0-12-6-12-12s6-12 12-12z"/>
+                            <path d="M60 48c6 0 12 6 12 12s-6 12-12 12c6 0 12-6 12-12s-6-12-12-12z"/>
+                            <path d="M48 60c0-6 6-12 12-12s12 6 12 12c0-6-6-12-12-12s-12 6-12 12z"/>
+                            <path d="M48 60c0 6 6 12 12 12s12-6 12-12c0 6-6 12-12 12s-12-6-12-12z"/>
+
+                            <!-- Outer petals -->
+                            <path d="M60 30c-8 5-15 15-15 30s7 25 15 30"/>
+                            <path d="M60 30c8 5 15 15 15 30s-7 25-15 30"/>
+                            <path d="M30 60c5-8 15-15 30-15s25 7 30 15"/>
+                            <path d="M30 60c5 8 15 15 30 15s25-7 30-15"/>
+
+                            <!-- Leaves -->
+                            <path d="M25 85c10 5 20 5 25 0" stroke="#8FA89A"/>
+                            <path d="M70 85c10-5 15-10 20-5" stroke="#8FA89A"/>
+                            <path d="M20 50c5 10 10 15 20 15" stroke="#8FA89A"/>
+                            <path d="M80 50c5 5 10 10 15 5" stroke="#8FA89A"/>
+                        </g>
+                    </svg>
                     <p class="seal-text">轻触揭晓今日运势</p>
                     <p class="seal-text-en">tap to reveal</p>
                 </div>
