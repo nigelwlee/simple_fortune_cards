@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lunar calendar library for accurate Chinese calendar calculations -->
+    <script src="https://unpkg.com/lunar-javascript@1.7.7/lunar.js"></script>
     <style>
         /* ===== CSS Variables - Feminine Floral Theme ===== */
         :root {
@@ -1814,32 +1816,58 @@
             return Math.abs(hash);
         }
 
-        // ===== Lunar Calendar (Simplified) =====
-        function getLunarDate(date) {
-            const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
-            const lunarDay = ((dayOfYear + 15) % 30) + 1;
-            const lunarMonth = Math.floor((dayOfYear + 15) / 30) % 12;
+        // ===== Lunar Calendar (using lunar-javascript library) =====
+        // Map Chinese zodiac names to English
+        const shengXiaoToEnglish = {
+            '鼠': 'Rat', '牛': 'Ox', '虎': 'Tiger', '兔': 'Rabbit',
+            '龙': 'Dragon', '蛇': 'Snake', '马': 'Horse', '羊': 'Goat',
+            '猴': 'Monkey', '鸡': 'Rooster', '狗': 'Dog', '猪': 'Pig'
+        };
 
+        // Get lunar data from the library
+        function getLunarData(date) {
+            const solar = Solar.fromDate(date);
+            const lunar = solar.getLunar();
+            return lunar;
+        }
+
+        function getLunarDate(date) {
+            const lunar = getLunarData(date);
             return {
-                month: lunarMonths[lunarMonth],
-                day: lunarDays[lunarDay - 1] || '初一'
+                month: lunar.getMonthInChinese() + '月',
+                day: lunar.getDayInChinese()
             };
         }
 
-        // ===== Get Year Animal =====
-        function getYearAnimal(year) {
+        // ===== Get Year Animal (accurate, based on lunar new year) =====
+        function getYearAnimal(year, date) {
+            // If date is provided, use lunar library for accurate calculation
+            if (date) {
+                const lunar = getLunarData(date);
+                const shengXiao = lunar.getYearShengXiao();
+                return shengXiaoToEnglish[shengXiao] || 'Snake';
+            }
+            // Fallback for birth year calculation (simple method)
             const animals = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'];
             const startYear = 1900;
             const index = (year - startYear) % 12;
             return animals[index >= 0 ? index : index + 12];
         }
 
-        // ===== Get Day Zodiac =====
+        // ===== Get Day Zodiac (accurate) =====
         function getDayZodiac(date) {
-            const baseDate = new Date(2024, 0, 1);
-            const daysDiff = Math.floor((date - baseDate) / 86400000);
-            const index = ((daysDiff % 12) + 12) % 12;
-            return dayZodiacs[index];
+            const lunar = getLunarData(date);
+            const shengXiao = lunar.getDayShengXiao();
+            return shengXiaoToEnglish[shengXiao] || 'Snake';
+        }
+
+        // ===== Get Yi (auspicious) and Ji (inauspicious) from lunar library =====
+        function getDayYiJi(date) {
+            const lunar = getLunarData(date);
+            return {
+                yi: lunar.getDayYi(),   // Array of auspicious activities
+                ji: lunar.getDayJi()    // Array of inauspicious activities
+            };
         }
 
         // ===== Render Daily Calendar =====
@@ -1848,8 +1876,8 @@
             const todayStr = getTodayString();
             const seed = getDateSeed(todayStr);
 
-            // Year info
-            const yearAnimal = getYearAnimal(today.getFullYear());
+            // Year info (using lunar library for accurate zodiac year)
+            const yearAnimal = getYearAnimal(null, today);
             const yearData = chineseZodiacs[yearAnimal];
             document.getElementById('topbar-year').textContent = yearData.cn + '年';
             document.getElementById('topbar-year-en').textContent = 'Year of the ' + yearAnimal;
@@ -1861,33 +1889,47 @@
             document.getElementById('weekday-en').textContent = weekdaysEn[today.getDay()];
             document.getElementById('weekday-cn').textContent = weekdaysCn[today.getDay()];
 
-            // Lunar date
-            const lunar = getLunarDate(today);
-            document.getElementById('month-cn').textContent = lunar.month;
-            document.getElementById('lunar-day').textContent = lunar.day;
+            // Lunar date (using lunar library)
+            const lunarDate = getLunarDate(today);
+            document.getElementById('month-cn').textContent = lunarDate.month;
+            document.getElementById('lunar-day').textContent = lunarDate.day;
 
-            // Day zodiac
+            // Day zodiac (using lunar library)
             const dayZodiac = getDayZodiac(today);
             document.getElementById('day-zodiac').textContent = dayZodiac + ' Day';
 
-            // Auspicious activities
-            const auspiciousCount = 3 + Math.floor(seededRandom(seed) * 2);
-            const shuffledAuspicious = [...auspiciousPool].sort((a, b) => seededRandom(seed + a.cn.charCodeAt(0)) - 0.5);
-            const todayAuspicious = shuffledAuspicious.slice(0, auspiciousCount);
+            // Auspicious/Inauspicious activities (using lunar library for real 黄历 data)
+            const yiji = getDayYiJi(today);
 
-            const auspiciousHtml = todayAuspicious.map(item =>
-                `<div class="activity-item">${item.cn}<span class="en">${item.en}</span></div>`
-            ).join('');
+            // Map common Chinese activities to English translations
+            const activityTranslations = {
+                '祭祀': 'Worship', '祈福': 'Pray', '求嗣': 'Fertility', '开光': 'Consecrate',
+                '出行': 'Travel', '解除': 'Cleanse', '伐木': 'Logging', '拆卸': 'Demolish',
+                '修造': 'Renovate', '动土': 'Groundwork', '安床': 'Bed Setup', '入宅': 'Move In',
+                '移徙': 'Relocate', '栽种': 'Plant', '入殓': 'Funeral', '破土': 'Break Ground',
+                '安葬': 'Burial', '启钻': 'Exhume', '嫁娶': 'Wedding', '纳采': 'Betrothal',
+                '订盟': 'Alliance', '开市': 'Open Business', '交易': 'Trade', '立券': 'Contract',
+                '挂匾': 'Hang Sign', '开仓': 'Open Storage', '出货': 'Ship Goods', '纳财': 'Collect Money',
+                '纳畜': 'Buy Livestock', '牧养': 'Raise Animals', '沐浴': 'Bathe', '理发': 'Haircut',
+                '整手足甲': 'Manicure', '冠笄': 'Coming of Age', '会亲友': 'Visit Friends',
+                '进人口': 'Welcome', '裁衣': 'Tailoring', '结网': 'Make Net', '捕捉': 'Hunting',
+                '词讼': 'Lawsuit', '诸事不宜': 'Nothing', '余事勿取': 'Rest'
+            };
+
+            // Render auspicious activities (limit to 4 for display)
+            const yiItems = yiji.yi.slice(0, 4);
+            const auspiciousHtml = yiItems.map(item => {
+                const en = activityTranslations[item] || '';
+                return `<div class="activity-item">${item}${en ? `<span class="en">${en}</span>` : ''}</div>`;
+            }).join('');
             document.getElementById('auspicious-items').innerHTML = auspiciousHtml;
 
-            // Inauspicious activities
-            const inauspiciousCount = 2 + Math.floor(seededRandom(seed + 1) * 2);
-            const shuffledInauspicious = [...inauspiciousPool].sort((a, b) => seededRandom(seed + 100 + a.cn.charCodeAt(0)) - 0.5);
-            const todayInauspicious = shuffledInauspicious.slice(0, inauspiciousCount);
-
-            const inauspiciousHtml = todayInauspicious.map(item =>
-                `<div class="activity-item">${item.cn}<span class="en">${item.en}</span></div>`
-            ).join('');
+            // Render inauspicious activities (limit to 3 for display)
+            const jiItems = yiji.ji.slice(0, 3);
+            const inauspiciousHtml = jiItems.map(item => {
+                const en = activityTranslations[item] || '';
+                return `<div class="activity-item">${item}${en ? `<span class="en">${en}</span>` : ''}</div>`;
+            }).join('');
             document.getElementById('inauspicious-items').innerHTML = inauspiciousHtml;
 
             // Lucky color
